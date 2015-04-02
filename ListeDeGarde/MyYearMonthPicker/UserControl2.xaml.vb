@@ -5,6 +5,10 @@ Imports System.Diagnostics
 Public Class UserControl2
 
     Private WithEvents newBtn As Button
+    Private monthstrings() As String = {"Janvier", "Février", "Mars", _
+                                        "Avril", "Mai", "Juin", _
+                                        "juillet", "Aout", "Septembre", _
+                                        "Octobre", "Novembre", "Décembre"}
 
     Private Sub Button_Click(sender As Object, e As Windows.RoutedEventArgs)
         'get references to workbook
@@ -73,22 +77,9 @@ Public Class UserControl2
     End Sub
 
     Private Sub ComboBox_Loaded_1(sender As Object, e As Windows.RoutedEventArgs)
-        Dim theList As New List(Of String)
-        theList.Add("Janvier")
-        theList.Add("Fevrier")
-        theList.Add("Mars")
-        theList.Add("Avril")
-        theList.Add("May")
-        theList.Add("Juin")
-        theList.Add("Juillet")
-        theList.Add("Aout")
-        theList.Add("Septembre")
-        theList.Add("Octobre")
-        theList.Add("Novembre")
-        theList.Add("Decembre")
         Dim theComboBox As ComboBox
         theComboBox = CType(sender, ComboBox)
-        theComboBox.ItemsSource = theList
+        theComboBox.ItemsSource = monthstrings
         theComboBox.SelectedIndex = 0
     End Sub
 
@@ -106,7 +97,6 @@ Public Class UserControl2
         Catch ex As Exception
         End Try
         If Not IsNothing(theController) Then
-            Dim monthstrings() As String = {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "juillet", "Aout", "Septembre", "Octobre", "Novembre", "Decembre"}
             Me.MoisAnnee.Content = theController.aControlledMonth.Year.ToString + "-" + monthstrings(theController.aControlledMonth.Month - 1)
         Else : Me.MoisAnnee.Content = ""
         End If
@@ -116,9 +106,9 @@ Public Class UserControl2
 
         ' This call is required by the designer.
         InitializeComponent()
-        Me.MoisAnnee.Content = ""
-        ' Add any initialization after the InitializeComponent() call.
 
+        ' Add any initialization after the InitializeComponent() call.
+        Me.MoisAnnee.Content = ""
     End Sub
 End Class
 
