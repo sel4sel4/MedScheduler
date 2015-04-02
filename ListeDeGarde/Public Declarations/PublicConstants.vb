@@ -1,0 +1,94 @@
+﻿Public Module PublicConstants
+
+    ' --------------------DB Address
+    Public Const CONSTFILEADDRESS As String = "C:\Users\Martin\Documents\Scheduling Mira\ListesDeGarde.accdb"
+
+    '----------------------Table Name Mapping
+
+    'DB Access constants for Table ScheduleShiftType
+    Public Const TABLE_shiftType = "TABLE_shiftType"
+    Public Const SQLShiftStart = "ShiftStart"
+    Public Const SQLShiftStop = "ShiftStop"
+    Public Const SQLShiftType = "ShiftType"
+    Public Const SQLActive = "Active"
+    Public Const SQLDescription = "Description"
+
+    'DB Access constants for Table ScheduleDoc
+    Public Const TABLE_Doc = "TABLE_Doc"
+    Public Const SQLFirstName = "FirstName"
+    Public Const SQLLastName = "LastName"
+    Public Const SQLInitials = "Initials"
+    'Public Const SQLActive = "Active"
+
+    '-----------------------Default Values
+    Public Const DEFAULTDATE As Long = 29221
+End Module
+
+Public Module PublicStructures
+    '------------------------------------------------------------------------------
+    '                   =========== Structures ===========
+    '------------------------------------------------------------------------------
+
+    Public Structure T_DBRefTypeS
+        Dim theSQLName As String
+        Dim theValue As String
+    End Structure
+
+    Public Structure T_DBRefTypeL
+        Dim theSQLName As String
+        Dim theValue As Long
+    End Structure
+
+    Public Structure T_DBRefTypeI
+        Dim theSQLName As String
+        Dim theValue As Integer
+    End Structure
+
+    Public Structure T_DBRefTypeB
+        Dim theSQLName As String
+        Dim theValue As Boolean
+    End Structure
+End Module
+
+
+Public Module PublicEnums
+    Public Enum Availability
+        Assigne = 0
+        Dispo = 1
+        NonDispoPermanente = 2
+        NonDispoTemporaire = 3
+        SurUtilise = 4
+    End Enum
+
+    Public Enum Weekdays
+        monday = 1
+        tuesday = 2
+        wednesday = 3
+        Thursay = 4
+        Friday = 5
+        Saturday = 6
+        Sunday = 7
+    End Enum
+
+    Public Enum EnumWhereSubClause
+        EW_None
+        EW_begin
+        EW_end
+    End Enum
+
+End Module
+
+Public Module MyGlobals
+
+    Public globalShiftTypes As ScheduleShiftType
+    'Public theNonDispoList As Collection
+    Public theList As String
+    Public theRangeCollection As Collection
+
+    ' Conenction Global variables
+    'Public cnn As New ADODB.Connection  'Connection object definition
+    'Public rs As New ADODB.Recordset    'recordset object definition
+    'Public strSQL As String             'Query String
+    Public FileAddress As String        'String to contain Excell database path and filename
+    'Public GlobalDBAccessClass As DBAccessClass1
+End Module
