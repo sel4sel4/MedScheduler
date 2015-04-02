@@ -3,16 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" Height="413" Width="196">
+             mc:Ignorable="d" Height="461" Width="196">
     <Grid Background="#FFBBD8C3">
         <ComboBox  Name="combo1" HorizontalAlignment="Left" Margin="59,14,0,0" VerticalAlignment="Top" Width="59" Loaded="combo1_Loaded" />
         <ComboBox  Name="combo2" HorizontalAlignment="Left" Margin="59,40.96,0,0" VerticalAlignment="Top" Width="95" RenderTransformOrigin="0.833,0.455" Loaded="ComboBox_Loaded_1"/>
-        <Label Content="Year" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.071,0.615"/>
-        <Label Content="Month" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="70"/>
+        <Label Content="Année" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="70" RenderTransformOrigin="0.071,0.615"/>
+        <Label Content="Mois" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top" Width="70"/>
         <Button Content="Créer Calendrier" HorizontalAlignment="Left" Margin="51,67.92,0,0" VerticalAlignment="Top" Width="103" Click="Button_Click"/>
         <ScrollViewer HorizontalAlignment="Left" Height="307.04" Margin="10,96.96,0,0" VerticalAlignment="Top" Width="176" RenderTransformOrigin="1.897,0.714" Background="#FFBBE4DD">
             <StackPanel x:Name="SplMain" HorizontalAlignment="Left" Height="307.04" VerticalAlignment="Top" Width="157" Background="#FFBBE4DD"/>
         </ScrollViewer>
+        <Label x:Name="MoisAnnee" Content="Label" HorizontalAlignment="Left" Margin="10,409,0,0" VerticalAlignment="Top" Width="176" Height="26.96"/>
 
     </Grid>
 </UserControl>

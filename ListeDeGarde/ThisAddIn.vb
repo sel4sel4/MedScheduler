@@ -2,6 +2,7 @@
     Public WithEvents xlApp As Excel.Application
     Public WithEvents xlBook As Excel.Workbook
     Public WithEvents xlSheet1 As Excel.Worksheet
+    Public theControllerCollection As Collection
     Private myCustomTaskPane As Microsoft.Office.Tools.CustomTaskPane
 
 
@@ -18,6 +19,7 @@
         myCustomTaskPane = Me.CustomTaskPanes.Add(MyTaskPaneView, "Liste de Garde")
         myCustomTaskPane.Visible = True
         xlApp = Globals.ThisAddIn.Application
+        theControllerCollection = New Collection
 
     End Sub
 
@@ -42,15 +44,17 @@
     End Sub
 
     Private Sub xlApp_SheetActivate(ByVal Obb As Object) Handles xlApp.SheetActivate
-        System.Diagnostics.Debug.WriteLine("WithEvents: switching activeSheet.")
-        Me.xlSheet1 = CType(Obb, Excel.Worksheet)
+        'System.Diagnostics.Debug.WriteLine("WithEvents: switching activeSheet.")
+        'Me.xlSheet1 = CType(Obb, Excel.Worksheet)
 
 
         Dim mycontrol As System.Windows.Forms.UserControl = Globals.ThisAddIn.myCustomTaskPane.Control
         Dim aCollection As System.Windows.Forms.Control.ControlCollection = mycontrol.Controls
-        Dim aEH As System.Windows.Forms.Integration.ElementHost = aCollection(0)
-        Dim aUC2 As UserControl2 = aEH.Child
-        aUC2.xlSheet2 = CType(Obb, Excel.Worksheet)
+        Dim aElementHost As System.Windows.Forms.Integration.ElementHost = aCollection(0)
+        Dim aUserControl2 As UserControl2 = aElementHost.Child
+        aUserControl2.redraw()
+
+        'need to rebuild the taskpane on the basis of the currentlyselected month
     End Sub
 
 

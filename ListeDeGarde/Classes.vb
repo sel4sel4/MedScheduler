@@ -53,6 +53,7 @@ Public Class ScheduleMonth
     End Property
 
     Public Sub New(aMonth As Integer, aYear As Integer)
+        globalShiftTypes = New ScheduleShiftType
         Dim theDaysInMonth As Integer = DateTime.DaysInMonth(aYear, aMonth)
         pYear = aYear
         pMonth = aMonth
@@ -62,6 +63,8 @@ Public Class ScheduleMonth
             theDay = New ScheduleDay(x, aMonth, aYear)
             pDays.Add(theDay, x.ToString())
         Next
+
+
     End Sub
 
 End Class
