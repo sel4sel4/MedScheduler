@@ -399,7 +399,7 @@ Public Class ScheduleDoc
 End Class
 
 Public Class scheduleDocAvailable
-    Const kTicksToDays As Long = 864000000000
+
     Private pDocInitial As T_DBRefTypeS
     Private pAvailability As PublicEnums.Availability
     Private pDate As T_DBRefTypeD
@@ -562,6 +562,168 @@ Public Class scheduleDocAvailable
         End If
         Return Nothing
     End Function
+
+End Class
+
+Public Class ScheduleNonDispo
+
+    Private pDocInitial As T_DBRefTypeS
+    Private pDateStart As T_DBRefTypeD
+    Private pDateStop As T_DBRefTypeD
+    Private pTimeStart As T_DBRefTypeI
+    Private pTimeStop As T_DBRefTypeI
+
+    Public Property DocInitial() As String
+        Get
+            Return pDocInitial.theValue
+        End Get
+        Set(ByVal value As String)
+            pDocInitial.theValue = value
+        End Set
+    End Property
+
+    Public Property DateStartL() As Long
+        Get
+            Return pDateStart.theValue.Ticks / kTicksToDays
+        End Get
+        Set(ByVal value As Long)
+            Dim aDateType As DateTime
+            aDateType = New DateTime(value * kTicksToDays)
+            pDateStart.theValue = DateSerial(aDateType.Year, aDateType.Month, aDateType.Day)
+        End Set
+    End Property
+
+    Public Property DateStart() As Date
+        Get
+            Return pDateStart.theValue
+        End Get
+        Set(ByVal value As Date)
+            pDateStart.theValue = value
+        End Set
+    End Property
+
+    Public Property DateStopL() As Long
+        Get
+            Return pDateStop.theValue.Ticks / kTicksToDays
+        End Get
+        Set(ByVal value As Long)
+            Dim aDateType As DateTime
+            aDateType = New DateTime(value * kTicksToDays)
+            pDateStop.theValue = DateSerial(aDateType.Year, aDateType.Month, aDateType.Day)
+        End Set
+    End Property
+
+    Public Property DateStop() As Date
+        Get
+            Return pDateStop.theValue
+        End Get
+        Set(ByVal value As Date)
+            pDateStop.theValue = value
+        End Set
+    End Property
+
+    Public Property TimeStart() As Integer
+        Get
+            Return pTimeStart.theValue
+        End Get
+        Set(ByVal value As Integer)
+            pTimeStart.theValue = value
+        End Set
+    End Property
+
+    Public Property TimeStop() As Integer
+        Get
+            Return pTimeStop.theValue
+        End Get
+        Set(ByVal value As Integer)
+            pTimeStop.theValue = value
+        End Set
+    End Property
+
+    Public Sub New(aDocInitial As String, _
+                   aDateStart As Date, _
+                   aDateStop As Date, _
+                   aTimeStart As Integer, _
+                   aTimeStop As Integer)
+
+        pDocInitial.theSQLName = SQLInitials
+        pDateStart.theSQLName = SQLDateStart
+        pDateStop.theSQLName = SQLDateStop
+        pTimeStart.theSQLName = SQLTimeStart
+        pTimeStop.theSQLName = SQLTimeStop
+
+        pDocInitial.theValue = aDocInitial
+        pDateStart.theValue = aDateStart
+        pDateStop.theValue = aDateStop
+        pTimeStart.theValue = aTimeStart
+        pTimeStop.theValue = aTimeStop
+
+        Dim theBuiltSql As New SQLStrBuilder
+        Dim theRS As New ADODB.Recordset
+        Dim theDBAC As New DBAC
+
+        With theBuiltSql
+            .SQLClear()
+            .SQL_Insert(Table_NonDispo)
+            .SQL_Values(pDocInitial.theSQLName, DocInitial)
+            .SQL_Values(pDateStart.theSQLName, DateStartL)
+            .SQL_Values(pTimeStart.theSQLName, TimeStart)
+            .SQL_Values(pDateStop.theSQLName, DateStopL)
+            .SQL_Values(pTimeStop.theSQLName, TimeStop)
+
+            Dim numaffected As Integer
+            theDBAC.CExecuteDB(.SQLStringInsert, numaffected)
+        End With
+
+    End Sub
+    Public Sub New()
+
+        pDocInitial.theSQLName = SQLInitials
+        pDateStart.theSQLName = SQLDateStart
+        pDateStop.theSQLName = SQLDateStop
+        pTimeStart.theSQLName = SQLTimeStart
+        pTimeStop.theSQLName = SQLTimeStop
+
+    End Sub
+
+    Public Function GetNonDispoListForDoc(aDocInitials As String, aYear As Integer, aMonth As Integer) As Collection
+        Dim theBuiltSql As New SQLStrBuilder
+        Dim theRS As New ADODB.Recordset
+        Dim theDBAC As New DBAC
+        Dim theStartdate As Date = DateSerial(aYear, aMonth, 1)
+        Dim theStopdate As Date = DateSerial(aYear, aMonth + 1, 1)
+        With theBuiltSql
+            .SQL_Select("*")
+            .SQL_From(Table_NonDispo)
+            .SQL_Where(pDocInitial.theSQLName, "=", aDocInitials)
+            .SQL_Where(pDateStop.theSQLName, ">=", theStartdate.Ticks / kTicksToDays)
+            .SQL_Where(pDateStart.theSQLName, "<", theStopdate.Ticks / kTicksToDays)
+            .SQL_Order_By(pDateStart.theSQLName)
+            .SQL_Order_By(pTimeStart.theSQLName)
+            theDBAC.COpenDB(.SQLStringSelect, theRS)
+        End With
+        Dim ascheduleNonDispo As ScheduleNonDispo
+        Dim theCount As Integer = theRS.RecordCount
+        If theCount > 0 Then
+            Dim aCollection As New Collection
+            theRS.MoveFirst()
+            For x As Integer = 1 To theCount
+                ascheduleNonDispo = New ScheduleNonDispo
+                If Not IsDBNull(theRS.Fields(pDocInitial.theSQLName).Value) Then ascheduleNonDispo.DocInitial = theRS.Fields(pDocInitial.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pDateStart.theSQLName).Value) Then ascheduleNonDispo.DateStartL = theRS.Fields(pDateStart.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pTimeStart.theSQLName).Value) Then ascheduleNonDispo.TimeStart = theRS.Fields(pTimeStart.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pDateStop.theSQLName).Value) Then ascheduleNonDispo.DateStopL = theRS.Fields(pDateStop.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pTimeStop.theSQLName).Value) Then ascheduleNonDispo.TimeStop = theRS.Fields(pTimeStop.theSQLName).Value
+                aCollection.Add(ascheduleNonDispo)
+                theRS.MoveNext()
+            Next
+            Return aCollection
+        Else : Return Nothing
+        End If
+    End Function
+
+    
+
 
 End Class
 

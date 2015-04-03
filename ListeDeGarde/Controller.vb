@@ -4,6 +4,10 @@
     Private controlledShiftTypes As ScheduleShiftType
     Private monthloaded As Boolean = False
     Private Const theRestTime As Integer = 12 * 60
+    Private monthstrings() As String = {"Janvier", "Février", "Mars", _
+                                        "Avril", "Mai", "Juin", _
+                                        "juillet", "Aout", "Septembre", _
+                                        "Octobre", "Novembre", "Décembre"}
     Public ReadOnly Property aControlledMonth() As ScheduleMonth
         Get
             Return controlledMonth
@@ -11,7 +15,7 @@
     End Property
 
     Public Sub New(aSheet As Excel.Worksheet, aYear As Integer, aMonth As Integer, aMonthString As String)
-        monthloaded = False
+
         'load the sheet
         controlledExcelSheet = aSheet
 
@@ -20,73 +24,8 @@
 
         'Load shift types collection into global
         controlledShiftTypes = New ScheduleShiftType
-
-        Dim theDay As ScheduleDay
-        Dim row As Integer
-        Dim col As Integer = 0
-
-        'get number of shifts
-        Dim rowheight1 As Integer = controlledShiftTypes.ShiftCollection.Count + 1
-        'assign colwidth as 2
-        Dim colwidth1 As Integer = 2
-
-        'populate the top left corner of sheet with year and month strings
-        controlledExcelSheet.Range("A1").Value = aMonthString
-        controlledExcelSheet.Range("B1").Value = aYear.ToString()
-
-        'set top left corner of calendar
-        Dim theRangeA3 As Excel.Range = controlledExcelSheet.Range("A3")
-        Dim theRange As Excel.Range
-
-
-        For Each theDay In controlledMonth.Days
-            col = CInt(theDay.theDate.DayOfWeek)
-            theRange = theRangeA3.Offset(row * rowheight1, col * colwidth1)
-
-            Dim theRangeForShiftType As Excel.Range
-            Dim TheRAngeForDocLists As Excel.Range
-            Dim theShift As ScheduleShift
-
-            Dim theCounter1 As Integer = 1
-            For Each theShift In theDay.Shifts
-                ' Dim theSetValue As String = ""
-                theRangeForShiftType = theRange.Offset(theCounter1, 0)
-                theRangeForShiftType.Value2 = "'" + theShift.Description
-                TheRAngeForDocLists = theRange.Offset(theCounter1, 1)
-                theShift.aRange = TheRAngeForDocLists
-
-                fixlist(theShift)
-                theCounter1 = theCounter1 + 1
-            Next
-
-            theRange.Offset(0, colwidth1 - 1).Value = theDay.theDate.Day
-            theRange = theRange.Resize(rowheight1, colwidth1)
-            addBordersAroundRange(theRange)
-            If col = 6 Then row = row + 1
-        Next
-
-        'check if data for this year and month already exist
-        Dim aTest As New scheduleDocAvailable(DateSerial(aYear, aMonth, 1))
-        Dim aCollection As Collection
-        Dim theDay2 As ScheduleDay
-        Dim theShift2 As ScheduleShift
-        Dim theDocAvailble As scheduleDocAvailable
-        aCollection = aTest.doesDataExistForThisMonth()
-        If Not IsNothing(aCollection) Then
-            Dim theAssignedDocs As scheduleDocAvailable
-            For Each theAssignedDocs In aCollection
-                theDay2 = controlledMonth.Days.Item(theAssignedDocs.Date_.Day)
-                theShift2 = theDay2.Shifts.Item(theAssignedDocs.ShiftType.ToString())
-                theShift2.Doc = theAssignedDocs.DocInitial
-                theDocAvailble = theShift2.DocAvailabilities(theAssignedDocs.DocInitial)
-                theDocAvailble.SetAvailabilityfromDB = PublicEnums.Availability.Assigne
-                theShift2.aRange.Value = theAssignedDocs.DocInitial
-                fixAvailability(theShift2.Doc, controlledMonth, theShift2)
-            Next
-
-        End If
-
-        monthloaded = True
+        resetSheet()
+       
 
     End Sub
 
@@ -319,4 +258,133 @@
 
     End Sub
 
+    Public Sub SetUpPermNonDispos()
+        Dim theSchedulenondispo As New ScheduleNonDispo
+        Dim aSchedulenondispo As ScheduleNonDispo
+        Dim aCollection As Collection
+        Dim aDay As ScheduleDay
+        Dim ashift As ScheduleShift
+        Dim theScheduledoc As New ScheduleDoc(controlledMonth.Year, controlledMonth.Month)
+        Dim docCollection As Collection = theScheduledoc.DocList
+        Dim ascheduleDoc As ScheduleDoc
+
+        'For Each doc in the total collection of doctors
+        For Each ascheduleDoc In docCollection
+
+            'get the unavailability list for one doctor
+            aCollection = theSchedulenondispo.GetNonDispoListForDoc(ascheduleDoc.Initials, controlledMonth.Year, controlledMonth.Month)
+            If Not IsNothing(aCollection) Then
+                'iterate through the doctors list of unavailabilities
+                For Each aSchedulenondispo In aCollection
+
+                    'start with the day prior to the start of the unavailability (to cover the 0-8 shift)
+                    If controlledMonth.Days.Contains(aSchedulenondispo.DateStart.Day - 1) Then
+                        aDay = controlledMonth.Days.Item(aSchedulenondispo.DateStart.Day - 1)
+                        For Each ashift In aDay.Shifts
+                            If aSchedulenondispo.TimeStart + 1440 < ashift.ShiftStop Then
+                                Dim thedocAvail As scheduleDocAvailable
+                                If ashift.DocAvailabilities.Contains(ascheduleDoc.Initials) Then
+                                    thedocAvail = ashift.DocAvailabilities.Item(ascheduleDoc.Initials)
+                                    thedocAvail.Availability = PublicEnums.Availability.NonDispoPermanente
+                                    fixlist(ashift)
+                                End If
+                            End If
+                        Next
+                    End If
+                    'FIX: non-dispos spanning more than one month
+                    'cycle through the days included in the non dispo
+
+                    For y As Integer = aSchedulenondispo.DateStart.Day To aSchedulenondispo.DateStop.Day
+                        If controlledMonth.Days.Contains(y) Then
+                            aDay = controlledMonth.Days.Item(y)
+                            For Each ashift In aDay.Shifts
+                                If (aSchedulenondispo.TimeStart < ashift.ShiftStop And aSchedulenondispo.DateStart <= ashift.aDate) Or _
+                                    (aSchedulenondispo.TimeStop > ashift.ShiftStart And aSchedulenondispo.DateStop >= ashift.aDate) Then
+                                    Dim thedocAvail As scheduleDocAvailable
+                                    thedocAvail = ashift.DocAvailabilities.Item(ascheduleDoc.Initials)
+                                    thedocAvail.Availability = PublicEnums.Availability.NonDispoPermanente
+                                    fixlist(ashift)
+                                End If
+                            Next
+                        End If
+                    Next
+                Next
+            End If
+        Next
+    End Sub
+
+    Public Sub resetSheet()
+        monthloaded = False
+
+        Dim amonthstring As String = monthstrings(aControlledMonth.Month + 1)
+
+        controlledExcelSheet.Cells.Clear()
+        Dim theDay As ScheduleDay
+        Dim row As Integer
+        Dim col As Integer = 0
+
+        'get number of shifts
+        Dim rowheight1 As Integer = controlledShiftTypes.ShiftCollection.Count + 1
+        'assign colwidth as 2
+        Dim colwidth1 As Integer = 2
+
+        'populate the top left corner of sheet with year and month strings
+        controlledExcelSheet.Range("A1").Value = amonthstring
+        controlledExcelSheet.Range("B1").Value = aControlledMonth.Year.ToString()
+
+        'set top left corner of calendar
+        Dim theRangeA3 As Excel.Range = controlledExcelSheet.Range("A3")
+        Dim theRange As Excel.Range
+
+
+        For Each theDay In controlledMonth.Days
+            col = CInt(theDay.theDate.DayOfWeek)
+            theRange = theRangeA3.Offset(row * rowheight1, col * colwidth1)
+
+            Dim theRangeForShiftType As Excel.Range
+            Dim TheRAngeForDocLists As Excel.Range
+            Dim theShift As ScheduleShift
+
+            Dim theCounter1 As Integer = 1
+            For Each theShift In theDay.Shifts
+                ' Dim theSetValue As String = ""
+                theRangeForShiftType = theRange.Offset(theCounter1, 0)
+                theRangeForShiftType.Value2 = "'" + theShift.Description
+                TheRAngeForDocLists = theRange.Offset(theCounter1, 1)
+                theShift.aRange = TheRAngeForDocLists
+
+                fixlist(theShift)
+                theCounter1 = theCounter1 + 1
+            Next
+
+            theRange.Offset(0, colwidth1 - 1).Value = theDay.theDate.Day
+            theRange = theRange.Resize(rowheight1, colwidth1)
+            addBordersAroundRange(theRange)
+            If col = 6 Then row = row + 1
+        Next
+
+        'check if data for this year and month already exist
+        Dim aTest As New scheduleDocAvailable(DateSerial(aControlledMonth.Year, aControlledMonth.Month, 1))
+        Dim aCollection As Collection
+        Dim theDay2 As ScheduleDay
+        Dim theShift2 As ScheduleShift
+        Dim theDocAvailble As scheduleDocAvailable
+        aCollection = aTest.doesDataExistForThisMonth()
+        If Not IsNothing(aCollection) Then
+            Dim theAssignedDocs As scheduleDocAvailable
+            For Each theAssignedDocs In aCollection
+                theDay2 = controlledMonth.Days.Item(theAssignedDocs.Date_.Day)
+                theShift2 = theDay2.Shifts.Item(theAssignedDocs.ShiftType.ToString())
+                theShift2.Doc = theAssignedDocs.DocInitial
+                theDocAvailble = theShift2.DocAvailabilities(theAssignedDocs.DocInitial)
+                theDocAvailble.SetAvailabilityfromDB = PublicEnums.Availability.Assigne
+                theShift2.aRange.Value = theAssignedDocs.DocInitial
+                fixAvailability(theShift2.Doc, controlledMonth, theShift2)
+            Next
+
+        End If
+        SetUpPermNonDispos()
+        monthloaded = True
+
+    End Sub
 End Class

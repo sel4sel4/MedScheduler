@@ -26,8 +26,17 @@
     'Public Const SQLShiftType = "ShiftType"
     'Public Const SQLInitials = "Initials"
 
+    'DB Access constants for Table_NonDispo
+    Public Const Table_NonDispo = "Table_NonDispo"
+    Public Const SQLDateStart = "aDateStart"
+    Public Const SQLTimeStart = "aTimeStart"
+    Public Const SQLDateStop = "aDateStop"
+    Public Const SQLTimeStop = "aTimeStop"
+    'Public Const SQLInitials = "Initials"
+
     '-----------------------Default Values
     Public Const DEFAULTDATE As Long = 29221
+    Public Const kTicksToDays As Long = 864000000000
 End Module
 
 Public Module PublicStructures

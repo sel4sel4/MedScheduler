@@ -13,5 +13,7 @@ Public Class Ribbon1
 
     Private Sub Button2_Click(sender As Object, e As RibbonControlEventArgs) Handles Button2.Click
         'UseDelegate()
+        Dim aform1 As New Form1
+        aform1.ShowDialog()
     End Sub
 End Class

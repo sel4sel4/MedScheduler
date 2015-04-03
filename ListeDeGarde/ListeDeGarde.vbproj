@@ -188,12 +188,21 @@
     <AppDesigner Include="My Project\" />
     <Compile Include="Controller.vb" />
     <Compile Include="Classes.vb" />
+    <Compile Include="GetNonDispos\Form1.Designer.vb">
+      <DependentUpon>Form1.vb</DependentUpon>
+    </Compile>
+    <Compile Include="GetNonDispos\Form1.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Public Declarations\PublicConstants.vb" />
     <Compile Include="MyYearMonthPicker\YearMonthPicker.Designer.vb">
       <DependentUpon>YearMonthPicker.vb</DependentUpon>
     </Compile>
     <Compile Include="MyYearMonthPicker\YearMonthPicker.vb">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GetNonDispos\UserControl1.xaml.vb">
+      <DependentUpon>UserControl1.xaml</DependentUpon>
     </Compile>
     <Compile Include="Using EventsModules\UseDelegateM.vb" />
     <Compile Include="MyYearMonthPicker\UserControl2.xaml.vb">
@@ -208,6 +217,9 @@
     <Compile Include="ThisAddIn.vb">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="GetNonDispos\Form1.resx">
+      <DependentUpon>Form1.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Ribbon1.resx">
       <DependentUpon>Ribbon1.vb</DependentUpon>
     </EmbeddedResource>
@@ -292,6 +304,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="MyYearMonthPicker\UserControl2.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="GetNonDispos\UserControl1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
