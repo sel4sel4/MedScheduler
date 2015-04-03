@@ -3,7 +3,7 @@
     Private controlledMonth As ScheduleMonth
     Private controlledShiftTypes As ScheduleShiftType
     Private monthloaded As Boolean = False
-    Private Const theRestTime As Integer = 12 * 60
+    Private Const theRestTime As Long = 432000000000
     Private monthstrings() As String = {"Janvier", "Février", "Mars", _
                                         "Avril", "Mai", "Juin", _
                                         "juillet", "Aout", "Septembre", _
@@ -38,6 +38,7 @@
         Dim aShift As ScheduleShift
         Dim adocAvail As scheduleDocAvailable
         Dim anExitNotice As Boolean = False
+        Dim firstDoc As String = ""
 
         For Each aday In controlledMonth.Days
             For Each aShift In aday.Shifts
@@ -47,15 +48,15 @@
                         If aShift.DocAvailabilities.Contains(aShift.Doc) Then
                             adocAvail = aShift.DocAvailabilities.Item(aShift.Doc)
                             adocAvail.Availability = PublicEnums.Availability.Dispo
-                            fixAvailability(aShift.Doc, controlledMonth, aShift)
+                            firstDoc = aShift.Doc
                         End If
                     End If
 
-                    'assign new doc
+                    ''assign new doc
                     If aShift.DocAvailabilities.Contains(Target.Value) Then
                         adocAvail = aShift.DocAvailabilities.Item(Target.Value)
                         adocAvail.Availability = PublicEnums.Availability.Assigne
-                        fixAvailability(Target.Value, controlledMonth, aShift)
+                        fixAvailability(Target.Value, controlledMonth, aShift, firstDoc)
                         aShift.Doc = Target.Value
                         anExitNotice = True
                     End If
@@ -64,7 +65,11 @@
             Next
             If anExitNotice = True Then Exit For
         Next
-        If anExitNotice = True Then statsMensuelles()
+        If anExitNotice = True Then
+            ' resetSheet()
+            statsMensuelles()
+        End If
+
     End Sub
 
     Public Sub HighLightDocAvailablilities(Initials As String)
@@ -98,7 +103,7 @@
         Next
     End Sub
 
-    Private Sub fixAvailability(aDoc As String, aMonth As ScheduleMonth, ashift As ScheduleShift)
+    Private Sub fixAvailability(aDoc As String, aMonth As ScheduleMonth, ashift As ScheduleShift, Optional firstDoc As String = "")
         Dim theDate As Date = ashift.aDate
         Dim theShift As Integer = ashift.ShiftType
         Dim theshiftStart As Integer = ashift.ShiftStart
@@ -107,42 +112,72 @@
         Dim theStopDay As Integer = theDate.Day + 1
         Dim myShift As ScheduleShift
         Dim aDay As ScheduleDay = aMonth.Days(ashift.aDate.Day)
-        For Each myShift In aDay.Shifts
-            If myShift.ShiftStop > ashift.ShiftStart - theRestTime Or ashift.ShiftStop + 920 > myShift.ShiftStart Then
-                Dim thedocAvail As scheduleDocAvailable
-                thedocAvail = myShift.DocAvailabilities.Item(aDoc)
-                If thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
-                        thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
-                    thedocAvail.Availability = PublicEnums.Availability.NonDispoTemporaire
-                    fixlist(myShift)
-                End If
-            End If
-        Next
-        aDay = aMonth.Days(ashift.aDate.Day - 1) 'FIX: check if first day of month
-        For Each myShift In aDay.Shifts
-            If myShift.ShiftStop > ashift.ShiftStart - theRestTime + 1440 Then
-                Dim thedocAvail As scheduleDocAvailable
-                thedocAvail = myShift.DocAvailabilities.Item(aDoc)
-                If thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
-                        thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
-                    thedocAvail.Availability = PublicEnums.Availability.NonDispoTemporaire
-                    fixlist(myShift)
-                End If
+        Dim nonDispoStart As Long
+        Dim nonDispoStop As Long
+        Dim shftStop As Long
+        Dim shftStart As Long
+        Dim RecheckCollection As New Collection
+        Dim RecheckShift As ScheduleShift
 
+        For x As Integer = ashift.aDate.Day - 1 To ashift.aDate.Day + 1
+            If aMonth.Days.Contains(x.ToString()) Then
+                aDay = aMonth.Days.Item(x.ToString())
+                For Each myShift In aDay.Shifts
+   
+                    nonDispoStart = ashift.aDate.Ticks + CLng(ashift.ShiftStart) * 600000000 - theRestTime
+                    nonDispoStop = ashift.aDate.Ticks + CLng(ashift.ShiftStop) * 600000000 + theRestTime
+                    shftStop = myShift.aDate.Ticks + CLng(myShift.ShiftStop) * 600000000
+                    shftStart = myShift.aDate.Ticks + CLng(myShift.ShiftStart) * 600000000
+                    Dim thedocAvail As scheduleDocAvailable
+
+                    If firstDoc <> "" Then 'do opposite of the top one
+                        'then check if this doc is assigned in prevous or next day
+                        'if yes redo fixavailability on either or both of those if not leave as is
+                        If myShift.DocAvailabilities.Contains(firstDoc) Then
+                            thedocAvail = myShift.DocAvailabilities.Item(firstDoc)
+                            If thedocAvail.Availability = PublicEnums.Availability.Assigne Then
+                                RecheckCollection.Add(myShift)
+                            End If
+                        End If
+                    End If
+
+                    If (shftStart > nonDispoStart And shftStart < nonDispoStop) Or _
+                                       (shftStop > nonDispoStart And shftStop < nonDispoStop) Or _
+                                       (shftStart > nonDispoStart And shftStop < nonDispoStop) Then
+
+                        thedocAvail = myShift.DocAvailabilities.Item(aDoc)
+                        If thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
+                                thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
+                            thedocAvail.Availability = PublicEnums.Availability.NonDispoTemporaire
+                            fixlist(myShift)
+                        End If
+
+                        If firstDoc <> "" Then 'do opposite of the top one
+                            'then check if this doc is assigned in prevous or next day
+                            'if yes redo fixavailability on either or both of those if not leave as is
+                            If myShift.DocAvailabilities.Contains(firstDoc) Then
+                                thedocAvail = myShift.DocAvailabilities.Item(firstDoc)
+                                If thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
+                                thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
+                                    thedocAvail.Availability = PublicEnums.Availability.Dispo
+
+                                    fixlist(myShift)
+
+                                End If
+                            End If
+                        End If
+
+                        
+                    End If
+                Next
             End If
         Next
-        aDay = aMonth.Days(ashift.aDate.Day + 1) 'FIX: check if last day of month
-        For Each myShift In aDay.Shifts
-            If ashift.ShiftStop + theRestTime - 1440 > myShift.ShiftStart Then
-                Dim thedocAvail As scheduleDocAvailable
-                thedocAvail = myShift.DocAvailabilities.Item(aDoc)
-                If thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
-                    thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
-                    thedocAvail.Availability = PublicEnums.Availability.NonDispoTemporaire
-                    fixlist(myShift)
-                End If
-            End If
-        Next
+
+        If RecheckCollection.Count > 0 Then
+            For Each RecheckShift In RecheckCollection
+                fixAvailability(firstDoc, aMonth, RecheckShift)
+            Next
+        End If
 
     End Sub
 
@@ -267,6 +302,10 @@
         Dim theScheduledoc As New ScheduleDoc(controlledMonth.Year, controlledMonth.Month)
         Dim docCollection As Collection = theScheduledoc.DocList
         Dim ascheduleDoc As ScheduleDoc
+        Dim nonDispoStart As Long
+        Dim nonDispoStop As Long
+        Dim shftStop As Long
+        Dim shftStart As Long
 
         'For Each doc in the total collection of doctors
         For Each ascheduleDoc In docCollection
@@ -278,28 +317,35 @@
                 For Each aSchedulenondispo In aCollection
 
                     'start with the day prior to the start of the unavailability (to cover the 0-8 shift)
-                    If controlledMonth.Days.Contains(aSchedulenondispo.DateStart.Day - 1) Then
-                        aDay = controlledMonth.Days.Item(aSchedulenondispo.DateStart.Day - 1)
-                        For Each ashift In aDay.Shifts
-                            If aSchedulenondispo.TimeStart + 1440 < ashift.ShiftStop Then
-                                Dim thedocAvail As scheduleDocAvailable
-                                If ashift.DocAvailabilities.Contains(ascheduleDoc.Initials) Then
-                                    thedocAvail = ashift.DocAvailabilities.Item(ascheduleDoc.Initials)
-                                    thedocAvail.Availability = PublicEnums.Availability.NonDispoPermanente
-                                    fixlist(ashift)
-                                End If
-                            End If
-                        Next
-                    End If
+                    'If controlledMonth.Days.Contains(aSchedulenondispo.DateStart.Day - 1) Then
+                    '    aDay = controlledMonth.Days.Item(aSchedulenondispo.DateStart.Day - 1)
+                    '    For Each ashift In aDay.Shifts
+                    '        If aSchedulenondispo.TimeStart + 1440 < ashift.ShiftStop Then
+                    '            Dim thedocAvail As scheduleDocAvailable
+                    '            If ashift.DocAvailabilities.Contains(ascheduleDoc.Initials) Then
+                    '                thedocAvail = ashift.DocAvailabilities.Item(ascheduleDoc.Initials)
+                    '                thedocAvail.Availability = PublicEnums.Availability.NonDispoPermanente
+                    '                fixlist(ashift)
+                    '            End If
+                    '        End If
+                    '    Next
+                    'End If
                     'FIX: non-dispos spanning more than one month
                     'cycle through the days included in the non dispo
 
-                    For y As Integer = aSchedulenondispo.DateStart.Day To aSchedulenondispo.DateStop.Day
+                    For y As Integer = aSchedulenondispo.DateStart.Day - 1 To aSchedulenondispo.DateStop.Day
                         If controlledMonth.Days.Contains(y) Then
                             aDay = controlledMonth.Days.Item(y)
                             For Each ashift In aDay.Shifts
-                                If (aSchedulenondispo.TimeStart < ashift.ShiftStop And aSchedulenondispo.DateStart <= ashift.aDate) Or _
-                                    (aSchedulenondispo.TimeStop > ashift.ShiftStart And aSchedulenondispo.DateStop >= ashift.aDate) Then
+                                nonDispoStart = aSchedulenondispo.DateStart.Ticks + CLng(aSchedulenondispo.TimeStart) * 600000000
+                                nonDispoStop = aSchedulenondispo.DateStop.Ticks + CLng(aSchedulenondispo.TimeStop) * 600000000
+                                shftStop = ashift.aDate.Ticks + CLng(ashift.ShiftStop) * 600000000
+                                shftStart = ashift.aDate.Ticks + CLng(ashift.ShiftStart) * 600000000
+
+                                If (shftStart > nonDispoStart And shftStart < nonDispoStop) Or _
+                                    (shftStop > nonDispoStart And shftStop < nonDispoStop) Or _
+                                    (shftStart > nonDispoStart And shftStop < nonDispoStop) Then
+
                                     Dim thedocAvail As scheduleDocAvailable
                                     thedocAvail = ashift.DocAvailabilities.Item(ascheduleDoc.Initials)
                                     thedocAvail.Availability = PublicEnums.Availability.NonDispoPermanente
