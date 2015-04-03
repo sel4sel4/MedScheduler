@@ -16,4 +16,8 @@ Public Class Ribbon1
         Dim aform1 As New Form1
         aform1.ShowDialog()
     End Sub
+
+    Private Sub Button3_Click(sender As Object, e As RibbonControlEventArgs) Handles Button3.Click
+        LoadDatabaseFileLocation()
+    End Sub
 End Class

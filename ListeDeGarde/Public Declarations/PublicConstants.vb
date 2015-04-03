@@ -118,23 +118,25 @@ Public Module MyGlobals
     'Public strSQL As String             'Query String
     Public FileAddress As String        'String to contain Excell database path and filename
     'Public GlobalDBAccessClass As DBAccessClass1
+    Public MySettingsGlobal As Settings1
+
 End Module
 
-'Public Module GlobalFunctions
+Public Module GlobalFunctions
 
-'    Public Sub LoadDatabaseFileLocation()
-'        If My.SettingsSettings.DataBaseLocation = "" Then
-'            Dim filedialog As OpenFileDialog = New OpenFileDialog()
-'            filedialog.Title = "Select Location of database file"
-'            filedialog.InitialDirectory = ""
-'            filedialog.Filter = "*.accdb"
-'            filedialog.RestoreDirectory = True
-'            If filedialog.ShowDialog() = DialogResult.OK Then
-'                Mysettings1.DataBaseLocation = filedialog.FileName
-'            End If
-'            Mysettings1.Save()
-'        End If
-'    End Sub
+    Public Sub LoadDatabaseFileLocation()
+        Dim filedialog As OpenFileDialog = New OpenFileDialog()
+        filedialog.Title = "Select Location of database file"
+        filedialog.InitialDirectory = ""
+        filedialog.Filter = "Access DB files (*.accdb)|*.txt"
+
+        filedialog.RestoreDirectory = True
+        If filedialog.ShowDialog() = DialogResult.OK Then
+            MySettingsGlobal.DataBaseLocation = filedialog.FileName
+        End If
+        MySettingsGlobal.Save()
+
+    End Sub
 
 
-'End Module
+End Module

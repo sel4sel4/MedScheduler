@@ -125,4 +125,8 @@ Public Class UserControl1
 
 
     End Sub
+
+    Private Sub NonDispoList_SelectionChanged(sender As Object, e As Windows.Controls.SelectionChangedEventArgs) Handles NonDispoList.SelectionChanged
+        Debug.WriteLine("the selected index is" + NonDispoList.SelectedIndex.ToString())
+    End Sub
 End Class

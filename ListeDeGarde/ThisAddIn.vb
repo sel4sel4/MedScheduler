@@ -23,21 +23,7 @@ Public Class ThisAddIn
         xlApp = Globals.ThisAddIn.Application
         theControllerCollection = New Collection
 
-        Dim Mysettings1 As New Settings1
-        Mysettings1.Reload()
-        If Mysettings1.DataBaseLocation = "" Then
-            Dim filedialog As OpenFileDialog = New OpenFileDialog()
-            filedialog.Title = "Select Location of database file"
-            filedialog.InitialDirectory = ""
-            filedialog.Filter = "*.accdb"
-            filedialog.RestoreDirectory = True
-            If filedialog.ShowDialog() = DialogResult.OK Then
-                Mysettings1.DataBaseLocation = filedialog.FileName
-            End If
-            Mysettings1.Save()
-        End If
-        CONSTFILEADDRESS = Mysettings1.DataBaseLocation
-
+        MySettingsGlobal = New Settings1
 
     End Sub
 

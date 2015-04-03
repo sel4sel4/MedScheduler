@@ -13,6 +13,10 @@ Public Class UserControl2
     Private Sub Button_Click(sender As Object, e As Windows.RoutedEventArgs)
         'get references to workbook
         Dim wb As Excel.Workbook = Globals.ThisAddIn.Application.ActiveWorkbook
+        If MySettingsGlobal.DataBaseLocation = "" Then
+            LoadDatabaseFileLocation()
+        Else : CONSTFILEADDRESS = MySettingsGlobal.DataBaseLocation
+        End If
 
         'if sheet already exists exit
         If Globals.ThisAddIn.theControllerCollection.Contains(Me.combo1.Text + "-" + Me.combo2.Text) Then Exit Sub
@@ -24,6 +28,8 @@ Public Class UserControl2
 
         'rename the new sheet
         Globals.ThisAddIn.xlSheet1.Name = Me.combo2.Text + "-" + Me.combo1.Text
+
+
 
         'Get list of doc names and create a button for each. Assign initals as button name
         Dim theScheduleDoc As New ScheduleDoc(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
