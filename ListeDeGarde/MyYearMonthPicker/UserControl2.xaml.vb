@@ -96,14 +96,15 @@ Public Class UserControl2
         Next
         If Globals.ThisAddIn.theControllerCollection.Count < 1 Then Exit Sub
         Dim theController As Controller
-        Try
+        If Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then
             theController = Globals.ThisAddIn.theControllerCollection(Globals.ThisAddIn.Application.ActiveSheet.name)
-        Catch ex As Exception
-        End Try
-        If Not IsNothing(theController) Then
-            Me.MoisAnnee.Content = theController.aControlledMonth.Year.ToString + "-" + monthstrings(theController.aControlledMonth.Month - 1)
-        Else : Me.MoisAnnee.Content = ""
+
+            If Not IsNothing(theController) Then
+                Me.MoisAnnee.Content = theController.aControlledMonth.Year.ToString + "-" + monthstrings(theController.aControlledMonth.Month - 1)
+            Else : Me.MoisAnnee.Content = ""
+            End If
         End If
+
     End Sub
 
     Public Sub New()

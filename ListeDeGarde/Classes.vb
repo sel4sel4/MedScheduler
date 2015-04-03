@@ -1,5 +1,6 @@
 ﻿Imports System.Diagnostics
 Imports System.Windows.Forms
+Imports System.Configuration
 
 Public Class ScheduleYear
     Private pYear As Integer
@@ -1172,5 +1173,8 @@ Public Class SQLStrBuilder
 
 
 End Class
+
+
+
 
 

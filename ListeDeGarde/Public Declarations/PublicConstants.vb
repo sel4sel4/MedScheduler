@@ -1,8 +1,10 @@
-﻿Public Module PublicConstants
+﻿Imports System.Windows.Forms
+
+Public Module PublicConstants
 
     ' --------------------DB Address
-    Public Const CONSTFILEADDRESS As String = "C:\Users\Martin\Documents\Scheduling Mira\ListesDeGarde.accdb"
-
+    'Public const CONSTFILEADDRESS As String = "C:\Users\Martin\Documents\Scheduling Mira\ListesDeGarde.accdb"
+    Public CONSTFILEADDRESS As String
     '----------------------Table Name Mapping
 
     'DB Access constants for Table ScheduleShiftType
@@ -117,3 +119,22 @@ Public Module MyGlobals
     Public FileAddress As String        'String to contain Excell database path and filename
     'Public GlobalDBAccessClass As DBAccessClass1
 End Module
+
+'Public Module GlobalFunctions
+
+'    Public Sub LoadDatabaseFileLocation()
+'        If My.SettingsSettings.DataBaseLocation = "" Then
+'            Dim filedialog As OpenFileDialog = New OpenFileDialog()
+'            filedialog.Title = "Select Location of database file"
+'            filedialog.InitialDirectory = ""
+'            filedialog.Filter = "*.accdb"
+'            filedialog.RestoreDirectory = True
+'            If filedialog.ShowDialog() = DialogResult.OK Then
+'                Mysettings1.DataBaseLocation = filedialog.FileName
+'            End If
+'            Mysettings1.Save()
+'        End If
+'    End Sub
+
+
+'End Module
