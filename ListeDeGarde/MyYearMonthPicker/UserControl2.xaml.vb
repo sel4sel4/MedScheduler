@@ -14,6 +14,9 @@ Public Class UserControl2
         'get references to workbook
         Dim wb As Excel.Workbook = Globals.ThisAddIn.Application.ActiveWorkbook
 
+        'if sheet already exists exit
+        If Globals.ThisAddIn.theControllerCollection.Contains(Me.combo1.Text + "-" + Me.combo2.Text) Then Exit Sub
+
         'create a new sheet
         Globals.ThisAddIn.xlSheet1 = _
             DirectCast(wb.Sheets.Add(After:=wb.Sheets(wb.Sheets.Count), _
@@ -34,6 +37,7 @@ Public Class UserControl2
 
         'create a controller instance and add it to the global collection
         Dim aController As New Controller(Globals.ThisAddIn.xlSheet1, CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1, Me.combo2.Text)
+
         Globals.ThisAddIn.theControllerCollection.Add(aController, Globals.ThisAddIn.xlSheet1.Name)
     End Sub
 
@@ -109,6 +113,13 @@ Public Class UserControl2
 
         ' Add any initialization after the InitializeComponent() call.
         Me.MoisAnnee.Content = ""
+    End Sub
+
+    Private Sub StatsBtn_Click(sender As Object, e As Windows.RoutedEventArgs) Handles StatsBtn.Click
+        'lauch action in controller
+        If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
+        Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
+        aController.statsMensuelles()
     End Sub
 End Class
 

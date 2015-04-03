@@ -31,18 +31,17 @@ Partial Class YearMonthPicker
         Me.ElementHost1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ElementHost1.Location = New System.Drawing.Point(0, 0)
         Me.ElementHost1.Name = "ElementHost1"
-        Me.ElementHost1.Size = New System.Drawing.Size(420, 364)
+        Me.ElementHost1.Size = New System.Drawing.Size(150, 150)
         Me.ElementHost1.TabIndex = 0
         Me.ElementHost1.Text = "ElementHost1"
         Me.ElementHost1.Child = Me.UserControl21
         '
-        'UserControl3
+        'YearMonthPicker
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.Controls.Add(Me.ElementHost1)
-        Me.Name = "UserControl3"
-        Me.Size = New System.Drawing.Size(420, 364)
+        Me.Name = "YearMonthPicker"
         Me.ResumeLayout(False)
 
     End Sub

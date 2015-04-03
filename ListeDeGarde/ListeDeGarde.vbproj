@@ -189,17 +189,16 @@
     <Compile Include="Controller.vb" />
     <Compile Include="Classes.vb" />
     <Compile Include="Public Declarations\PublicConstants.vb" />
-    <Compile Include="Using EventsModules\UseDelegateM.vb" />
-    <Compile Include="MyYearMonthPicker\UserControl2.xaml.vb">
-      <DependentUpon>UserControl2.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MyYearMonthPicker\YearMonthPicker.Designer.vb">
       <DependentUpon>YearMonthPicker.vb</DependentUpon>
     </Compile>
     <Compile Include="MyYearMonthPicker\YearMonthPicker.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Using EventsModules\UseWithEventsM.vb" />
+    <Compile Include="Using EventsModules\UseDelegateM.vb" />
+    <Compile Include="MyYearMonthPicker\UserControl2.xaml.vb">
+      <DependentUpon>UserControl2.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Ribbon1.Designer.vb">
       <DependentUpon>Ribbon1.vb</DependentUpon>
     </Compile>
@@ -209,11 +208,11 @@
     <Compile Include="ThisAddIn.vb">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="MyYearMonthPicker\YearMonthPicker.resx">
-      <DependentUpon>YearMonthPicker.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Ribbon1.resx">
       <DependentUpon>Ribbon1.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MyYearMonthPicker\YearMonthPicker.resx">
+      <DependentUpon>YearMonthPicker.vb</DependentUpon>
     </EmbeddedResource>
     <None Include="ListeDeGarde_TemporaryKey.pfx" />
     <None Include="ThisAddIn.Designer.xml">

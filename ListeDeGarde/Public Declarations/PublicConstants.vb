@@ -20,6 +20,12 @@
     Public Const SQLInitials = "Initials"
     'Public Const SQLActive = "Active"
 
+    'DB Access constants for Table ScheduleData
+    Public Const TABLE_ScheduleData = "TABLE_ScheduleData"
+    Public Const SQLDate = "aDate"
+    'Public Const SQLShiftType = "ShiftType"
+    'Public Const SQLInitials = "Initials"
+
     '-----------------------Default Values
     Public Const DEFAULTDATE As Long = 29221
 End Module
@@ -32,6 +38,11 @@ Public Module PublicStructures
     Public Structure T_DBRefTypeS
         Dim theSQLName As String
         Dim theValue As String
+    End Structure
+
+    Public Structure T_DBRefTypeA
+        Dim theSQLName As String
+        Dim theValue As Availability
     End Structure
 
     Public Structure T_DBRefTypeL
@@ -47,6 +58,11 @@ Public Module PublicStructures
     Public Structure T_DBRefTypeB
         Dim theSQLName As String
         Dim theValue As Boolean
+    End Structure
+
+    Public Structure T_DBRefTypeD
+        Dim theSQLName As String
+        Dim theValue As Date
     End Structure
 End Module
 

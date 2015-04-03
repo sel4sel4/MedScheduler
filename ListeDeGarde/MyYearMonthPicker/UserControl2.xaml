@@ -14,6 +14,7 @@
             <StackPanel x:Name="SplMain" HorizontalAlignment="Left" Height="307.04" VerticalAlignment="Top" Width="157" Background="#FFBBE4DD"/>
         </ScrollViewer>
         <Label x:Name="MoisAnnee" Content="Label" HorizontalAlignment="Left" Margin="10,409,0,0" VerticalAlignment="Top" Width="176" Height="26.96"/>
+        <Button x:Name="StatsBtn" Content="Stats Mensuelles" HorizontalAlignment="Left" Height="25.04" Margin="23,435.96,0,0" VerticalAlignment="Top" Width="120"/>
 
     </Grid>
 </UserControl>

@@ -17,7 +17,6 @@ Module UseDelegateSM
 
 
 
-
         'Start Excel and create a new workbook.
         xlApp = Globals.ThisAddIn.Application
         xlBook = Globals.ThisAddIn.Application.ActiveWorkbook

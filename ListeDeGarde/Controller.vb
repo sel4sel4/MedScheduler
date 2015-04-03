@@ -3,7 +3,7 @@
     Private controlledMonth As ScheduleMonth
     Private controlledShiftTypes As ScheduleShiftType
     Private monthloaded As Boolean = False
-
+    Private Const theRestTime As Integer = 12 * 60
     Public ReadOnly Property aControlledMonth() As ScheduleMonth
         Get
             Return controlledMonth
@@ -11,7 +11,7 @@
     End Property
 
     Public Sub New(aSheet As Excel.Worksheet, aYear As Integer, aMonth As Integer, aMonthString As String)
-
+        monthloaded = False
         'load the sheet
         controlledExcelSheet = aSheet
 
@@ -65,6 +65,27 @@
             If col = 6 Then row = row + 1
         Next
 
+        'check if data for this year and month already exist
+        Dim aTest As New scheduleDocAvailable(DateSerial(aYear, aMonth, 1))
+        Dim aCollection As Collection
+        Dim theDay2 As ScheduleDay
+        Dim theShift2 As ScheduleShift
+        Dim theDocAvailble As scheduleDocAvailable
+        aCollection = aTest.doesDataExistForThisMonth()
+        If Not IsNothing(aCollection) Then
+            Dim theAssignedDocs As scheduleDocAvailable
+            For Each theAssignedDocs In aCollection
+                theDay2 = controlledMonth.Days.Item(theAssignedDocs.Date_.Day)
+                theShift2 = theDay2.Shifts.Item(theAssignedDocs.ShiftType.ToString())
+                theShift2.Doc = theAssignedDocs.DocInitial
+                theDocAvailble = theShift2.DocAvailabilities(theAssignedDocs.DocInitial)
+                theDocAvailble.SetAvailabilityfromDB = PublicEnums.Availability.Assigne
+                theShift2.aRange.Value = theAssignedDocs.DocInitial
+                fixAvailability(theShift2.Doc, controlledMonth, theShift2)
+            Next
+
+        End If
+
         monthloaded = True
 
     End Sub
@@ -73,7 +94,7 @@
 
         If monthloaded = False Then Exit Sub
 
-        System.Diagnostics.Debug.WriteLine("WithEvents: You Changed Cells " + Target.Address + " " + controlledExcelSheet.Name)
+        'System.Diagnostics.Debug.WriteLine("WithEvents: You Changed Cells " + Target.Address + " " + controlledExcelSheet.Name)
         Dim aday As ScheduleDay
         Dim aShift As ScheduleShift
         Dim adocAvail As scheduleDocAvailable
@@ -82,20 +103,29 @@
         For Each aday In controlledMonth.Days
             For Each aShift In aday.Shifts
                 If aShift.aRange.Address = Target.Address Then
-                    For Each adocAvail In aShift.DocAvailabilities
-                        If adocAvail.DocInitial = Target.Value Then
-                            adocAvail.Availability = PublicEnums.Availability.Assigne
-                            fixAvailability(Target.Value, controlledMonth, aShift)
-                            anExitNotice = True
-                            Exit For
+                    'make current Doc dispo again
+                    If Not IsNothing(aShift.Doc) Then
+                        If aShift.DocAvailabilities.Contains(aShift.Doc) Then
+                            adocAvail = aShift.DocAvailabilities.Item(aShift.Doc)
+                            adocAvail.Availability = PublicEnums.Availability.Dispo
+                            fixAvailability(aShift.Doc, controlledMonth, aShift)
                         End If
-                        If anExitNotice = True Then Exit For
-                    Next
+                    End If
+
+                    'assign new doc
+                    If aShift.DocAvailabilities.Contains(Target.Value) Then
+                        adocAvail = aShift.DocAvailabilities.Item(Target.Value)
+                        adocAvail.Availability = PublicEnums.Availability.Assigne
+                        fixAvailability(Target.Value, controlledMonth, aShift)
+                        aShift.Doc = Target.Value
+                        anExitNotice = True
+                    End If
                 End If
                 If anExitNotice = True Then Exit For
             Next
             If anExitNotice = True Then Exit For
         Next
+        If anExitNotice = True Then statsMensuelles()
     End Sub
 
     Public Sub HighLightDocAvailablilities(Initials As String)
@@ -139,44 +169,39 @@
         Dim myShift As ScheduleShift
         Dim aDay As ScheduleDay = aMonth.Days(ashift.aDate.Day)
         For Each myShift In aDay.Shifts
-            If myShift.ShiftStop > ashift.ShiftStart - 920 Or ashift.ShiftStop + 920 > myShift.ShiftStart Then
+            If myShift.ShiftStop > ashift.ShiftStart - theRestTime Or ashift.ShiftStop + 920 > myShift.ShiftStart Then
                 Dim thedocAvail As scheduleDocAvailable
-                For Each thedocAvail In myShift.DocAvailabilities
-                    If thedocAvail.DocInitial = aDoc And _
-                            thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
-                            thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
-                        thedocAvail.Availability = PublicEnums.Availability.NonDispoTemporaire
-                        fixlist(myShift)
-                    End If
-                Next
+                thedocAvail = myShift.DocAvailabilities.Item(aDoc)
+                If thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
+                        thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
+                    thedocAvail.Availability = PublicEnums.Availability.NonDispoTemporaire
+                    fixlist(myShift)
+                End If
             End If
         Next
         aDay = aMonth.Days(ashift.aDate.Day - 1) 'FIX: check if first day of month
         For Each myShift In aDay.Shifts
-            If myShift.ShiftStop > ashift.ShiftStart - 920 + 1440 Then
+            If myShift.ShiftStop > ashift.ShiftStart - theRestTime + 1440 Then
                 Dim thedocAvail As scheduleDocAvailable
-                For Each thedocAvail In myShift.DocAvailabilities
-                    If thedocAvail.DocInitial = aDoc And _
-                        thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
+                thedocAvail = myShift.DocAvailabilities.Item(aDoc)
+                If thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
                         thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
-                        thedocAvail.Availability = PublicEnums.Availability.NonDispoTemporaire
-                        fixlist(myShift)
-                    End If
-                Next
+                    thedocAvail.Availability = PublicEnums.Availability.NonDispoTemporaire
+                    fixlist(myShift)
+                End If
+
             End If
         Next
         aDay = aMonth.Days(ashift.aDate.Day + 1) 'FIX: check if last day of month
         For Each myShift In aDay.Shifts
-            If ashift.ShiftStop + 920 - 1440 > myShift.ShiftStart Then
+            If ashift.ShiftStop + theRestTime - 1440 > myShift.ShiftStart Then
                 Dim thedocAvail As scheduleDocAvailable
-                For Each thedocAvail In myShift.DocAvailabilities
-                    If thedocAvail.DocInitial = aDoc And _
-                        thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
-                        thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
-                        thedocAvail.Availability = PublicEnums.Availability.NonDispoTemporaire
-                        fixlist(myShift)
-                    End If
-                Next
+                thedocAvail = myShift.DocAvailabilities.Item(aDoc)
+                If thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
+                    thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
+                    thedocAvail.Availability = PublicEnums.Availability.NonDispoTemporaire
+                    fixlist(myShift)
+                End If
             End If
         Next
 
@@ -239,6 +264,58 @@
             .Weight = Excel.XlBorderWeight.xlThin
             .ColorIndex = Excel.Constants.xlAutomatic
         End With
+
+    End Sub
+
+    Private Sub controlledExcelSheet_BeforeDelete() Handles controlledExcelSheet.BeforeDelete
+
+        Globals.ThisAddIn.theControllerCollection.Remove(controlledExcelSheet.Name)
+
+    End Sub
+
+    Public Sub statsMensuelles()
+        Dim theShiftTypeCounts As Collection
+        Dim ascheduleshifttype As ScheduleShiftType
+        'pour chaque medecin compter chaque type de shift
+        Dim theScheduleDoc As New ScheduleDoc(controlledMonth.Year, controlledMonth.Month)
+        Dim aScheduleDoc As ScheduleDoc
+        Dim ashift As ScheduleShift
+        Dim aDay As ScheduleDay
+        Dim StartingRange As Excel.Range
+        StartingRange = controlledExcelSheet.Range("p3")
+
+        For Each ascheduleshifttype In globalShiftTypes.ShiftCollection
+            StartingRange.Offset(-1, ascheduleshifttype.ShiftType).Value = "'" + ascheduleshifttype.Description
+        Next
+
+        Dim aDOcAvail As scheduleDocAvailable
+        For Each aScheduleDoc In theScheduleDoc.DocList
+            StartingRange.Value = aScheduleDoc.Initials
+            theShiftTypeCounts = New Collection
+
+            For Each ascheduleshifttype In globalShiftTypes.ShiftCollection
+                StartingRange.Offset(0, ascheduleshifttype.ShiftType).Value = 0
+            Next
+
+
+            For Each aDay In controlledMonth.Days
+                For Each ashift In aDay.Shifts
+                    aDOcAvail = ashift.DocAvailabilities(aScheduleDoc.Initials)
+                    If aDOcAvail.Availability = PublicEnums.Availability.Assigne Then
+                        StartingRange.Offset(0, aDOcAvail.ShiftType).Value = StartingRange.Offset(0, aDOcAvail.ShiftType).Value + 1
+                    End If
+                Next
+
+            Next
+
+
+            StartingRange = StartingRange.Offset(1, 0)
+        Next
+        'noter le medecin sur le WS
+        'dans un array de dimension n= types de shifts
+        'compter les assignations
+        'transferer les donnees sur la page
+
 
     End Sub
 

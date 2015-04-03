@@ -99,7 +99,7 @@ Public Class ScheduleDay
                                               aShiftType.ShiftStart, _
                                               aShiftType.ShiftStop, _
                                               aShiftType.Description)
-            pShifts.Add(theShift)
+            pShifts.Add(theShift, aShiftType.ShiftType.ToString())
         Next
 
     End Sub
@@ -201,11 +201,11 @@ Public Class ScheduleShift
                                                                PublicEnums.Availability.Dispo, _
                                                                pDate, _
                                                                pShiftType)
-            pDocAvailabilities.Add(theScheduleDocAvailable)
+            pDocAvailabilities.Add(theScheduleDocAvailable, aScheduleDoc.Initials)
         Next
 
     End Sub
-    Public Sub addDoc(aDOc As String)
+    Public Sub addDoc(aDoc As String)
         'modify tally for the doc
         'change docs schedule
     End Sub
@@ -399,42 +399,62 @@ Public Class ScheduleDoc
 End Class
 
 Public Class scheduleDocAvailable
-
-    Private pDocInitial As String
-    Private pAvailability As Availability
-    Private pDate As Date
-    Private pShiftType As Integer
+    Const kTicksToDays As Long = 864000000000
+    Private pDocInitial As T_DBRefTypeS
+    Private pAvailability As PublicEnums.Availability
+    Private pDate As T_DBRefTypeD
+    Private pShiftType As T_DBRefTypeI
 
     Public Property DocInitial() As String
         Get
-            Return pDocInitial
+            Return pDocInitial.theValue
         End Get
         Set(ByVal value As String)
-            pDocInitial = value
+            pDocInitial.theValue = value
         End Set
     End Property
-    Public Property Availability() As Integer
+    Public Property Availability() As PublicEnums.Availability
         Get
             Return pAvailability
         End Get
-        Set(ByVal value As Integer)
+        Set(ByVal value As PublicEnums.Availability)
+            If value = PublicEnums.Availability.Assigne Then UpdateScheduleDataTable(value)
             pAvailability = value
         End Set
     End Property
-    Public Property Date_() As Date
-        Get
-            Return pDate
-        End Get
-        Set(ByVal value As Date)
-            pDate = value
+
+    Public WriteOnly Property SetAvailabilityfromDB() As PublicEnums.Availability
+        Set(ByVal value As PublicEnums.Availability)
+            pAvailability = value
         End Set
     End Property
+
+    Public Property Date_() As Date
+        Get
+            Return pDate.theValue
+        End Get
+        Set(ByVal value As Date)
+            pDate.theValue = value
+        End Set
+    End Property
+
+    Public Property DateL() As Long
+        Get
+            Return pDate.theValue.Ticks / kTicksToDays
+        End Get
+        Set(ByVal value As Long)
+            Dim aDateType As DateTime
+            aDateType = New DateTime(value * kTicksToDays)
+            pDate.theValue = DateSerial(aDateType.Year, aDateType.Month, aDateType.Day)
+        End Set
+    End Property
+
     Public Property ShiftType() As Integer
         Get
-            Return pShiftType
+            Return pShiftType.theValue
         End Get
         Set(ByVal value As Integer)
-            pShiftType = value
+            pShiftType.theValue = value
         End Set
     End Property
 
@@ -442,11 +462,107 @@ Public Class scheduleDocAvailable
                    aAvailability As Integer, _
                    aDate As Date, _
                    aShiftType As Integer)
-        pDocInitial = aDocInitial
+
+        pDocInitial.theSQLName = SQLInitials
+        pDate.theSQLName = SQLDate
+        pShiftType.theSQLName = SQLShiftType
+
+        pDocInitial.theValue = aDocInitial
         pAvailability = aAvailability
-        pDate = aDate
-        pShiftType = aShiftType
+        pDate.theValue = aDate
+        pShiftType.theValue = aShiftType
     End Sub
+
+    Public Sub New(aDate As Date)
+        pDocInitial.theSQLName = SQLInitials
+        pDate.theSQLName = SQLDate
+        pShiftType.theSQLName = SQLShiftType
+
+        pDate.theValue = aDate
+    End Sub
+
+    Public Sub New()
+        pDocInitial.theSQLName = SQLInitials
+        pDate.theSQLName = SQLDate
+        pShiftType.theSQLName = SQLShiftType
+    End Sub
+
+    Public Sub UpdateScheduleDataTable(theAvail As Integer)
+        'check if an entry already exists for this date and shift
+        Dim theBuiltSql As New SQLStrBuilder
+        Dim theRS As New ADODB.Recordset
+        Dim theDBAC As New DBAC
+
+        With theBuiltSql
+            .SQL_Select("*")
+            .SQL_From(TABLE_ScheduleData)
+            .SQL_Where(pDate.theSQLName, "=", DateL)
+            .SQL_Where(pShiftType.theSQLName, "=", pShiftType.theValue)
+            theDBAC.COpenDB(.SQLStringSelect, theRS)
+        End With
+
+        Dim theCount As Integer = theRS.RecordCount
+
+        Select Case theCount
+            Case 0  'if not create a new entry
+                With theBuiltSql
+                    .SQLClear()
+                    .SQL_Insert(TABLE_ScheduleData)
+                    .SQL_Values(pDate.theSQLName, DateL)
+                    .SQL_Values(pShiftType.theSQLName, pShiftType.theValue)
+                    .SQL_Values(pDocInitial.theSQLName, pDocInitial.theValue)
+                    Dim numaffected As Integer
+                    theDBAC.CExecuteDB(.SQLStringInsert, numaffected)
+                    Debug.WriteLine(.SQLStringInsert)
+                    Debug.WriteLine("Number of databaseentries" + numaffected.ToString())
+                End With
+
+            Case 1 'if yes update it with the new value
+                theRS.Fields(pDocInitial.theSQLName).Value = pDocInitial.theValue
+                theRS.ActiveConnection = theDBAC.aConnection
+                theRS.UpdateBatch()
+                theRS.Close()
+            Case Else
+                Debug.WriteLine("there is more than one copy of this entry ... this is bad")
+
+
+        End Select
+    End Sub
+
+    Public Function doesDataExistForThisMonth() As Collection
+
+        Dim theBuiltSql As New SQLStrBuilder
+        Dim theRS As New ADODB.Recordset
+        Dim theDBAC As New DBAC
+        Dim startdate As Date
+        Dim stopdate As Date
+        startdate = DateSerial(pDate.theValue.Year, pDate.theValue.Month, 1)
+        stopdate = DateSerial(pDate.theValue.Year, pDate.theValue.Month + 1, 1)
+        With theBuiltSql
+            .SQL_Select("*")
+            .SQL_From(TABLE_ScheduleData)
+            .SQL_Where(pDate.theSQLName, ">=", startdate.Ticks / kTicksToDays)
+            .SQL_Where(pDate.theSQLName, "<", stopdate.Ticks / kTicksToDays)
+            theDBAC.COpenDB(.SQLStringSelect, theRS)
+        End With
+
+        If theRS.RecordCount > 0 Then
+            Dim aScheduleDocAvailable As scheduleDocAvailable
+            Dim aCollection As New Collection
+            theRS.MoveFirst()
+            For x As Integer = 1 To theRS.RecordCount
+                aScheduleDocAvailable = New scheduleDocAvailable
+                aScheduleDocAvailable.DocInitial = theRS.Fields(Me.pDocInitial.theSQLName).Value
+                aScheduleDocAvailable.DateL = theRS.Fields(Me.pDate.theSQLName).Value
+                aScheduleDocAvailable.ShiftType = theRS.Fields(Me.pShiftType.theSQLName).Value
+                aCollection.Add(aScheduleDocAvailable)
+                theRS.MoveNext()
+            Next
+            Return aCollection
+        End If
+        Return Nothing
+    End Function
+
 End Class
 
 Public Class DBAC
@@ -460,6 +576,12 @@ Public Class DBAC
     Private theConnectionState As Long
     Private mConnectionString As String
     Private mConnection As ADODB.Connection
+    Public ReadOnly Property aConnection() As ADODB.Connection
+        Get
+            Return mConnection
+        End Get
+    End Property
+
 
     Public Sub New()
         On Error GoTo errhandler
@@ -722,6 +844,12 @@ Public Class SQLStrBuilder
                 Else
                     theValueStr = theValue
                 End If
+            Case "Date"
+                If isFieldName = False Then
+                    theValueStr = "#" & theValue & "#"
+                Else
+                    theValueStr = theValue
+                End If
             Case "Boolean"
                 If theValue = True Then
                     theValueStr = "true"
@@ -836,6 +964,8 @@ Public Class SQLStrBuilder
         Select Case TypeName(theValue)
             Case "String"
                 theValueStr = "'" & theValue & "'"
+            Case "Date"
+                theValueStr = "#" & theValue & "#"
             Case Else
                 theValueStr = CStr(theValue)
         End Select
