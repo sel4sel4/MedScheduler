@@ -514,8 +514,8 @@ Public Class scheduleDocAvailable
                     .SQL_Values(pDocInitial.theSQLName, pDocInitial.theValue)
                     Dim numaffected As Integer
                     theDBAC.CExecuteDB(.SQLStringInsert, numaffected)
-                    Debug.WriteLine(.SQLStringInsert)
-                    Debug.WriteLine("Number of databaseentries" + numaffected.ToString())
+                    'Debug.WriteLine(.SQLStringInsert)
+                    'Debug.WriteLine("Number of databaseentries" + numaffected.ToString())
                 End With
 
             Case 1 'if yes update it with the new value
@@ -524,7 +524,7 @@ Public Class scheduleDocAvailable
                 theRS.UpdateBatch()
                 theRS.Close()
             Case Else
-                Debug.WriteLine("there is more than one copy of this entry ... this is bad")
+                'Debug.WriteLine("there is more than one copy of this entry ... this is bad")
 
 
         End Select
@@ -780,7 +780,7 @@ errhandler:
         theRS.CursorLocation = ADODB.CursorLocationEnum.adUseClient
 
         On Error GoTo errhandler
-        Debug.Print(theSQLstr)
+        'Debug.Print(theSQLstr)
         theRS.Open(theSQLstr, _
                    mConnection, _
                    ADODB.CursorTypeEnum.adOpenKeyset, _

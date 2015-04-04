@@ -28,6 +28,7 @@ Public Class UserControl1
 
         If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
         Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
+        updateListview()
         aController.resetSheet()
 
 
@@ -72,6 +73,20 @@ Public Class UserControl1
 
     Private Sub DocList_SelectionChanged(sender As Object, e As Windows.Controls.SelectionChangedEventArgs) Handles DocList.SelectionChanged
 
+      
+        updateListview()
+
+
+
+
+    End Sub
+
+    Private Sub NonDispoList_SelectionChanged(sender As Object, e As Windows.Controls.SelectionChangedEventArgs) Handles NonDispoList.SelectionChanged
+        'Debug.WriteLine("the selected index is" + NonDispoList.SelectedIndex.ToString())
+    End Sub
+
+
+    Private Sub updateListview()
         NonDispoList.ItemsSource = Nothing
         Dim aYear As Integer, aMonth As Integer
         If Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then
@@ -84,6 +99,7 @@ Public Class UserControl1
             aYear = aDate.Year
             aMonth = aDate.Month
         End If
+
         Dim theSchedulenondispo As New ScheduleNonDispo
         Dim aSchedulenondispo As ScheduleNonDispo
         Dim acollection As Collection
@@ -120,13 +136,5 @@ Public Class UserControl1
 
             NonDispoList.ItemsSource = anArray
         End If
-
-
-
-
-    End Sub
-
-    Private Sub NonDispoList_SelectionChanged(sender As Object, e As Windows.Controls.SelectionChangedEventArgs) Handles NonDispoList.SelectionChanged
-        Debug.WriteLine("the selected index is" + NonDispoList.SelectedIndex.ToString())
     End Sub
 End Class

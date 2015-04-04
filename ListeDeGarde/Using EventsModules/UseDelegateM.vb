@@ -44,15 +44,15 @@ Module UseDelegateSM
 
     Private Sub CellsChange(ByVal Target As Excel.Range)
         'This is called when a cell or cells on a worksheet are changed.
-        System.Diagnostics.Debug.WriteLine("Delegate: You Changed Cells " + Target.Address + " on " + _
-                          Target.Worksheet.Name())
+        'System.Diagnostics.Debug.WriteLine("Delegate: You Changed Cells " + Target.Address + " on " + _
+        ' Target.Worksheet.Name())
     End Sub
 
     Private Sub BeforeBookClose(ByVal Wb As Excel.Workbook, ByRef Cancel As Boolean)
         'This is called when you choose to close the workbook in Excel.
         'The event handlers are removed, and then the workbook is closed 
         'without saving changes.
-        System.Diagnostics.Debug.WriteLine("Delegate: Closing the workbook and removing event handlers.")
+        'System.Diagnostics.Debug.WriteLine("Delegate: Closing the workbook and removing event handlers.")
         RemoveHandler xlSheet1.Change, EventDel_CellsChange
         RemoveHandler xlApp.WorkbookBeforeClose, EventDel_BeforeBookClose
         Wb.Saved = True 'Set the dirty flag to true so there is no prompt to save.

@@ -128,7 +128,7 @@ Public Module GlobalFunctions
         Dim filedialog As OpenFileDialog = New OpenFileDialog()
         filedialog.Title = "Select Location of database file"
         filedialog.InitialDirectory = ""
-        filedialog.Filter = "Access DB files (*.accdb)|*.txt"
+        filedialog.Filter = "Access DB files (*.accdb)|*.accdb"
 
         filedialog.RestoreDirectory = True
         If filedialog.ShowDialog() = DialogResult.OK Then

@@ -79,7 +79,7 @@ Public Class UserControl2
 
     Private Sub onBtnClick(ByVal sender As Object, ByVal e As Windows.RoutedEventArgs)
         Dim aButton As Button = CType(sender, Button)
-        Debug.WriteLine(aButton.Content)
+        'Debug.WriteLine(aButton.Content)
         If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
         Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
         aController.HighLightDocAvailablilities(aButton.Name)

@@ -37,13 +37,13 @@ Public Class ThisAddIn
         Dim theRange As Excel.Range
         theRange = xlSheet1.Range("a1")
         theRange.Value2 = "I have just opened"
-        System.Diagnostics.Debug.WriteLine("ThisAddin: opening the workbook")
+        'System.Diagnostics.Debug.WriteLine("ThisAddin: opening the workbook")
         xlBook.Saved = True 'Set the dirty flag to true so there is no prompt to save
     End Sub
 
     Private Sub xlApp_WorkbookBeforeClose(ByVal Wb As Excel.Workbook, _
   ByRef Cancel As Boolean) Handles xlApp.WorkbookBeforeClose
-        System.Diagnostics.Debug.WriteLine("WithEvents: Closing the workbook.")
+        'System.Diagnostics.Debug.WriteLine("WithEvents: Closing the workbook.")
         Wb.Saved = True 'Set the dirty flag to true so there is no prompt to save
     End Sub
 
