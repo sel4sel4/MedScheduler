@@ -6,7 +6,15 @@ ListeDeGarde
 </name>
 </assembly>
 <members>
-<member name="M:ListeDeGarde.UserControl1.InitializeComponent">
+<member name="M:ListeDeGarde.DrInterface.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:ListeDeGarde.DrInterface">
+	<summary>
+DrInterface
+</summary>
+</member><member name="M:ListeDeGarde.UserControl1.InitializeComponent">
 	<summary>
 InitializeComponent
 </summary>

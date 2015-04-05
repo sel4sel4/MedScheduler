@@ -715,7 +715,7 @@ Public Class ScheduleNonDispo
                 If Not IsDBNull(theRS.Fields(pTimeStart.theSQLName).Value) Then ascheduleNonDispo.TimeStart = theRS.Fields(pTimeStart.theSQLName).Value
                 If Not IsDBNull(theRS.Fields(pDateStop.theSQLName).Value) Then ascheduleNonDispo.DateStopL = theRS.Fields(pDateStop.theSQLName).Value
                 If Not IsDBNull(theRS.Fields(pTimeStop.theSQLName).Value) Then ascheduleNonDispo.TimeStop = theRS.Fields(pTimeStop.theSQLName).Value
-                aCollection.Add(ascheduleNonDispo)
+                aCollection.Add(ascheduleNonDispo, x.ToString())
                 theRS.MoveNext()
             Next
             Return aCollection
@@ -724,9 +724,29 @@ Public Class ScheduleNonDispo
     End Function
 
     
-
+    Public Sub Delete()
+        Dim theBuiltSql As New SQLStrBuilder
+        Dim theDBAC As New DBAC
+        Dim numaffected As Integer
+        With theBuiltSql
+            .SQL_From(Table_NonDispo)
+            .SQL_Where(pDocInitial.theSQLName, "=", DocInitial)
+            .SQL_Where(pDateStop.theSQLName, "=", DateStopL)
+            .SQL_Where(pDateStart.theSQLName, "=", DateStartL)
+            .SQL_Where(pTimeStop.theSQLName, "=", TimeStop)
+            .SQL_Where(pTimeStart.theSQLName, "=", TimeStart)
+            theDBAC.CExecuteDB(.SQLStringDelete, numaffected)
+        End With
+    End Sub
 
 End Class
+
+
+
+
+
+
+
 
 Public Class DBAC
 

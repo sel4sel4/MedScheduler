@@ -23,3 +23,6 @@ C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\GetNonDispos\UserControl1.g.vb
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde.Form1.resources
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\bin\Debug\ListeDeGarde.dll.config
+C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\DrInterface\DrInterfaceWPF.baml
+C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\DrInterface\DrInterfaceWPF.g.vb
+C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde.DrInterfaceForm.resources

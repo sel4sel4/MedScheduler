@@ -211,6 +211,12 @@
     <AppDesigner Include="My Project\" />
     <Compile Include="Controller.vb" />
     <Compile Include="Classes.vb" />
+    <Compile Include="DrInterface\DrInterfaceForm.Designer.vb">
+      <DependentUpon>DrInterfaceForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DrInterface\DrInterfaceForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GetNonDispos\Form1.Designer.vb">
       <DependentUpon>Form1.vb</DependentUpon>
     </Compile>
@@ -233,6 +239,9 @@
       <DependentUpon>Settings1.settings</DependentUpon>
     </Compile>
     <Compile Include="Settings1.vb" />
+    <Compile Include="DrInterface\DrInterfaceWPF.xaml.vb">
+      <DependentUpon>DrInterfaceWPF.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Using EventsModules\UseDelegateM.vb" />
     <Compile Include="MyYearMonthPicker\UserControl2.xaml.vb">
       <DependentUpon>UserControl2.xaml</DependentUpon>
@@ -246,6 +255,9 @@
     <Compile Include="ThisAddIn.vb">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="DrInterface\DrInterfaceForm.resx">
+      <DependentUpon>DrInterfaceForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GetNonDispos\Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
     </EmbeddedResource>
@@ -257,6 +269,7 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="ListeDeGarde_TemporaryKey.pfx" />
+    <None Include="My Project\DataSources\ScheduleDoc.datasource" />
     <None Include="Settings1.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings1.Designer.vb</LastGenOutput>
@@ -342,6 +355,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GetNonDispos\UserControl1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DrInterface\DrInterfaceWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

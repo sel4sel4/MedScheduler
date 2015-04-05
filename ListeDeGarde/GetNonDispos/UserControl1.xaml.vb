@@ -1,5 +1,5 @@
 ﻿Imports System.Diagnostics
-
+Imports System.Windows.Controls
 Public Class UserControl1
     Private theDocList() As String
     Private theInitialsList() As String
@@ -11,6 +11,7 @@ Public Class UserControl1
                                     "15:00", "16:00", "17:00", _
                                     "18:00", "19:00", "20:00", _
                                     "21:00", "22:00", "23:00"}
+    Private theNonDispoCollection As Collection
 
     Private Sub AddNonDispo_Click(sender As Object, e As Windows.RoutedEventArgs) Handles AddNonDispo.Click
         
@@ -69,16 +70,12 @@ Public Class UserControl1
             x = x + 1
         Next
         Me.DocList.ItemsSource = theDocList
+
+
     End Sub
 
     Private Sub DocList_SelectionChanged(sender As Object, e As Windows.Controls.SelectionChangedEventArgs) Handles DocList.SelectionChanged
-
-      
         updateListview()
-
-
-
-
     End Sub
 
     Private Sub NonDispoList_SelectionChanged(sender As Object, e As Windows.Controls.SelectionChangedEventArgs) Handles NonDispoList.SelectionChanged
@@ -87,7 +84,8 @@ Public Class UserControl1
 
 
     Private Sub updateListview()
-        NonDispoList.ItemsSource = Nothing
+
+        'get year and month
         Dim aYear As Integer, aMonth As Integer
         If Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then
             Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
@@ -100,16 +98,28 @@ Public Class UserControl1
             aMonth = aDate.Month
         End If
 
+        Dim theListMenuItem As ListViewItem
+
+
+        'get nondispolist
         Dim theSchedulenondispo As New ScheduleNonDispo
         Dim aSchedulenondispo As ScheduleNonDispo
-        Dim acollection As Collection
-        Dim anArray() As String
-        acollection = theSchedulenondispo.GetNonDispoListForDoc(theInitialsList(DocList.SelectedIndex), aYear, aMonth)
-        If Not IsNothing(acollection) Then
-            ReDim anArray(0 To acollection.Count - 1)
-            Dim x As Integer = 0
-            For Each aSchedulenondispo In acollection
+        Dim x As Integer = 0
+        theNonDispoCollection = theSchedulenondispo.GetNonDispoListForDoc(theInitialsList(DocList.SelectedIndex), aYear, aMonth)
+        NonDispoList.Items.Clear()
+        If Not IsNothing(theNonDispoCollection) Then
 
+            Dim theContextMenu As New ContextMenu()
+            Dim theMenuItem1 As New MenuItem()
+            theMenuItem1.Header = "Delete"
+            Dim theMenuItem2 As New MenuItem()
+            theMenuItem2.Header = "Edit"
+            theContextMenu.DataContext = NonDispoList
+            AddHandler theMenuItem1.Click, AddressOf Me.MenuItem1Clicked
+            AddHandler theMenuItem2.Click, AddressOf Me.MenuItem2Clicked
+            theContextMenu.Items.Add(theMenuItem1)
+            theContextMenu.Items.Add(theMenuItem2)
+            For Each aSchedulenondispo In theNonDispoCollection
 
                 Dim myhours As Integer = aSchedulenondispo.TimeStart / 60
                 Dim myminutes As Integer = aSchedulenondispo.TimeStart - (myhours * 60)
@@ -118,9 +128,9 @@ Public Class UserControl1
                 myminutes = aSchedulenondispo.TimeStop - (myhours * 60)
                 Dim atime2 As New DateTime(1, 1, 1, myhours, myminutes, 0)
 
+                theListMenuItem = New ListViewItem()
 
-
-                anArray(x) = "Du " + Right("0" + aSchedulenondispo.DateStart.Day.ToString(), 2) + "/" + _
+                theListMenuItem.Content = "Du " + Right("0" + aSchedulenondispo.DateStart.Day.ToString(), 2) + "/" + _
                 Right("0" + aSchedulenondispo.DateStart.Month.ToString(), 2) + "/" + _
                 aSchedulenondispo.DateStart.Year.ToString() + "  " + _
                 Right("0" + atime.Hour.ToString(), 2) + ":" + Right("0" + atime.Minute.ToString(), 2) + " Au " + _
@@ -128,13 +138,34 @@ Public Class UserControl1
                 Right("0" + aSchedulenondispo.DateStop.Month.ToString(), 2) + "/" + _
                 aSchedulenondispo.DateStop.Year.ToString() + "  " + _
                 Right("0" + atime2.Hour.ToString(), 2) + ":" + Right("0" + atime2.Minute.ToString(), 2)
-                x = x + 1
 
+
+                theListMenuItem.ContextMenu = theContextMenu
+                NonDispoList.Items.Add(theListMenuItem)
             Next
 
-
-
-            NonDispoList.ItemsSource = anArray
         End If
+
+    End Sub
+
+    Private Sub MenuItem1Clicked(sender As Object, e As System.Windows.RoutedEventArgs)
+        Debug.WriteLine("MenuItem1Clicked")
+        Dim theMenuItem1 As MenuItem
+        theMenuItem1 = CType(sender, MenuItem)
+        Dim theContextmenu As ContextMenu
+        theContextmenu = theMenuItem1.Parent
+        Dim theListview As ListView
+        theListview = CType(theContextmenu.DataContext, ListView)
+        Debug.WriteLine("selcdted item is:" + theListview.SelectedIndex.ToString())
+        If theNonDispoCollection.Contains((theListview.SelectedIndex + 1).ToString()) Then
+            Dim theNonDispo As ScheduleNonDispo
+            theNonDispo = theNonDispoCollection(theListview.SelectedIndex + 1)
+            theNonDispo.delete()
+        End If
+        updateListview()
+    End Sub
+
+    Private Sub MenuItem2Clicked(sender As Object, e As System.Windows.RoutedEventArgs)
+        Debug.WriteLine("MenuItem2Clicked")
     End Sub
 End Class
