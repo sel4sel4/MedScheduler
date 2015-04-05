@@ -20,4 +20,9 @@ Public Class Ribbon1
     Private Sub Button3_Click(sender As Object, e As RibbonControlEventArgs) Handles Button3.Click
         LoadDatabaseFileLocation()
     End Sub
+
+    Private Sub Button4_Click(sender As Object, e As RibbonControlEventArgs) Handles Button4.Click
+        Dim aform1 As New DrInterfaceForm
+        aform1.ShowDialog()
+    End Sub
 End Class

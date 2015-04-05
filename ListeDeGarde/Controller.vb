@@ -362,7 +362,7 @@
     Public Sub resetSheet()
         monthloaded = False
 
-        Dim amonthstring As String = monthstrings(aControlledMonth.Month + 1)
+        Dim amonthstring As String = monthstrings(aControlledMonth.Month - 1)
 
         controlledExcelSheet.Cells.Clear()
         Dim theDay As ScheduleDay

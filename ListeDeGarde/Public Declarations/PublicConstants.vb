@@ -113,12 +113,18 @@ Public Module MyGlobals
     Public theRangeCollection As Collection
 
     ' Conenction Global variables
-    'Public cnn As New ADODB.Connection  'Connection object definition
+    Public cnn As New ADODB.Connection  'Connection object definition
     'Public rs As New ADODB.Recordset    'recordset object definition
     'Public strSQL As String             'Query String
     Public FileAddress As String        'String to contain Excell database path and filename
     'Public GlobalDBAccessClass As DBAccessClass1
     Public MySettingsGlobal As Settings1
+
+    Public monthstrings() As String = {"Janvier", "Février", "Mars", _
+                                    "Avril", "Mai", "Juin", _
+                                    "juillet", "Aout", "Septembre", _
+                                    "Octobre", "Novembre", "Décembre"}
+    Public yearstrings() As String = {"2014", "2015", "2016", "2017"}
 
 End Module
 

@@ -17,12 +17,14 @@
     	<ListView x:Name="NonDispoList" Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="256" Margin="22,85,0,0" VerticalAlignment="Top" Width="453">
     		<ListView.View>
     			<GridView>
-    				<GridViewColumn/>
+    				<GridViewColumn Width="Auto"></GridViewColumn>
     			</GridView>
     		</ListView.View>
     	</ListView>
     	<Button x:Name="AddNonDispo" Grid.ColumnSpan="3" Content="Add" HorizontalAlignment="Left" Margin="400,58.04,0,0" VerticalAlignment="Top" Width="75"/>
-    	<ComboBox x:Name="DocList" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="268" Margin="22,19,0,0"/>
+    	<ComboBox x:Name="DocList" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="268" Margin="22,19,0,0" SelectedIndex="0"/>
+    	<ComboBox x:Name="aMonth" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="321,19,0,0" VerticalAlignment="Top" Width="67" Loaded="aMonth_Loaded"/>
+    	<ComboBox x:Name="aYear" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="393,19,0,0" VerticalAlignment="Top" Width="67" Loaded="aYear_Loaded"/>
             
     </Grid>
 </UserControl>

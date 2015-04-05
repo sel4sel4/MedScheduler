@@ -46,13 +46,17 @@
         Me.Button1 = Me.Factory.CreateRibbonButton
         Me.Button2 = Me.Factory.CreateRibbonButton
         Me.Button3 = Me.Factory.CreateRibbonButton
+        Me.Button4 = Me.Factory.CreateRibbonButton
+        Me.Group2 = Me.Factory.CreateRibbonGroup
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
+        Me.Group2.SuspendLayout()
         '
         'Tab1
         '
         Me.Tab1.ControlId.ControlIdType = Microsoft.Office.Tools.Ribbon.RibbonControlIdType.Office
         Me.Tab1.Groups.Add(Me.Group1)
+        Me.Tab1.Groups.Add(Me.Group2)
         Me.Tab1.Label = "TabAddIns"
         Me.Tab1.Name = "Tab1"
         '
@@ -79,6 +83,17 @@
         Me.Button3.Label = "Change DB File"
         Me.Button3.Name = "Button3"
         '
+        'Button4
+        '
+        Me.Button4.Label = "Medecins"
+        Me.Button4.Name = "Button4"
+        '
+        'Group2
+        '
+        Me.Group2.Items.Add(Me.Button4)
+        Me.Group2.Label = "Group2"
+        Me.Group2.Name = "Group2"
+        '
         'Ribbon1
         '
         Me.Name = "Ribbon1"
@@ -88,6 +103,8 @@
         Me.Tab1.PerformLayout()
         Me.Group1.ResumeLayout(False)
         Me.Group1.PerformLayout()
+        Me.Group2.ResumeLayout(False)
+        Me.Group2.PerformLayout()
 
     End Sub
 
@@ -96,6 +113,8 @@
     Friend WithEvents Button1 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button2 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button3 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Button4 As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Group2 As Microsoft.Office.Tools.Ribbon.RibbonGroup
 End Class
 
 Partial Class ThisRibbonCollection

@@ -5,10 +5,7 @@ Imports System.Diagnostics
 Public Class UserControl2
 
     Private WithEvents newBtn As Button
-    Private monthstrings() As String = {"Janvier", "Février", "Mars", _
-                                        "Avril", "Mai", "Juin", _
-                                        "juillet", "Aout", "Septembre", _
-                                        "Octobre", "Novembre", "Décembre"}
+
 
     Private Sub Button_Click(sender As Object, e As Windows.RoutedEventArgs)
         'get references to workbook
@@ -48,14 +45,9 @@ Public Class UserControl2
     End Sub
 
     Private Sub combo1_Loaded(sender As Object, e As Windows.RoutedEventArgs)
-        Dim theList As New List(Of String)
-        theList.Add("2014")
-        theList.Add("2015")
-        theList.Add("2016")
-        theList.Add("2017")
         Dim theComboBox As ComboBox
         theComboBox = CType(sender, ComboBox)
-        theComboBox.ItemsSource = theList
+        theComboBox.ItemsSource = yearstrings
         theComboBox.SelectedIndex = 0
     End Sub
 

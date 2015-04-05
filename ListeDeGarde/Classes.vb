@@ -741,13 +741,6 @@ Public Class ScheduleNonDispo
 
 End Class
 
-
-
-
-
-
-
-
 Public Class DBAC
 
     'Public cnn As New ADODB.Connection  'Connection object definition
@@ -768,12 +761,16 @@ Public Class DBAC
 
     Public Sub New()
         On Error GoTo errhandler
-        mConnection = New ADODB.Connection
-        mConnectionString = Provider + "Data Source=" _
+        If cnn.State = ADODB.ObjectStateEnum.adStateClosed Then
+
+            mConnectionString = Provider + "Data Source=" _
             + CONSTFILEADDRESS _
             + ";" & DBpassword
-        mConnection.ConnectionString = mConnectionString
-        mConnection.Open()
+            cnn.ConnectionString = mConnectionString
+            cnn.Open()
+        End If
+
+        mConnection = cnn
         On Error GoTo 0
         Exit Sub
 errhandler:
@@ -843,7 +840,7 @@ errhandler:
 
     Protected Overrides Sub finalize()
 
-        mConnection.Close()
+        'mConnection.Close()
         mConnection = Nothing
 
     End Sub
