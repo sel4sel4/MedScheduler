@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
              mc:Ignorable="d" Height="360" Width="496">
     <Grid Margin="0,0,10,10">
     	<Grid.ColumnDefinitions>
@@ -10,21 +11,34 @@
     		<ColumnDefinition Width="77*"/>
     		<ColumnDefinition Width="4*"/>
     	</Grid.ColumnDefinitions>
-    	<DatePicker x:Name="StartDate" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="22,56,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.384,0.583" Width="98.64"/>
-    	<DatePicker x:Name="StopDate" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="209,56,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.069,0.542" Height="24" Width="98.64"/>
-    	<ComboBox x:Name="StartTime" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="125.64,58.04,0,0" VerticalAlignment="Top" Width="63" Height="21.96"/>
-    	<ComboBox x:Name="StopTime" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="312.64,58.04,0,0" VerticalAlignment="Top" Width="63" RenderTransformOrigin="0.468,0.59" Height="21.96"/>
-    	<ListView x:Name="NonDispoList" Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="256" Margin="22,85,0,0" VerticalAlignment="Top" Width="453">
+    	<DatePicker x:Name="StartDate" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="22,56,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.384,0.583" Width="98.64" VerticalContentAlignment="Center"/>
+    	<DatePicker x:Name="StopDate" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="227,56,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.069,0.542" Height="24" Width="98.64" VerticalContentAlignment="Center"/>
+    	<ComboBox x:Name="StartTime" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="120.64,56,0,0" VerticalAlignment="Top" Width="63" Height="24" VerticalContentAlignment="Center"/>
+    	<ComboBox x:Name="StopTime" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="330.64,56,0,0" VerticalAlignment="Top" Width="63" RenderTransformOrigin="0.468,0.59" Height="24" VerticalContentAlignment="Center"/>
+    	<ListView x:Name="NonDispoList" Grid.ColumnSpan="2" HorizontalAlignment="Left" Height="256" Margin="22,85,0,0" VerticalAlignment="Top" Width="453">
     		<ListView.View>
     			<GridView>
-    				<GridViewColumn Width="Auto"></GridViewColumn>
+    				<GridViewColumn x:Name="Du"  Header="Du:" Width="200" DisplayMemberBinding ="{Binding du}"  >
+    					<GridViewColumn.HeaderContainerStyle>
+    						<Style TargetType="GridViewColumnHeader">
+								<Setter Property="HorizontalContentAlignment"
+									Value="left" />
+								</Style>
+						</GridViewColumn.HeaderContainerStyle></GridViewColumn>
+    				<GridViewColumn x:Name="Au" Header="Au:" Width="200"  DisplayMemberBinding="{Binding au}"  >
+    					<GridViewColumn.HeaderContainerStyle>
+    						<Style TargetType="GridViewColumnHeader">
+								<Setter Property="HorizontalContentAlignment"
+									Value="left" />
+								</Style>
+						</GridViewColumn.HeaderContainerStyle></GridViewColumn>
     			</GridView>
     		</ListView.View>
     	</ListView>
-    	<Button x:Name="AddNonDispo" Grid.ColumnSpan="3" Content="Add" HorizontalAlignment="Left" Margin="400,58.04,0,0" VerticalAlignment="Top" Width="75"/>
-    	<ComboBox x:Name="DocList" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="268" Margin="22,19,0,0" SelectedIndex="0"/>
-    	<ComboBox x:Name="aMonth" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="321,19,0,0" VerticalAlignment="Top" Width="67" Loaded="aMonth_Loaded"/>
-    	<ComboBox x:Name="aYear" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="393,19,0,0" VerticalAlignment="Top" Width="67" Loaded="aYear_Loaded"/>
+    	<Button x:Name="AddNonDispo" Grid.ColumnSpan="2" Content="Ajouter" HorizontalAlignment="Left" Margin="377,10,0,0" VerticalAlignment="Top" Width="75"/>
+    	<ComboBox x:Name="DocList" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="268" Margin="22,10,0,0" SelectedIndex="0"/>
+    	<ComboBox x:Name="aMonth" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="22,34.04,0,0" VerticalAlignment="Top" Width="67" Loaded="aMonth_Loaded"/>
+    	<ComboBox x:Name="aYear" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="94,34.04,0,0" VerticalAlignment="Top" Width="67" Loaded="aYear_Loaded"/>
             
     </Grid>
 </UserControl>

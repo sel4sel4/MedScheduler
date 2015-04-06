@@ -390,7 +390,7 @@ Public Class ScheduleDoc
                 aScheduleDoc.pLastName.theValue = theRS.Fields(pLastName.theSQLName).Value
                 aScheduleDoc.pInitials.theValue = theRS.Fields(pInitials.theSQLName).Value
                 aScheduleDoc.pActive.theValue = theRS.Fields(pActive.theSQLName).Value
-                pDocList.Add(aScheduleDoc)
+                pDocList.Add(aScheduleDoc, Initials)
                 theRS.MoveNext()
             Next
 
@@ -573,6 +573,36 @@ Public Class ScheduleNonDispo
     Private pDateStop As T_DBRefTypeD
     Private pTimeStart As T_DBRefTypeI
     Private pTimeStop As T_DBRefTypeI
+    Private pDu As String
+    Private pAu As String
+    Public ReadOnly Property du() As String
+        Get
+            Dim myhours As Integer = pTimeStart.theValue / 60
+            Dim myminutes As Integer = pTimeStart.theValue - (myhours * 60)
+            Dim atime As New DateTime(1, 1, 1, myhours, myminutes, 0)
+            Dim astr As String = daystrings(pDateStart.theValue.DayOfWeek) + " le " + pDateStart.theValue.Day.ToString() _
+                                 + " " + monthstrings(pDateStart.theValue.Month - 1) _
+                                 + " " + pDateStart.theValue.Year.ToString() _
+                                  + " à " + Right("0" + atime.Hour.ToString(), 2) _
+                                  + ":" + Right("0" + atime.Minute.ToString(), 2)
+
+            Return astr
+        End Get
+    End Property
+
+    Public ReadOnly Property au() As String
+        Get
+            Dim myhours As Integer = pTimeStop.theValue / 60
+            Dim myminutes As Integer = pTimeStop.theValue - (myhours * 60)
+            Dim atime As New DateTime(1, 1, 1, myhours, myminutes, 0)
+            Dim astr As String = daystrings(pDateStop.theValue.DayOfWeek) + " le " + pDateStop.theValue.Day.ToString() _
+                                 + " " + monthstrings(pDateStop.theValue.Month - 1) _
+                                 + " " + pDateStop.theValue.Year.ToString() _
+                                  + " à " + Right("0" + atime.Hour.ToString(), 2) _
+                                  + ":" + Right("0" + atime.Minute.ToString(), 2)
+            Return astr
+        End Get
+    End Property
 
     Public Property DocInitial() As String
         Get
@@ -658,34 +688,51 @@ Public Class ScheduleNonDispo
         pDateStop.theValue = aDateStop
         pTimeStart.theValue = aTimeStart
         pTimeStop.theValue = aTimeStop
+        If IsUnique() Then
 
-        Dim theBuiltSql As New SQLStrBuilder
-        Dim theRS As New ADODB.Recordset
-        Dim theDBAC As New DBAC
+            Dim theBuiltSql As New SQLStrBuilder
+            Dim theDBAC As New DBAC
 
-        With theBuiltSql
-            .SQLClear()
-            .SQL_Insert(Table_NonDispo)
-            .SQL_Values(pDocInitial.theSQLName, DocInitial)
-            .SQL_Values(pDateStart.theSQLName, DateStartL)
-            .SQL_Values(pTimeStart.theSQLName, TimeStart)
-            .SQL_Values(pDateStop.theSQLName, DateStopL)
-            .SQL_Values(pTimeStop.theSQLName, TimeStop)
+            With theBuiltSql
+                .SQLClear()
+                .SQL_Insert(Table_NonDispo)
+                .SQL_Values(pDocInitial.theSQLName, DocInitial)
+                .SQL_Values(pDateStart.theSQLName, DateStartL)
+                .SQL_Values(pTimeStart.theSQLName, TimeStart)
+                .SQL_Values(pDateStop.theSQLName, DateStopL)
+                .SQL_Values(pTimeStop.theSQLName, TimeStop)
 
-            Dim numaffected As Integer
-            theDBAC.CExecuteDB(.SQLStringInsert, numaffected)
-        End With
-
+                Dim numaffected As Integer
+                theDBAC.CExecuteDB(.SQLStringInsert, numaffected)
+            End With
+        End If
     End Sub
-    Public Sub New()
 
+    Public Sub New()
         pDocInitial.theSQLName = SQLInitials
         pDateStart.theSQLName = SQLDateStart
         pDateStop.theSQLName = SQLDateStop
         pTimeStart.theSQLName = SQLTimeStart
         pTimeStop.theSQLName = SQLTimeStop
-
     End Sub
+
+    Private Function IsUnique() As Boolean
+        Dim theBuiltSql As New SQLStrBuilder
+        Dim theRS As New ADODB.Recordset
+        Dim theDBAC As New DBAC
+        With theBuiltSql
+            .SQLClear()
+            .SQL_Select(pDocInitial.theSQLName)
+            .SQL_From(Table_NonDispo)
+            .SQL_Where(pDocInitial.theSQLName, "=", DocInitial)
+            .SQL_Where(pDateStart.theSQLName, "=", DateStartL)
+            .SQL_Where(pTimeStart.theSQLName, "=", TimeStart)
+            .SQL_Where(pDateStop.theSQLName, "=", DateStopL)
+            .SQL_Where(pTimeStop.theSQLName, "=", TimeStop)
+            theDBAC.COpenDB(.SQLStringSelect, theRS)
+        End With
+        If theRS.RecordCount > 0 Then Return False Else Return True
+    End Function
 
     Public Function GetNonDispoListForDoc(aDocInitials As String, aYear As Integer, aMonth As Integer) As Collection
         Dim theBuiltSql As New SQLStrBuilder
@@ -722,7 +769,6 @@ Public Class ScheduleNonDispo
         Else : Return Nothing
         End If
     End Function
-
     
     Public Sub Delete()
         Dim theBuiltSql As New SQLStrBuilder
@@ -763,6 +809,8 @@ Public Class DBAC
         On Error GoTo errhandler
         If cnn.State = ADODB.ObjectStateEnum.adStateClosed Then
 
+            If MySettingsGlobal.DataBaseLocation = "" Then LoadDatabaseFileLocation()
+            If CONSTFILEADDRESS = "" Then CONSTFILEADDRESS = MySettingsGlobal.DataBaseLocation
             mConnectionString = Provider + "Data Source=" _
             + CONSTFILEADDRESS _
             + ";" & DBpassword

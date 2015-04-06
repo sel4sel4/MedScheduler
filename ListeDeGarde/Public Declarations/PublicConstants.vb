@@ -119,11 +119,14 @@ Public Module MyGlobals
     Public FileAddress As String        'String to contain Excell database path and filename
     'Public GlobalDBAccessClass As DBAccessClass1
     Public MySettingsGlobal As Settings1
+    Public daystrings() As String = {"dimanche", "lundi", "mardi", _
+                                   "mercredi", "jeudi", "vendredi", _
+                                   "samedi"}
 
-    Public monthstrings() As String = {"Janvier", "Février", "Mars", _
-                                    "Avril", "Mai", "Juin", _
-                                    "juillet", "Aout", "Septembre", _
-                                    "Octobre", "Novembre", "Décembre"}
+    Public monthstrings() As String = {"janvier", "février", "mars", _
+                                    "avril", "mai", "juin", _
+                                    "juillet", "aout", "septembre", _
+                                    "octobre", "novembre", "décembre"}
     Public yearstrings() As String = {"2014", "2015", "2016", "2017"}
 
 End Module

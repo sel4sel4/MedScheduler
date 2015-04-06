@@ -31,7 +31,7 @@ Partial Class DrInterfaceForm
         Me.ElementHost1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ElementHost1.Location = New System.Drawing.Point(0, 0)
         Me.ElementHost1.Name = "ElementHost1"
-        Me.ElementHost1.Size = New System.Drawing.Size(262, 512)
+        Me.ElementHost1.Size = New System.Drawing.Size(308, 554)
         Me.ElementHost1.TabIndex = 0
         Me.ElementHost1.Text = "ElementHost1"
         Me.ElementHost1.Child = Me.DrInterface1
@@ -40,7 +40,7 @@ Partial Class DrInterfaceForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(262, 512)
+        Me.ClientSize = New System.Drawing.Size(308, 554)
         Me.Controls.Add(Me.ElementHost1)
         Me.Name = "DrInterfaceForm"
         Me.Text = "Medecins"

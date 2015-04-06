@@ -1,5 +1,6 @@
 ﻿Imports System.Diagnostics
 Imports System.Windows.Controls
+Imports System.Collections.ObjectModel
 Public Class UserControl1
     Private theDocList() As String
     Private theInitialsList() As String
@@ -17,7 +18,7 @@ Public Class UserControl1
     Private theNonDispoCollection As Collection
 
     Private Sub AddNonDispo_Click(sender As Object, e As Windows.RoutedEventArgs) Handles AddNonDispo.Click
-        
+
         If Me.DocList.SelectedIndex = -1 Or _
             Me.StartTime.SelectedIndex = -1 Or _
             Me.StopTime.SelectedIndex = -1 Or _
@@ -35,7 +36,7 @@ Public Class UserControl1
 
         If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
         Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
-        aController.resetSheet()
+        aController.resetSheetExt()
 
 
     End Sub
@@ -91,10 +92,6 @@ Public Class UserControl1
         updateListview()
     End Sub
 
-    'Private Sub NonDispoList_SelectionChanged(sender As Object, e As Windows.Controls.SelectionChangedEventArgs) Handles NonDispoList.SelectionChanged
-    '    'Debug.WriteLine("the selected index is" + NonDispoList.SelectedIndex.ToString())
-    'End Sub
-
     Private Sub aMonth_SelectionChanged(sender As Object, e As Windows.Controls.SelectionChangedEventArgs) Handles aMonth.SelectionChanged
         If changesOngoing = True Then Exit Sub
         aMonthP = aMonth.SelectedIndex + 1
@@ -104,8 +101,6 @@ Public Class UserControl1
         If changesOngoing = True Then Exit Sub
         aYearP = CInt(aYear.SelectedItem)
         updateListview()
-
-        'Debug.WriteLine("the selected index is" + NonDispoList.SelectedIndex.ToString())
     End Sub
 
     Private Sub StartDate_SelectionChanged(sender As Object, e As Windows.Controls.SelectionChangedEventArgs) Handles StartDate.SelectedDateChanged
@@ -117,27 +112,11 @@ Public Class UserControl1
 
     Private Sub updateListview()
 
-        ''get year and month
-        'If Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then
-        '    Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
-        '    aYearP = aController.aControlledMonth.Year
-        '    aMonthP = aController.aControlledMonth.Month
-        'Else
-        '    Dim aDate As New DateTime
-        '    aDate = DateTime.Now
-        '    aYearP = aDate.Year
-        '    aMonthP = aDate.Month
-        'End If
-
-        Dim theListMenuItem As ListViewItem
-
-
+        NonDispoList.ItemsSource = Nothing
         'get nondispolist
         Dim theSchedulenondispo As New ScheduleNonDispo
-        Dim aSchedulenondispo As ScheduleNonDispo
         Dim x As Integer = 0
         theNonDispoCollection = theSchedulenondispo.GetNonDispoListForDoc(theInitialsList(DocList.SelectedIndex), aYearP, aMonthP)
-        NonDispoList.Items.Clear()
         If Not IsNothing(theNonDispoCollection) Then
 
             Dim theContextMenu As New ContextMenu()
@@ -146,51 +125,24 @@ Public Class UserControl1
             theContextMenu.DataContext = NonDispoList
             AddHandler theMenuItem1.Click, AddressOf Me.MenuItem1Clicked
             theContextMenu.Items.Add(theMenuItem1)
-            For Each aSchedulenondispo In theNonDispoCollection
-
-                Dim myhours As Integer = aSchedulenondispo.TimeStart / 60
-                Dim myminutes As Integer = aSchedulenondispo.TimeStart - (myhours * 60)
-                Dim atime As New DateTime(1, 1, 1, myhours, myminutes, 0)
-                myhours = aSchedulenondispo.TimeStop / 60
-                myminutes = aSchedulenondispo.TimeStop - (myhours * 60)
-                Dim atime2 As New DateTime(1, 1, 1, myhours, myminutes, 0)
-
-                theListMenuItem = New ListViewItem()
-
-                theListMenuItem.Content = "Du " + Right("0" + aSchedulenondispo.DateStart.Day.ToString(), 2) + "/" + _
-                Right("0" + aSchedulenondispo.DateStart.Month.ToString(), 2) + "/" + _
-                aSchedulenondispo.DateStart.Year.ToString() + "  " + _
-                Right("0" + atime.Hour.ToString(), 2) + ":" + Right("0" + atime.Minute.ToString(), 2) + " Au " + _
-                Right("0" + aSchedulenondispo.DateStop.Day.ToString(), 2) + "/" + _
-                Right("0" + aSchedulenondispo.DateStop.Month.ToString(), 2) + "/" + _
-                aSchedulenondispo.DateStop.Year.ToString() + "  " + _
-                Right("0" + atime2.Hour.ToString(), 2) + ":" + Right("0" + atime2.Minute.ToString(), 2)
-
-
-                theListMenuItem.ContextMenu = theContextMenu
-                NonDispoList.Items.Add(theListMenuItem)
-            Next
-
+            Me.NonDispoList.ContextMenu = theContextMenu
+            NonDispoList.ItemsSource = theNonDispoCollection
         End If
         StartDate.SelectedDate = DateSerial(aYearP, aMonthP, 1)
 
     End Sub
 
     Private Sub MenuItem1Clicked(sender As Object, e As System.Windows.RoutedEventArgs)
-        Debug.WriteLine("MenuItem1Clicked")
-        Dim theMenuItem1 As MenuItem
-        theMenuItem1 = CType(sender, MenuItem)
-        Dim theContextmenu As ContextMenu
-        theContextmenu = theMenuItem1.Parent
-        Dim theListview As ListView
-        theListview = CType(theContextmenu.DataContext, ListView)
-        Debug.WriteLine("selcdted item is:" + theListview.SelectedIndex.ToString())
-        If theNonDispoCollection.Contains((theListview.SelectedIndex + 1).ToString()) Then
-            Dim theNonDispo As ScheduleNonDispo
-            theNonDispo = theNonDispoCollection(theListview.SelectedIndex + 1)
-            theNonDispo.delete()
+        Dim theNonDispo As ScheduleNonDispo
+        If NonDispoList.SelectedIndex >= 0 Then
+            theNonDispo = NonDispoList.SelectedItem
+            theNonDispo.Delete()
+            updateListview()
         End If
-        updateListview()
+        If Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then
+            Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
+            aController.resetSheetExt()
+        End If
     End Sub
 
     Private Sub aMonth_Loaded(sender As Object, e As Windows.RoutedEventArgs)

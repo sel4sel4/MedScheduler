@@ -4,10 +4,7 @@
     Private controlledShiftTypes As ScheduleShiftType
     Private monthloaded As Boolean = False
     Private Const theRestTime As Long = 432000000000
-    Private monthstrings() As String = {"Janvier", "Février", "Mars", _
-                                        "Avril", "Mai", "Juin", _
-                                        "juillet", "Aout", "Septembre", _
-                                        "Octobre", "Novembre", "Décembre"}
+
     Public ReadOnly Property aControlledMonth() As ScheduleMonth
         Get
             Return controlledMonth
@@ -67,7 +64,7 @@
         Next
         If anExitNotice = True Then
             ' resetSheet()
-            statsMensuelles()
+            'statsMensuelles()
         End If
 
     End Sub
@@ -293,7 +290,7 @@
 
     End Sub
 
-    Public Sub SetUpPermNonDispos()
+    Private Sub SetUpPermNonDispos()
         Dim theSchedulenondispo As New ScheduleNonDispo
         Dim aSchedulenondispo As ScheduleNonDispo
         Dim aCollection As Collection
@@ -359,7 +356,7 @@
         Next
     End Sub
 
-    Public Sub resetSheet()
+    Private Sub resetSheet()
         monthloaded = False
 
         Dim amonthstring As String = monthstrings(aControlledMonth.Month - 1)
@@ -409,7 +406,19 @@
             If col = 6 Then row = row + 1
         Next
 
-        'check if data for this year and month already exist
+        SetupAssignedDocs()
+        SetUpPermNonDispos()
+        monthloaded = True
+
+    End Sub
+
+    Public Sub resetSheetExt()
+        ClearAvailability()
+        SetUpPermNonDispos()
+        SetupAssignedDocs()
+    End Sub
+
+    Private Sub SetupAssignedDocs()
         Dim aTest As New scheduleDocAvailable(DateSerial(aControlledMonth.Year, aControlledMonth.Month, 1))
         Dim aCollection As Collection
         Dim theDay2 As ScheduleDay
@@ -429,8 +438,20 @@
             Next
 
         End If
-        SetUpPermNonDispos()
-        monthloaded = True
+    End Sub
 
+    Private Sub ClearAvailability()
+        Dim aDay As ScheduleDay
+        Dim ashift As ScheduleShift
+        Dim aDocAvail As scheduleDocAvailable
+
+        For Each aDay In aControlledMonth.Days
+            For Each ashift In aDay.Shifts
+                For Each aDocAvail In ashift.DocAvailabilities
+                    aDocAvail.Availability = Availability.Dispo
+                Next
+                fixlist(ashift)
+            Next
+        Next
     End Sub
 End Class
