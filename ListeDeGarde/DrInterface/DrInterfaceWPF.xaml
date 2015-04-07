@@ -4,26 +4,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" Height="554" Width="308">
+             mc:Ignorable="d" Height="584" Width="310">
 	
   
 
-    <Grid>
-    	<ToggleButton Content="ToggleButton" HorizontalAlignment="Left" Margin="146.5,153,0,0" VerticalAlignment="Top"/>
-    	<ToggleButton Content="ToggleButton" HorizontalAlignment="Left" Margin="146.5,126.04,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5"/>
-    	<ToggleButton Content="ToggleButton" HorizontalAlignment="Left" Margin="146.5,179.96,0,0" VerticalAlignment="Top"/>
-    	<TextBox x:Name="version1" HorizontalAlignment="Left" Height="23" Margin="118.5,98,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-    	<TextBox x:Name="lastName1" HorizontalAlignment="Left" Height="23" Margin="118.5,70,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-    	<TextBox x:Name="firstName1" HorizontalAlignment="Left" Height="23" Margin="118.5,42,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-    	<TextBox x:Name="initials1" HorizontalAlignment="Left" Height="23" Margin="118.5,14,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-    	<TextBlock HorizontalAlignment="Left" Margin="48.5,17,0,0" TextWrapping="Wrap" Text="Initials" VerticalAlignment="Top"/>
-    	<TextBlock HorizontalAlignment="Left" Margin="48.5,45,0,0" TextWrapping="Wrap" Text="First Name" VerticalAlignment="Top"/>
-    	<TextBlock HorizontalAlignment="Left" Margin="48.5,73,0,0" TextWrapping="Wrap" Text="Last Name" VerticalAlignment="Top"/>
-    	<TextBlock HorizontalAlignment="Left" Margin="48.5,101,0,0" TextWrapping="Wrap" Text="Version" VerticalAlignment="Top"/>
-    	<TextBlock HorizontalAlignment="Left" Margin="48.5,129.04,0,0" TextWrapping="Wrap" Text="Fait les nuits" VerticalAlignment="Top"/>
-    	<TextBlock HorizontalAlignment="Left" Margin="48.5,156,0,0" TextWrapping="Wrap" Text="Fait de l'urgence" VerticalAlignment="Top"/>
-    	<TextBlock HorizontalAlignment="Left" Margin="48.5,182.96,0,0" TextWrapping="Wrap" Text="Fait les soins" VerticalAlignment="Top"/>
-    	<ListView x:Name="DocListView" HorizontalAlignment="Left" Height="232.24" Margin="11,230.88,0,0" VerticalAlignment="Top" Width="287.5">
+    <Grid >
+    	<ToggleButton x:Name="Urgence" Content="     " HorizontalAlignment="Left" Margin="111.384,189,0,0" VerticalAlignment="Top"/>
+    	<ToggleButton x:Name="Nuits" Content="     " HorizontalAlignment="Left" Margin="111.384,162.04,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5"/>
+    	<ToggleButton x:Name="Soins" Content="     " HorizontalAlignment="Left" Margin="241.384,161.96,0,0" VerticalAlignment="Top"/>
+    	<TextBox x:Name="version1" HorizontalAlignment="Left" Height="23" Margin="108.077,69.92,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="45.999"/>
+    	<TextBox x:Name="lastName1" HorizontalAlignment="Left" Height="23" Margin="154.23,25.96,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="138.53"/>
+    	<TextBox x:Name="firstName1" HorizontalAlignment="Left" Height="23" Margin="12.5,25.96,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="132.433"/>
+    	<TextBox x:Name="initials1" HorizontalAlignment="Left" Height="23" Margin="10,69.92,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="67.207"/>
+    	<TextBlock HorizontalAlignment="Left" Margin="12.5,53.96,0,0" TextWrapping="Wrap" Text="Initials" VerticalAlignment="Top"/>
+    	<TextBlock HorizontalAlignment="Left" Margin="12.5,10,0,0" TextWrapping="Wrap" Text="First Name" VerticalAlignment="Top"/>
+    	<TextBlock HorizontalAlignment="Left" Margin="154.23,10,0,0" TextWrapping="Wrap" Text="Last Name" VerticalAlignment="Top"/>
+    	<TextBlock HorizontalAlignment="Left" Margin="108.077,53.96,0,0" TextWrapping="Wrap" Text="Version" VerticalAlignment="Top"/>
+    	<TextBlock HorizontalAlignment="Left" Margin="18.384,165.04,0,0" TextWrapping="Wrap" Text="Fait les nuits" VerticalAlignment="Top"/>
+    	<TextBlock HorizontalAlignment="Left" Margin="18.384,192,0,0" TextWrapping="Wrap" Text="Fait de l'urgence" VerticalAlignment="Top"/>
+    	<TextBlock HorizontalAlignment="Left" Margin="166.384,164.96,0,0" TextWrapping="Wrap" Text="Fait les soins" VerticalAlignment="Top"/>
+    	<ListView x:Name="DocListView" HorizontalAlignment="Left" Height="232.24" Margin="12.5,220.38,0,0" VerticalAlignment="Top" Width="287.5">
     		<ListView.View>
     			<GridView>
     				<GridViewColumn x:Name="FirstName"  Header="Prénom:" Width="110" DisplayMemberBinding ="{Binding FirstName}"  >
@@ -50,11 +50,17 @@
     			</GridView>
     		</ListView.View>
     	</ListView>
-    	<Button Content="Sauvegarder" HorizontalAlignment="Left" Margin="224.5,523.54,0,0" VerticalAlignment="Top" Width="75"/>
-    	<Button Content="Nouveau Medecin" HorizontalAlignment="Left" Margin="181.5,469.62,0,0" VerticalAlignment="Top" Width="117"/>
-    	<Button Content="Modifier Medecin" HorizontalAlignment="Left" Margin="181.5,496.58,0,0" VerticalAlignment="Top" Width="117"/>
-    	<ToggleButton Content="ToggleButton" HorizontalAlignment="Left" Margin="146.5,206.92,0,0" VerticalAlignment="Top"/>
-    	<TextBlock HorizontalAlignment="Left" Margin="48.5,209.92,0,0" TextWrapping="Wrap" Text="Actif" VerticalAlignment="Top"/>
+    	<Button Content="Sauvegarder" HorizontalAlignment="Left" Margin="226,513.04,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+    	<Button Content="Nouveau Medecin" HorizontalAlignment="Left" Margin="183,459.12,0,0" VerticalAlignment="Top" Width="117" Click="Button_Click_1"/>
+    	<Button Content="Modifier Medecin" HorizontalAlignment="Left" Margin="183,486.08,0,0" VerticalAlignment="Top" Width="117"/>
+    	<ToggleButton x:Name="Hospit" Content="     " HorizontalAlignment="Left" Margin="241.384,188.92,0,0" VerticalAlignment="Top"/>
+    	<TextBlock HorizontalAlignment="Left" Margin="166.384,191.92,0,0" TextWrapping="Wrap" Text="Fait l'Hospit" VerticalAlignment="Top"/>
+    	<ToggleButton x:Name="Active" Content="     " HorizontalAlignment="Left" Margin="206.514,69.92,0,0" VerticalAlignment="Top"/>
+    	<TextBlock HorizontalAlignment="Left" Margin="177.5,72.92,0,0" TextWrapping="Wrap" Text="Actif" VerticalAlignment="Top"/>
+    	<TextBlock HorizontalAlignment="Left" Margin="12.5,99,0,0" TextWrapping="Wrap" Text="Applicable du: " VerticalAlignment="Top"/>
+    	<TextBlock HorizontalAlignment="Left" Margin="130.67,99,0,0" TextWrapping="Wrap" Text="Au:" VerticalAlignment="Top"/>
+    	<DatePicker x:Name="Du1" HorizontalAlignment="Left" Margin="13.447,114.96,0,0" VerticalAlignment="Top" Height="30.04" Width="103.493"/>
+    	<DatePicker x:Name="Au1" HorizontalAlignment="Left" Margin="130.67,114.96,0,0" VerticalAlignment="Top" Height="30.04" Width="103.493"/>
             
     </Grid>
 </UserControl>

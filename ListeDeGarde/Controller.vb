@@ -50,12 +50,19 @@
                     End If
 
                     ''assign new doc
-                    If aShift.DocAvailabilities.Contains(Target.Value) Then
-                        adocAvail = aShift.DocAvailabilities.Item(Target.Value)
-                        adocAvail.Availability = PublicEnums.Availability.Assigne
-                        fixAvailability(Target.Value, controlledMonth, aShift, firstDoc)
-                        aShift.Doc = Target.Value
-                        anExitNotice = True
+                    If IsNothing(Target.Value) Then
+                        'adocAvail = aShift.DocAvailabilities.Item(firstDoc)
+                        'adocAvail.Availability = PublicEnums.Availability.Dispo
+                        fixAvailability(firstDoc, controlledMonth, aShift, firstDoc)
+                        aShift.Doc = ""
+                    Else
+                        If aShift.DocAvailabilities.Contains(Target.Value) Then
+                            adocAvail = aShift.DocAvailabilities.Item(Target.Value)
+                            adocAvail.Availability = PublicEnums.Availability.Assigne
+                            fixAvailability(Target.Value, controlledMonth, aShift, firstDoc)
+                            aShift.Doc = Target.Value
+                            anExitNotice = True
+                        End If
                     End If
                 End If
                 If anExitNotice = True Then Exit For
@@ -260,6 +267,7 @@
         Next
 
         Dim aDOcAvail As scheduleDocAvailable
+
         For Each aScheduleDoc In theScheduleDoc.DocList
             StartingRange.Value = aScheduleDoc.Initials
             theShiftTypeCounts = New Collection
@@ -282,6 +290,7 @@
 
             StartingRange = StartingRange.Offset(1, 0)
         Next
+
         'noter le medecin sur le WS
         'dans un array de dimension n= types de shifts
         'compter les assignations

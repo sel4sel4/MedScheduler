@@ -647,6 +647,63 @@ Public Class ScheduleDoc
             Next
         End If
     End Sub
+    Public Shared Function LoadAllDocs2(aYear As Integer, aMonth As Integer) As Collection
+        Dim theBuiltSql As New SQLStrBuilder
+        Dim theRS As New ADODB.Recordset
+        Dim theDBAC As New DBAC
+        Dim theCurrentMonthDate As Date = DateSerial(aYear, aMonth, 1)
+        Dim acollection As New Collection
+
+        With theBuiltSql
+            .SQL_Select("*")
+            .SQL_From(TABLE_Doc)
+            .SQL_Where(SQLActive, "=", True)
+            '.SQL_Where(pEffectiveStart.theSQLName, "<= ", True)
+            .SQL_Order_By(SQLLastName)
+
+            theDBAC.COpenDB(.SQLStringSelect, theRS)
+        End With
+
+        If theRS.RecordCount > 0 Then
+            theRS.MoveFirst()
+            For x As Integer = 1 To theRS.RecordCount
+                Dim aScheduleDoc As New ScheduleDoc(aYear, aMonth)
+                If Not IsDBNull(theRS.Fields(SQLFirstName).Value) Then _
+                aScheduleDoc.FirstName = theRS.Fields(SQLFirstName).Value
+                If Not IsDBNull(theRS.Fields(SQLLastName).Value) Then _
+                aScheduleDoc.LastName = theRS.Fields(SQLLastName).Value
+                If Not IsDBNull(theRS.Fields(SQLInitials).Value) Then _
+                aScheduleDoc.Initials = theRS.Fields(SQLInitials).Value
+                If Not IsDBNull(theRS.Fields(SQLActive).Value) Then _
+                aScheduleDoc.Active = theRS.Fields(SQLActive).Value
+                If Not IsDBNull(theRS.Fields(SQLVersion).Value) Then _
+                aScheduleDoc.Version = theRS.Fields(SQLVersion).Value
+                If Not IsDBNull(theRS.Fields(SQLEffectiveStart).Value) Then _
+                    aScheduleDoc.EffectiveStart = theRS.Fields(SQLEffectiveStart).Value
+                If Not IsDBNull(theRS.Fields(SQLEffectiveEnd).Value) Then _
+                aScheduleDoc.EffectiveEnd = theRS.Fields(SQLEffectiveEnd).Value
+                If Not IsDBNull(theRS.Fields(SQLMinShift).Value) Then _
+                    aScheduleDoc.MinShift = theRS.Fields(SQLMinShift).Value
+                If Not IsDBNull(theRS.Fields(SQLMaxShift).Value) Then _
+                    aScheduleDoc.MaxShift = theRS.Fields(SQLMaxShift).Value
+                If Not IsDBNull(theRS.Fields(SQLUrgenceTog).Value) Then _
+                    aScheduleDoc.UrgenceTog = theRS.Fields(SQLUrgenceTog).Value
+                If Not IsDBNull(theRS.Fields(SQLHospitTog).Value) Then _
+                    aScheduleDoc.HospitTog = theRS.Fields(SQLHospitTog).Value
+                If Not IsDBNull(theRS.Fields(SQLSoinsTog).Value) Then _
+                    aScheduleDoc.SoinsTog = theRS.Fields(SQLSoinsTog).Value
+                If Not IsDBNull(theRS.Fields(SQLNuitsTog).Value) Then _
+                    aScheduleDoc.NuitsTog = theRS.Fields(SQLNuitsTog).Value
+
+                acollection.Add(aScheduleDoc, aScheduleDoc.Initials)
+                theRS.MoveNext()
+            Next
+            Return acollection
+        Else
+            Return Nothing
+        End If
+
+    End Function
 
 End Class
 
@@ -670,7 +727,12 @@ Public Class scheduleDocAvailable
             Return pAvailability
         End Get
         Set(ByVal value As PublicEnums.Availability)
-            If value = PublicEnums.Availability.Assigne Then UpdateScheduleDataTable(value)
+            If value = PublicEnums.Availability.Assigne Then
+                UpdateScheduleDataTable(value)
+            ElseIf pAvailability = PublicEnums.Availability.Assigne And _
+                value = PublicEnums.Availability.Dispo Then
+                DeleteScheduleDataEntry()
+            End If
             pAvailability = value
         End Set
     End Property
@@ -699,7 +761,7 @@ Public Class scheduleDocAvailable
                    aAvailability As Integer, _
                    aDate As Date, _
                    aShiftType As Integer)
-
+        pAvailability = PublicEnums.Availability.Dispo
         pDocInitial.theSQLName = SQLInitials
         pDate.theSQLName = SQLDate
         pShiftType.theSQLName = SQLShiftType
@@ -713,13 +775,14 @@ Public Class scheduleDocAvailable
         pDocInitial.theSQLName = SQLInitials
         pDate.theSQLName = SQLDate
         pShiftType.theSQLName = SQLShiftType
-
+        pAvailability = PublicEnums.Availability.Dispo
         Date_ = aDate
     End Sub
     Public Sub New()
         pDocInitial.theSQLName = SQLInitials
         pDate.theSQLName = SQLDate
         pShiftType.theSQLName = SQLShiftType
+        pAvailability = PublicEnums.Availability.Dispo
     End Sub
     Public Sub UpdateScheduleDataTable(theAvail As Integer)
         'check if an entry already exists for this date and shift
@@ -762,6 +825,23 @@ Public Class scheduleDocAvailable
 
         End Select
     End Sub
+
+    Public Sub DeleteScheduleDataEntry()
+        'check if an entry already exists for this date and shift
+        Dim theBuiltSql As New SQLStrBuilder
+        Dim theRS As New ADODB.Recordset
+        Dim theDBAC As New DBAC
+
+        With theBuiltSql
+
+            .SQL_From(TABLE_ScheduleData)
+            .SQL_Where(pDate.theSQLName, "=", Date_)
+            .SQL_Where(pShiftType.theSQLName, "=", ShiftType)
+            Dim numaffected As Integer
+            theDBAC.CExecuteDB(.SQLStringDelete, numaffected)
+        End With
+    End Sub
+
 
     Public Function doesDataExistForThisMonth() As Collection
 
