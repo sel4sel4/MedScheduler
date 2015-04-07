@@ -21,6 +21,15 @@ Public Module PublicConstants
     Public Const SQLLastName = "LastName"
     Public Const SQLInitials = "Initials"
     'Public Const SQLActive = "Active"
+    Public Const SQLEffectiveStart = "EffectiveStart"
+    Public Const SQLEffectiveEnd = "EffectiveEnd"
+    Public Const SQLMinShift = "MinShift"
+    Public Const SQLMaxShift = "MaxShift"
+    Public Const SQLUrgenceTog = "Urgence"
+    Public Const SQLHospitTog = "Hospit"
+    Public Const SQLSoinsTog = "Soins"
+    Public Const SQLNuitsTog = "Nuits"
+    Public Const SQLVersion = "Version"
 
     'DB Access constants for Table ScheduleData
     Public Const TABLE_ScheduleData = "TABLE_ScheduleData"
@@ -147,5 +156,10 @@ Public Module GlobalFunctions
 
     End Sub
 
+    Public Function cAccessDateStr(theDate As Date) As String
+
+        Return "#" + theDate.ToString("yyyy-M-d") + "#"
+
+    End Function
 
 End Module

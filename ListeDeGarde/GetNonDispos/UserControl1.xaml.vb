@@ -2,8 +2,9 @@
 Imports System.Windows.Controls
 Imports System.Collections.ObjectModel
 Public Class UserControl1
-    Private theDocList() As String
-    Private theInitialsList() As String
+    'Private theDocList() As String
+    Private theDocList2 As Collection
+    'Private theInitialsList() As String
     Private TimesList() As String = {"0:00", "1:00", "2:00", _
                                     "3:00", "4:00", "5:00", _
                                     "6:00", "7:00", "8:00", _
@@ -25,9 +26,9 @@ Public Class UserControl1
             Me.StopDate.Text = "" Or _
             Me.StartDate.Text = "" Then Exit Sub
 
-        Dim aScheduleNonDispo As New ScheduleNonDispo(theInitialsList(Me.DocList.SelectedIndex), _
-                                                        Me.StartDate.SelectedDate, _
-                                                        Me.StopDate.SelectedDate, _
+        Dim aScheduleNonDispo As New ScheduleNonDispo(Me.DocList.SelectedValue, _
+                                                       StartDate.SelectedDate.Value, _
+                                                      StopDate.SelectedDate.Value, _
                                                         Me.StartTime.SelectedIndex * 60, _
                                                         Me.StopTime.SelectedIndex * 60)
 
@@ -70,25 +71,18 @@ Public Class UserControl1
             aYearP = aDate.Year
             aMonthP = aDate.Month
         End If
-        Dim theScheduleDoc As New ScheduleDoc(aYearP, aMonthP)
-        Dim aScheduleDoc As ScheduleDoc
-        ReDim theDocList(0 To theScheduleDoc.DocList.Count - 1)
-        ReDim theInitialsList(0 To theScheduleDoc.DocList.Count - 1)
-        For Each aScheduleDoc In theScheduleDoc.DocList
-            theDocList(x) = aScheduleDoc.FirstName + " " + aScheduleDoc.LastName
-            theInitialsList(x) = aScheduleDoc.Initials
-            x = x + 1
-        Next
-        Me.DocList.ItemsSource = theDocList
+
         changesOngoing = True
         Me.aMonth.SelectedIndex = aMonthP - 1
         Me.aYear.SelectedItem = aYearP.ToString()
         changesOngoing = False
-        updateListview()
+
+        LoadDocList()
 
     End Sub
 
     Private Sub DocList_SelectionChanged(sender As Object, e As Windows.Controls.SelectionChangedEventArgs) Handles DocList.SelectionChanged
+        If changesOngoing = True Then Exit Sub
         updateListview()
     End Sub
 
@@ -104,10 +98,7 @@ Public Class UserControl1
     End Sub
 
     Private Sub StartDate_SelectionChanged(sender As Object, e As Windows.Controls.SelectionChangedEventArgs) Handles StartDate.SelectedDateChanged
-        Dim theDatePicker As DatePicker
-        theDatePicker = CType(sender, DatePicker)
-        Dim theDate As Date = theDatePicker.SelectedDate
-        StopDate.SelectedDate = DateSerial(theDate.Year, theDate.Month, theDate.Day + 1)
+        StopDate.SelectedDate = DateSerial(StartDate.SelectedDate.Value.Year, StartDate.SelectedDate.Value.Month, StartDate.SelectedDate.Value.Day + 1)
     End Sub
 
     Private Sub updateListview()
@@ -116,17 +107,19 @@ Public Class UserControl1
         'get nondispolist
         Dim theSchedulenondispo As New ScheduleNonDispo
         Dim x As Integer = 0
-        theNonDispoCollection = theSchedulenondispo.GetNonDispoListForDoc(theInitialsList(DocList.SelectedIndex), aYearP, aMonthP)
-        If Not IsNothing(theNonDispoCollection) Then
+        If DocList.SelectedIndex <> -1 Then
+            theNonDispoCollection = theSchedulenondispo.GetNonDispoListForDoc(DocList.SelectedValue, aYearP, aMonthP)
+            If Not IsNothing(theNonDispoCollection) Then
 
-            Dim theContextMenu As New ContextMenu()
-            Dim theMenuItem1 As New MenuItem()
-            theMenuItem1.Header = "Delete"
-            theContextMenu.DataContext = NonDispoList
-            AddHandler theMenuItem1.Click, AddressOf Me.MenuItem1Clicked
-            theContextMenu.Items.Add(theMenuItem1)
-            Me.NonDispoList.ContextMenu = theContextMenu
-            NonDispoList.ItemsSource = theNonDispoCollection
+                Dim theContextMenu As New ContextMenu()
+                Dim theMenuItem1 As New MenuItem()
+                theMenuItem1.Header = "Delete"
+                theContextMenu.DataContext = NonDispoList
+                AddHandler theMenuItem1.Click, AddressOf Me.MenuItem1Clicked
+                theContextMenu.Items.Add(theMenuItem1)
+                Me.NonDispoList.ContextMenu = theContextMenu
+                NonDispoList.ItemsSource = theNonDispoCollection
+            End If
         End If
         StartDate.SelectedDate = DateSerial(aYearP, aMonthP, 1)
 
@@ -158,6 +151,29 @@ Public Class UserControl1
         Dim theComboBox As ComboBox
         theComboBox = CType(sender, ComboBox)
         theComboBox.ItemsSource = yearstrings
+        changesOngoing = False
+    End Sub
+
+    Private Sub LoadDocList()
+        Dim theScheduleDoc As New ScheduleDoc(aYearP, aMonthP)
+        'theDocList2 = theScheduleDoc.DocList
+        'Dim aScheduleDoc As ScheduleDoc
+        'Dim x As Integer
+        'ReDim theDocList(0 To theScheduleDoc.DocList.Count - 1)
+        'ReDim theInitialsList(0 To theScheduleDoc.DocList.Count - 1)
+        'For Each aScheduleDoc In theScheduleDoc.DocList
+        '    theDocList(x) = aScheduleDoc.FirstName + " " + aScheduleDoc.LastName
+        '    theInitialsList(x) = aScheduleDoc.Initials
+        '    x = x + 1
+        'Next
+        changesOngoing = True
+        If theScheduleDoc.DocList.Count > 0 Then
+            Me.DocList.ItemsSource = theScheduleDoc.DocList
+            Me.DocList.DisplayMemberPath = "FistAndLastName"
+            Me.DocList.SelectedValuePath = "Initials"
+            Me.DocList.SelectedIndex = 0
+            updateListview()
+        End If
         changesOngoing = False
     End Sub
 End Class

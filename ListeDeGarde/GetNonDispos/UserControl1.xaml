@@ -36,7 +36,7 @@
     		</ListView.View>
     	</ListView>
     	<Button x:Name="AddNonDispo" Grid.ColumnSpan="2" Content="Ajouter" HorizontalAlignment="Left" Margin="377,10,0,0" VerticalAlignment="Top" Width="75"/>
-    	<ComboBox x:Name="DocList" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="268" Margin="22,10,0,0" SelectedIndex="0"/>
+    	<ComboBox x:Name="DocList" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="268" Margin="22,10,0,0" SelectedIndex="0"  ItemsSource="{Binding Path=FistAndLastName}"/>
     	<ComboBox x:Name="aMonth" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="22,34.04,0,0" VerticalAlignment="Top" Width="67" Loaded="aMonth_Loaded"/>
     	<ComboBox x:Name="aYear" Grid.ColumnSpan="2" HorizontalAlignment="Left" Margin="94,34.04,0,0" VerticalAlignment="Top" Width="67" Loaded="aYear_Loaded"/>
             

@@ -79,7 +79,6 @@ Public Class ScheduleDay
             Return pShifts
         End Get
     End Property
-
     ReadOnly Property theDate() As DateTime
         Get
             Return pDate
@@ -325,9 +324,17 @@ Public Class ScheduleDoc
     Private pLastName As T_DBRefTypeS
     Private pInitials As T_DBRefTypeS
     Private pActive As T_DBRefTypeB
+    Private pVersion As T_DBRefTypeI
+    Private pEffectiveStart As T_DBRefTypeD
+    Private pEffectiveEnd As T_DBRefTypeD
+    Private pMinShift As T_DBRefTypeI
+    Private pMaxShift As T_DBRefTypeI
+    Private pUrgenceTog As T_DBRefTypeB
+    Private pHospitTog As T_DBRefTypeB
+    Private pSoinsTog As T_DBRefTypeB
+    Private pNuitsTog As T_DBRefTypeB
     Private pYear As Integer
     Private pMonth As Integer
-    Private pDays As Collection
     Private Shared pDocList As Collection
 
     Public ReadOnly Property DocList() As Collection
@@ -335,30 +342,146 @@ Public Class ScheduleDoc
             Return pDocList
         End Get
     End Property
-
-    Public ReadOnly Property FirstName() As String
+    Public Property FirstName() As String
         Get
             Return pFirstName.theValue
         End Get
+        Set(value As String)
+            pFirstName.theValue = value
+        End Set
     End Property
-    Public ReadOnly Property LastName() As String
+    Public Property LastName() As String
         Get
             Return pLastName.theValue
         End Get
+        Set(value As String)
+            pLastName.theValue = value
+        End Set
     End Property
-
-    Public ReadOnly Property Initials() As String
+    Public Property Initials() As String
         Get
             Return pInitials.theValue
         End Get
+        Set(value As String)
+            pInitials.theValue = value
+        End Set
     End Property
-
+    Public Property Active() As Boolean
+        Get
+            Return pActive.theValue
+        End Get
+        Set(ByVal value As Boolean)
+            pActive.theValue = value
+        End Set
+    End Property
+    Public Property Version() As Integer
+        Get
+            Return pVersion.theValue
+        End Get
+        Set(ByVal value As Integer)
+            pVersion.theValue = value
+        End Set
+    End Property
+    Public Property EffectiveStart() As Date
+        Get
+            Return pEffectiveStart.theValue
+        End Get
+        Set(ByVal value As Date)
+            pEffectiveStart.theValue = value
+        End Set
+    End Property
+    Public Property EffectiveEnd() As Date
+        Get
+            Return pEffectiveEnd.theValue
+        End Get
+        Set(ByVal value As Date)
+            pEffectiveEnd.theValue = value
+        End Set
+    End Property
+    Public Property MinShift() As Integer
+        Get
+            Return pMinShift.theValue
+        End Get
+        Set(ByVal value As Integer)
+            pMinShift.theValue = value
+        End Set
+    End Property
+    Public Property MaxShift() As Integer
+        Get
+            Return pMaxShift.theValue
+        End Get
+        Set(ByVal value As Integer)
+            pMaxShift.theValue = value
+        End Set
+    End Property
+    Public Property UrgenceTog() As Boolean
+        Get
+            Return pUrgenceTog.theValue
+        End Get
+        Set(ByVal value As Boolean)
+            pUrgenceTog.theValue = value
+        End Set
+    End Property
+    Public Property HospitTog() As Boolean
+        Get
+            Return pHospitTog.theValue
+        End Get
+        Set(ByVal value As Boolean)
+            pHospitTog.theValue = value
+        End Set
+    End Property
+    Public Property SoinsTog() As Boolean
+        Get
+            Return pSoinsTog.theValue
+        End Get
+        Set(ByVal value As Boolean)
+            pSoinsTog.theValue = value
+        End Set
+    End Property
+    Public Property NuitsTog() As Boolean
+        Get
+            Return pNuitsTog.theValue
+        End Get
+        Set(ByVal value As Boolean)
+            pNuitsTog.theValue = value
+        End Set
+    End Property
+    Public ReadOnly Property FistAndLastName() As String
+        Get
+            Return FirstName + " " + LastName
+        End Get
+    End Property
 
     Public Sub New(aYear As Integer, aMonth As Integer)
         pFirstName.theSQLName = SQLFirstName
         pLastName.theSQLName = SQLLastName
         pInitials.theSQLName = SQLInitials
         pActive.theSQLName = SQLActive
+        pVersion.theSQLName = SQLVersion
+        pEffectiveStart.theSQLName = SQLEffectiveStart
+        pEffectiveEnd.theSQLName = SQLEffectiveEnd
+        pMinShift.theSQLName = SQLMinShift
+        pMaxShift.theSQLName = SQLMaxShift
+        pUrgenceTog.theSQLName = SQLUrgenceTog
+        pHospitTog.theSQLName = SQLHospitTog
+        pSoinsTog.theSQLName = SQLSoinsTog
+        pNuitsTog.theSQLName = SQLNuitsTog
+
+        FirstName = "FirstName"
+        LastName = "LastName"
+        Initials = "Initialles"
+        Active = True
+        Version = 1
+        EffectiveStart = DateSerial(2000, 1, 1)
+        EffectiveEnd = DateSerial(2020, 1, 1)
+        MinShift = 0
+        MaxShift = 99
+        UrgenceTog = True
+        HospitTog = True
+        SoinsTog = True
+        NuitsTog = True
+
+
         pYear = aYear
         pMonth = aMonth
 
@@ -367,8 +490,50 @@ Public Class ScheduleDoc
             LoadAllDocs(aYear, aMonth)
         End If
     End Sub
+    Public Sub New(aFirstName As String, _
+                    aLastName As String, _
+                    aInitials As String, _
+                    aActive As Boolean, _
+                    aVersion As Integer, _
+                    aEffectiveStart As Date, _
+                    aEffectiveEnd As Date, _
+                    aMinShift As Integer, _
+                    aMaxShift As Integer, _
+                    aUrgenceTog As Boolean, _
+                    aHospitTog As Boolean, _
+                    aSoinsTog As Boolean, _
+                    aNuitsTog As Boolean)
 
-    Private Sub LoadAllDocs(aYear As Integer, aMonth As Integer)
+        pFirstName.theSQLName = SQLFirstName
+        pLastName.theSQLName = SQLLastName
+        pInitials.theSQLName = SQLInitials
+        pActive.theSQLName = SQLActive
+        pVersion.theSQLName = SQLVersion
+        pEffectiveStart.theSQLName = SQLEffectiveStart
+        pEffectiveEnd.theSQLName = SQLEffectiveEnd
+        pMinShift.theSQLName = SQLMinShift
+        pMaxShift.theSQLName = SQLMaxShift
+        pUrgenceTog.theSQLName = SQLUrgenceTog
+        pHospitTog.theSQLName = SQLHospitTog
+        pSoinsTog.theSQLName = SQLSoinsTog
+        pNuitsTog.theSQLName = SQLNuitsTog
+
+        FirstName = aFirstName
+        LastName = aLastName
+        Initials = aInitials
+        Active = aActive
+        Version = aVersion
+        EffectiveStart = aEffectiveStart
+        EffectiveEnd = aEffectiveEnd
+        MinShift = aMinShift
+        MaxShift = aMaxShift
+        UrgenceTog = aUrgenceTog
+        HospitTog = aHospitTog
+        SoinsTog = aSoinsTog
+        NuitsTog = aNuitsTog
+
+    End Sub
+    Public Sub save()
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
         Dim theDBAC As New DBAC
@@ -376,7 +541,71 @@ Public Class ScheduleDoc
         With theBuiltSql
             .SQL_Select("*")
             .SQL_From(TABLE_Doc)
+            .SQL_Where(pInitials.theSQLName, "=", Initials)
+            .SQL_Where(pVersion.theSQLName, "=", Version)
+            theDBAC.COpenDB(.SQLStringSelect, theRS)
+        End With
+
+        Dim theCount As Integer = theRS.RecordCount
+
+        Select Case theCount
+            Case 0  'if not create a new entry
+                With theBuiltSql
+                    .SQLClear()
+                    .SQL_Insert(TABLE_Doc)
+                    .SQL_Values(pFirstName.theSQLName, FirstName)
+                    .SQL_Values(pLastName.theSQLName, LastName)
+                    .SQL_Values(pInitials.theSQLName, Initials)
+                    .SQL_Values(pActive.theSQLName, Active)
+                    .SQL_Values(pVersion.theSQLName, Version)
+                    .SQL_Values(pEffectiveStart.theSQLName, EffectiveStart)
+                    .SQL_Values(pEffectiveEnd.theSQLName, EffectiveEnd)
+                    .SQL_Values(pMinShift.theSQLName, MinShift)
+                    .SQL_Values(pMaxShift.theSQLName, MaxShift)
+                    .SQL_Values(pUrgenceTog.theSQLName, UrgenceTog)
+                    .SQL_Values(pHospitTog.theSQLName, HospitTog)
+                    .SQL_Values(pSoinsTog.theSQLName, SoinsTog)
+                    .SQL_Values(pNuitsTog.theSQLName, NuitsTog)
+
+                    Dim numaffected As Integer
+                    theDBAC.CExecuteDB(.SQLStringInsert, numaffected)
+                    'Debug.WriteLine(.SQLStringInsert)
+                    'Debug.WriteLine("Number of databaseentries" + numaffected.ToString())
+                End With
+
+            Case 1 'if yes update it with the new value
+                theRS.Fields(pFirstName.theSQLName).Value = FirstName
+                theRS.Fields(pLastName.theSQLName).Value = LastName
+                theRS.Fields(pInitials.theSQLName).Value = Initials
+                theRS.Fields(pActive.theSQLName).Value = Active
+                theRS.Fields(pVersion.theSQLName).Value = Version
+                theRS.Fields(pEffectiveStart.theSQLName).Value = EffectiveStart
+                theRS.Fields(pEffectiveEnd.theSQLName).Value = EffectiveEnd
+                theRS.Fields(pMinShift.theSQLName).Value = MinShift
+                theRS.Fields(pMaxShift.theSQLName).Value = MaxShift
+                theRS.Fields(pUrgenceTog.theSQLName).Value = UrgenceTog
+                theRS.Fields(pHospitTog.theSQLName).Value = HospitTog
+                theRS.Fields(pSoinsTog.theSQLName).Value = SoinsTog
+                theRS.Fields(pNuitsTog.theSQLName).Value = NuitsTog
+
+                theRS.ActiveConnection = theDBAC.aConnection
+                theRS.UpdateBatch()
+                theRS.Close()
+            Case Else
+                Debug.WriteLine("there is more than one copy of this entry ... this is bad")
+        End Select
+    End Sub
+    Private Sub LoadAllDocs(aYear As Integer, aMonth As Integer)
+        Dim theBuiltSql As New SQLStrBuilder
+        Dim theRS As New ADODB.Recordset
+        Dim theDBAC As New DBAC
+        Dim theCurrentMonthDate As Date = DateSerial(aYear, aMonth, 1)
+
+        With theBuiltSql
+            .SQL_Select("*")
+            .SQL_From(TABLE_Doc)
             .SQL_Where(pActive.theSQLName, "=", True)
+            '.SQL_Where(pEffectiveStart.theSQLName, "<= ", True)
             .SQL_Order_By(pLastName.theSQLName)
 
             theDBAC.COpenDB(.SQLStringSelect, theRS)
@@ -386,14 +615,36 @@ Public Class ScheduleDoc
             theRS.MoveFirst()
             For x As Integer = 1 To theRS.RecordCount
                 Dim aScheduleDoc As New ScheduleDoc(aYear, aMonth)
-                aScheduleDoc.pFirstName.theValue = theRS.Fields(pFirstName.theSQLName).Value
-                aScheduleDoc.pLastName.theValue = theRS.Fields(pLastName.theSQLName).Value
-                aScheduleDoc.pInitials.theValue = theRS.Fields(pInitials.theSQLName).Value
-                aScheduleDoc.pActive.theValue = theRS.Fields(pActive.theSQLName).Value
-                pDocList.Add(aScheduleDoc, Initials)
+                If Not IsDBNull(theRS.Fields(pFirstName.theSQLName).Value) Then _
+                aScheduleDoc.FirstName = theRS.Fields(pFirstName.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pLastName.theSQLName).Value) Then _
+                aScheduleDoc.LastName = theRS.Fields(pLastName.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pInitials.theSQLName).Value) Then _
+                aScheduleDoc.Initials = theRS.Fields(pInitials.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pActive.theSQLName).Value) Then _
+                aScheduleDoc.Active = theRS.Fields(pActive.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pVersion.theSQLName).Value) Then _
+                aScheduleDoc.Version = theRS.Fields(pVersion.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pEffectiveStart.theSQLName).Value) Then _
+                    aScheduleDoc.EffectiveStart = theRS.Fields(pEffectiveStart.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pEffectiveEnd.theSQLName).Value) Then _
+                aScheduleDoc.EffectiveEnd = theRS.Fields(pEffectiveEnd.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pMinShift.theSQLName).Value) Then _
+                    aScheduleDoc.MinShift = theRS.Fields(pMinShift.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pMaxShift.theSQLName).Value) Then _
+                    aScheduleDoc.MaxShift = theRS.Fields(pMaxShift.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pUrgenceTog.theSQLName).Value) Then _
+                    aScheduleDoc.UrgenceTog = theRS.Fields(pUrgenceTog.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pHospitTog.theSQLName).Value) Then _
+                    aScheduleDoc.HospitTog = theRS.Fields(pHospitTog.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pSoinsTog.theSQLName).Value) Then _
+                    aScheduleDoc.SoinsTog = theRS.Fields(pSoinsTog.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pNuitsTog.theSQLName).Value) Then _
+                    aScheduleDoc.NuitsTog = theRS.Fields(pNuitsTog.theSQLName).Value
+
+                pDocList.Add(aScheduleDoc, aScheduleDoc.Initials)
                 theRS.MoveNext()
             Next
-
         End If
     End Sub
 
@@ -423,13 +674,11 @@ Public Class scheduleDocAvailable
             pAvailability = value
         End Set
     End Property
-
     Public WriteOnly Property SetAvailabilityfromDB() As PublicEnums.Availability
         Set(ByVal value As PublicEnums.Availability)
             pAvailability = value
         End Set
     End Property
-
     Public Property Date_() As Date
         Get
             Return pDate.theValue
@@ -438,18 +687,6 @@ Public Class scheduleDocAvailable
             pDate.theValue = value
         End Set
     End Property
-
-    Public Property DateL() As Long
-        Get
-            Return pDate.theValue.Ticks / kTicksToDays
-        End Get
-        Set(ByVal value As Long)
-            Dim aDateType As DateTime
-            aDateType = New DateTime(value * kTicksToDays)
-            pDate.theValue = DateSerial(aDateType.Year, aDateType.Month, aDateType.Day)
-        End Set
-    End Property
-
     Public Property ShiftType() As Integer
         Get
             Return pShiftType.theValue
@@ -458,7 +695,6 @@ Public Class scheduleDocAvailable
             pShiftType.theValue = value
         End Set
     End Property
-
     Public Sub New(aDocInitial As String, _
                    aAvailability As Integer, _
                    aDate As Date, _
@@ -468,26 +704,23 @@ Public Class scheduleDocAvailable
         pDate.theSQLName = SQLDate
         pShiftType.theSQLName = SQLShiftType
 
-        pDocInitial.theValue = aDocInitial
-        pAvailability = aAvailability
-        pDate.theValue = aDate
-        pShiftType.theValue = aShiftType
+        DocInitial = aDocInitial
+        Availability = aAvailability
+        Date_ = aDate
+        ShiftType = aShiftType
     End Sub
-
     Public Sub New(aDate As Date)
         pDocInitial.theSQLName = SQLInitials
         pDate.theSQLName = SQLDate
         pShiftType.theSQLName = SQLShiftType
 
-        pDate.theValue = aDate
+        Date_ = aDate
     End Sub
-
     Public Sub New()
         pDocInitial.theSQLName = SQLInitials
         pDate.theSQLName = SQLDate
         pShiftType.theSQLName = SQLShiftType
     End Sub
-
     Public Sub UpdateScheduleDataTable(theAvail As Integer)
         'check if an entry already exists for this date and shift
         Dim theBuiltSql As New SQLStrBuilder
@@ -497,8 +730,8 @@ Public Class scheduleDocAvailable
         With theBuiltSql
             .SQL_Select("*")
             .SQL_From(TABLE_ScheduleData)
-            .SQL_Where(pDate.theSQLName, "=", DateL)
-            .SQL_Where(pShiftType.theSQLName, "=", pShiftType.theValue)
+            .SQL_Where(pDate.theSQLName, "=", Date_)
+            .SQL_Where(pShiftType.theSQLName, "=", ShiftType)
             theDBAC.COpenDB(.SQLStringSelect, theRS)
         End With
 
@@ -509,9 +742,9 @@ Public Class scheduleDocAvailable
                 With theBuiltSql
                     .SQLClear()
                     .SQL_Insert(TABLE_ScheduleData)
-                    .SQL_Values(pDate.theSQLName, DateL)
-                    .SQL_Values(pShiftType.theSQLName, pShiftType.theValue)
-                    .SQL_Values(pDocInitial.theSQLName, pDocInitial.theValue)
+                    .SQL_Values(pDate.theSQLName, Date_)
+                    .SQL_Values(pShiftType.theSQLName, ShiftType)
+                    .SQL_Values(pDocInitial.theSQLName, DocInitial)
                     Dim numaffected As Integer
                     theDBAC.CExecuteDB(.SQLStringInsert, numaffected)
                     'Debug.WriteLine(.SQLStringInsert)
@@ -535,15 +768,13 @@ Public Class scheduleDocAvailable
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
         Dim theDBAC As New DBAC
-        Dim startdate As Date
-        Dim stopdate As Date
-        startdate = DateSerial(pDate.theValue.Year, pDate.theValue.Month, 1)
-        stopdate = DateSerial(pDate.theValue.Year, pDate.theValue.Month + 1, 1)
+        Dim theStartdate As Date = DateSerial(Date_.Year, Date_.Month, 1)
+        Dim theStopdate As Date = DateSerial(Date_.Year, Date_.Month + 1, 1)
         With theBuiltSql
             .SQL_Select("*")
             .SQL_From(TABLE_ScheduleData)
-            .SQL_Where(pDate.theSQLName, ">=", startdate.Ticks / kTicksToDays)
-            .SQL_Where(pDate.theSQLName, "<", stopdate.Ticks / kTicksToDays)
+            .SQL_Where(pDate.theSQLName, ">=", theStartdate)
+            .SQL_Where(pDate.theSQLName, "<", theStopdate)
             theDBAC.COpenDB(.SQLStringSelect, theRS)
         End With
 
@@ -554,7 +785,7 @@ Public Class scheduleDocAvailable
             For x As Integer = 1 To theRS.RecordCount
                 aScheduleDocAvailable = New scheduleDocAvailable
                 aScheduleDocAvailable.DocInitial = theRS.Fields(Me.pDocInitial.theSQLName).Value
-                aScheduleDocAvailable.DateL = theRS.Fields(Me.pDate.theSQLName).Value
+                aScheduleDocAvailable.Date_ = theRS.Fields(Me.pDate.theSQLName).Value
                 aScheduleDocAvailable.ShiftType = theRS.Fields(Me.pShiftType.theSQLName).Value
                 aCollection.Add(aScheduleDocAvailable)
                 theRS.MoveNext()
@@ -567,7 +798,6 @@ Public Class scheduleDocAvailable
 End Class
 
 Public Class ScheduleNonDispo
-
     Private pDocInitial As T_DBRefTypeS
     Private pDateStart As T_DBRefTypeD
     Private pDateStop As T_DBRefTypeD
@@ -575,6 +805,7 @@ Public Class ScheduleNonDispo
     Private pTimeStop As T_DBRefTypeI
     Private pDu As String
     Private pAu As String
+
     Public ReadOnly Property du() As String
         Get
             Dim myhours As Integer = pTimeStart.theValue / 60
@@ -589,7 +820,6 @@ Public Class ScheduleNonDispo
             Return astr
         End Get
     End Property
-
     Public ReadOnly Property au() As String
         Get
             Dim myhours As Integer = pTimeStop.theValue / 60
@@ -603,7 +833,6 @@ Public Class ScheduleNonDispo
             Return astr
         End Get
     End Property
-
     Public Property DocInitial() As String
         Get
             Return pDocInitial.theValue
@@ -612,18 +841,6 @@ Public Class ScheduleNonDispo
             pDocInitial.theValue = value
         End Set
     End Property
-
-    Public Property DateStartL() As Long
-        Get
-            Return pDateStart.theValue.Ticks / kTicksToDays
-        End Get
-        Set(ByVal value As Long)
-            Dim aDateType As DateTime
-            aDateType = New DateTime(value * kTicksToDays)
-            pDateStart.theValue = DateSerial(aDateType.Year, aDateType.Month, aDateType.Day)
-        End Set
-    End Property
-
     Public Property DateStart() As Date
         Get
             Return pDateStart.theValue
@@ -632,18 +849,6 @@ Public Class ScheduleNonDispo
             pDateStart.theValue = value
         End Set
     End Property
-
-    Public Property DateStopL() As Long
-        Get
-            Return pDateStop.theValue.Ticks / kTicksToDays
-        End Get
-        Set(ByVal value As Long)
-            Dim aDateType As DateTime
-            aDateType = New DateTime(value * kTicksToDays)
-            pDateStop.theValue = DateSerial(aDateType.Year, aDateType.Month, aDateType.Day)
-        End Set
-    End Property
-
     Public Property DateStop() As Date
         Get
             Return pDateStop.theValue
@@ -652,7 +857,6 @@ Public Class ScheduleNonDispo
             pDateStop.theValue = value
         End Set
     End Property
-
     Public Property TimeStart() As Integer
         Get
             Return pTimeStart.theValue
@@ -661,7 +865,6 @@ Public Class ScheduleNonDispo
             pTimeStart.theValue = value
         End Set
     End Property
-
     Public Property TimeStop() As Integer
         Get
             Return pTimeStop.theValue
@@ -683,11 +886,11 @@ Public Class ScheduleNonDispo
         pTimeStart.theSQLName = SQLTimeStart
         pTimeStop.theSQLName = SQLTimeStop
 
-        pDocInitial.theValue = aDocInitial
-        pDateStart.theValue = aDateStart
-        pDateStop.theValue = aDateStop
-        pTimeStart.theValue = aTimeStart
-        pTimeStop.theValue = aTimeStop
+        DocInitial = aDocInitial
+        DateStart = aDateStart
+        DateStop = aDateStop
+        TimeStart = aTimeStart
+        TimeStop = aTimeStop
         If IsUnique() Then
 
             Dim theBuiltSql As New SQLStrBuilder
@@ -697,9 +900,9 @@ Public Class ScheduleNonDispo
                 .SQLClear()
                 .SQL_Insert(Table_NonDispo)
                 .SQL_Values(pDocInitial.theSQLName, DocInitial)
-                .SQL_Values(pDateStart.theSQLName, DateStartL)
+                .SQL_Values(pDateStart.theSQLName, DateStart)
                 .SQL_Values(pTimeStart.theSQLName, TimeStart)
-                .SQL_Values(pDateStop.theSQLName, DateStopL)
+                .SQL_Values(pDateStop.theSQLName, DateStop)
                 .SQL_Values(pTimeStop.theSQLName, TimeStop)
 
                 Dim numaffected As Integer
@@ -707,7 +910,6 @@ Public Class ScheduleNonDispo
             End With
         End If
     End Sub
-
     Public Sub New()
         pDocInitial.theSQLName = SQLInitials
         pDateStart.theSQLName = SQLDateStart
@@ -715,7 +917,6 @@ Public Class ScheduleNonDispo
         pTimeStart.theSQLName = SQLTimeStart
         pTimeStop.theSQLName = SQLTimeStop
     End Sub
-
     Private Function IsUnique() As Boolean
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
@@ -725,15 +926,14 @@ Public Class ScheduleNonDispo
             .SQL_Select(pDocInitial.theSQLName)
             .SQL_From(Table_NonDispo)
             .SQL_Where(pDocInitial.theSQLName, "=", DocInitial)
-            .SQL_Where(pDateStart.theSQLName, "=", DateStartL)
+            .SQL_Where(pDateStart.theSQLName, "=", DateStart)
             .SQL_Where(pTimeStart.theSQLName, "=", TimeStart)
-            .SQL_Where(pDateStop.theSQLName, "=", DateStopL)
+            .SQL_Where(pDateStop.theSQLName, "=", DateStop)
             .SQL_Where(pTimeStop.theSQLName, "=", TimeStop)
             theDBAC.COpenDB(.SQLStringSelect, theRS)
         End With
         If theRS.RecordCount > 0 Then Return False Else Return True
     End Function
-
     Public Function GetNonDispoListForDoc(aDocInitials As String, aYear As Integer, aMonth As Integer) As Collection
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
@@ -744,8 +944,8 @@ Public Class ScheduleNonDispo
             .SQL_Select("*")
             .SQL_From(Table_NonDispo)
             .SQL_Where(pDocInitial.theSQLName, "=", aDocInitials)
-            .SQL_Where(pDateStop.theSQLName, ">=", theStartdate.Ticks / kTicksToDays)
-            .SQL_Where(pDateStart.theSQLName, "<", theStopdate.Ticks / kTicksToDays)
+            .SQL_Where(pDateStop.theSQLName, ">=", theStartdate)
+            .SQL_Where(pDateStart.theSQLName, "<", theStopdate)
             .SQL_Order_By(pDateStart.theSQLName)
             .SQL_Order_By(pTimeStart.theSQLName)
             theDBAC.COpenDB(.SQLStringSelect, theRS)
@@ -758,9 +958,9 @@ Public Class ScheduleNonDispo
             For x As Integer = 1 To theCount
                 ascheduleNonDispo = New ScheduleNonDispo
                 If Not IsDBNull(theRS.Fields(pDocInitial.theSQLName).Value) Then ascheduleNonDispo.DocInitial = theRS.Fields(pDocInitial.theSQLName).Value
-                If Not IsDBNull(theRS.Fields(pDateStart.theSQLName).Value) Then ascheduleNonDispo.DateStartL = theRS.Fields(pDateStart.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pDateStart.theSQLName).Value) Then ascheduleNonDispo.DateStart = theRS.Fields(pDateStart.theSQLName).Value
                 If Not IsDBNull(theRS.Fields(pTimeStart.theSQLName).Value) Then ascheduleNonDispo.TimeStart = theRS.Fields(pTimeStart.theSQLName).Value
-                If Not IsDBNull(theRS.Fields(pDateStop.theSQLName).Value) Then ascheduleNonDispo.DateStopL = theRS.Fields(pDateStop.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pDateStop.theSQLName).Value) Then ascheduleNonDispo.DateStop = theRS.Fields(pDateStop.theSQLName).Value
                 If Not IsDBNull(theRS.Fields(pTimeStop.theSQLName).Value) Then ascheduleNonDispo.TimeStop = theRS.Fields(pTimeStop.theSQLName).Value
                 aCollection.Add(ascheduleNonDispo, x.ToString())
                 theRS.MoveNext()
@@ -769,7 +969,6 @@ Public Class ScheduleNonDispo
         Else : Return Nothing
         End If
     End Function
-    
     Public Sub Delete()
         Dim theBuiltSql As New SQLStrBuilder
         Dim theDBAC As New DBAC
@@ -777,8 +976,8 @@ Public Class ScheduleNonDispo
         With theBuiltSql
             .SQL_From(Table_NonDispo)
             .SQL_Where(pDocInitial.theSQLName, "=", DocInitial)
-            .SQL_Where(pDateStop.theSQLName, "=", DateStopL)
-            .SQL_Where(pDateStart.theSQLName, "=", DateStartL)
+            .SQL_Where(pDateStop.theSQLName, "=", DateStop)
+            .SQL_Where(pDateStart.theSQLName, "=", DateStart)
             .SQL_Where(pTimeStop.theSQLName, "=", TimeStop)
             .SQL_Where(pTimeStart.theSQLName, "=", TimeStart)
             theDBAC.CExecuteDB(.SQLStringDelete, numaffected)
@@ -1068,16 +1267,10 @@ Public Class SQLStrBuilder
         Select Case TypeName(theValue)
             Case "String"
                 If isFieldName = False Then
-                    theValueStr = "'" & theValue & "'"
-                Else
-                    theValueStr = theValue
+                    theValueStr = "'" + theValue + "'"
                 End If
             Case "Date"
-                If isFieldName = False Then
-                    theValueStr = "#" & theValue & "#"
-                Else
-                    theValueStr = theValue
-                End If
+                theValueStr = cAccessDateStr(theValue)
             Case "Boolean"
                 If theValue = True Then
                     theValueStr = "true"
@@ -1158,6 +1351,8 @@ Public Class SQLStrBuilder
         Select Case TypeName(theValue)
             Case "String"
                 theValueStr = "'" & theValue & "'"
+            Case "Date"
+                theValueStr = cAccessDateStr(theValue)
             Case Else
                 theValueStr = CStr(theValue)
         End Select
@@ -1193,7 +1388,7 @@ Public Class SQLStrBuilder
             Case "String"
                 theValueStr = "'" & theValue & "'"
             Case "Date"
-                theValueStr = "#" & theValue & "#"
+                theValueStr = cAccessDateStr(theValue)
             Case Else
                 theValueStr = CStr(theValue)
         End Select
