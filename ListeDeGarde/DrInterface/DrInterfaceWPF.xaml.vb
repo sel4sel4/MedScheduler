@@ -21,6 +21,7 @@ Public Class DrInterface
         theContextMenu.Items.Add(theMenuItem1)
         Me.DocListView.ContextMenu = theContextMenu
         initializeDocList()
+        Lock(True)
 
         'Me.DataContext = CType(Me.DocListView.SelectedItem, ScheduleDoc)
         ''initials1.Text = "{Binding Path=Initials}"
@@ -47,7 +48,7 @@ Public Class DrInterface
         Me.Urgence.IsChecked = ascheduleDoc.UrgenceTog
         Me.Du1.SelectedDate = ascheduleDoc.EffectiveStart
         Me.Au1.SelectedDate = ascheduleDoc.EffectiveEnd
-
+        Lock(True)
         waitingForNewSave = Nothing
 
     End Sub
@@ -88,6 +89,7 @@ Public Class DrInterface
         Dim aDate As DateTime = DateTime.Today
         waitingForNewSave = New ScheduleDoc(aDate.Year, aDate.Month)
         Me.initials1.IsReadOnly = False
+        Lock(False)
         Me.initials1.Text = waitingForNewSave.Initials
         Me.firstName1.Text = waitingForNewSave.FirstName
         Me.lastName1.Text = waitingForNewSave.LastName
@@ -120,5 +122,21 @@ Public Class DrInterface
         aDocList = ScheduleDoc.LoadAllDocs2(aYearP, aMonthP)
         Me.DocListView.ItemsSource = aDocList
         Me.DocListView.SelectedIndex = 0
+    End Sub
+    Private Sub Lock(locked As Boolean)
+        Me.firstName1.IsReadOnly = locked
+        Me.lastName1.IsReadOnly = locked
+        Me.version1.IsReadOnly = locked
+        Me.Soins.IsEnabled = Not locked
+        Me.Active.IsEnabled = Not locked
+        Me.Hospit.IsEnabled = Not locked
+        Me.Nuits.IsEnabled = Not locked
+        Me.Urgence.IsEnabled = Not locked
+        Me.Du1.IsEnabled = Not locked
+        Me.Au1.IsEnabled = Not locked
+    End Sub
+
+    Private Sub Button_Click_2(sender As Object, e As Windows.RoutedEventArgs)
+        Lock(Not Me.firstName1.IsReadOnly)
     End Sub
 End Class
