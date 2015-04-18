@@ -242,7 +242,13 @@
     <Compile Include="DrInterface\DrInterfaceWPF.xaml.vb">
       <DependentUpon>DrInterfaceWPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ShiftInterface.xaml.vb">
+    <Compile Include="ShiftInterface\ShiftInterfaceF.Designer.vb">
+      <DependentUpon>ShiftInterfaceF.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ShiftInterface\ShiftInterfaceF.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ShiftInterface\ShiftInterface.xaml.vb">
       <DependentUpon>ShiftInterface.xaml</DependentUpon>
     </Compile>
     <Compile Include="Using EventsModules\UseDelegateM.vb" />
@@ -365,7 +371,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ShiftInterface.xaml">
+    <Page Include="ShiftInterface\ShiftInterface.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
