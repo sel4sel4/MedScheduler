@@ -46,8 +46,9 @@
         Me.Button1 = Me.Factory.CreateRibbonButton
         Me.Button2 = Me.Factory.CreateRibbonButton
         Me.Button3 = Me.Factory.CreateRibbonButton
-        Me.Button4 = Me.Factory.CreateRibbonButton
         Me.Group2 = Me.Factory.CreateRibbonGroup
+        Me.Button4 = Me.Factory.CreateRibbonButton
+        Me.ShiftButton = Me.Factory.CreateRibbonButton
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
         Me.Group2.SuspendLayout()
@@ -83,16 +84,22 @@
         Me.Button3.Label = "Change DB File"
         Me.Button3.Name = "Button3"
         '
+        'Group2
+        '
+        Me.Group2.Items.Add(Me.Button4)
+        Me.Group2.Items.Add(Me.ShiftButton)
+        Me.Group2.Label = "Group2"
+        Me.Group2.Name = "Group2"
+        '
         'Button4
         '
         Me.Button4.Label = "Medecins"
         Me.Button4.Name = "Button4"
         '
-        'Group2
+        'ShiftButton
         '
-        Me.Group2.Items.Add(Me.Button4)
-        Me.Group2.Label = "Group2"
-        Me.Group2.Name = "Group2"
+        Me.ShiftButton.Label = "Shifts"
+        Me.ShiftButton.Name = "ShiftButton"
         '
         'Ribbon1
         '
@@ -115,6 +122,7 @@
     Friend WithEvents Button3 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Button4 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Group2 As Microsoft.Office.Tools.Ribbon.RibbonGroup
+    Friend WithEvents ShiftButton As Microsoft.Office.Tools.Ribbon.RibbonButton
 End Class
 
 Partial Class ThisRibbonCollection

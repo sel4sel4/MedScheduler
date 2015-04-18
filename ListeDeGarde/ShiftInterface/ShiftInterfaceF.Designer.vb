@@ -22,8 +22,31 @@ Partial Class ShiftInterfaceF
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        components = New System.ComponentModel.Container
+        Me.ElementHost1 = New System.Windows.Forms.Integration.ElementHost()
+        Me.UserControl31 = New ListeDeGarde.UserControl3()
+        Me.SuspendLayout()
+        '
+        'ElementHost1
+        '
+        Me.ElementHost1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ElementHost1.Location = New System.Drawing.Point(0, 0)
+        Me.ElementHost1.Name = "ElementHost1"
+        Me.ElementHost1.Size = New System.Drawing.Size(336, 469)
+        Me.ElementHost1.TabIndex = 0
+        Me.ElementHost1.Text = "ElementHost1"
+        Me.ElementHost1.Child = Me.UserControl31
+        '
+        'ShiftInterfaceF
+        '
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.ClientSize = New System.Drawing.Size(336, 469)
+        Me.Controls.Add(Me.ElementHost1)
+        Me.Name = "ShiftInterfaceF"
         Me.Text = "Form2"
+        Me.ResumeLayout(False)
+
     End Sub
+    Friend WithEvents ElementHost1 As System.Windows.Forms.Integration.ElementHost
+    Friend UserControl31 As ListeDeGarde.UserControl3
 End Class

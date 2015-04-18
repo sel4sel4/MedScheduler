@@ -14,6 +14,8 @@ Public Module PublicConstants
     Public Const SQLShiftType = "ShiftType"
     Public Const SQLActive = "Active"
     Public Const SQLDescription = "Description"
+    'Public Const SQLEffectiveStart = "EffectiveStart"
+    'Public Const SQLEffectiveEnd = "EffectiveEnd"
 
     'DB Access constants for Table ScheduleDoc
     Public Const TABLE_Doc = "TABLE_Doc"
@@ -137,6 +139,21 @@ Public Module MyGlobals
                                     "juillet", "aout", "septembre", _
                                     "octobre", "novembre", "décembre"}
     Public yearstrings() As String = {"2014", "2015", "2016", "2017"}
+
+    Public HoursStrings() As String = {"00", "01", "02", _
+                                    "03", "04", "05", _
+                                    "06", "07", "08", _
+                                    "09", "10", "11", _
+                                    "12", "13", "14", _
+                                    "15", "16", "17", _
+                                    "18", "19", "20", _
+                                    "21", "22", "23"}
+
+    Public MinutesStrings() As String = {"00", "05", "10", _
+                                "15", "20", "25", _
+                                "30", "35", "40", _
+                                "45", "50", "55"}
+
 
 End Module
 

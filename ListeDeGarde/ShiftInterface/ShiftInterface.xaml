@@ -3,26 +3,43 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" Height="331" Width="293">
+             mc:Ignorable="d" Height="456" Width="330">
     <Grid>
-        <Label Content="Shift Stop" HorizontalAlignment="Left" Margin="15,114,0,0" VerticalAlignment="Top" Width="108" Height="27"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="15,40,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="265"/>
+        <Label Content="Shift Stop" HorizontalAlignment="Left" Margin="17,71.297,0,0" VerticalAlignment="Top" Width="72.28" Height="27"/>
+        <TextBox x:Name="Description" HorizontalAlignment="Left" Height="23" Margin="90,17,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="230"/>
         <Label Content="Description" HorizontalAlignment="Left" Margin="15,13,0,0" VerticalAlignment="Top" Width="108" Height="27"/>
-        <CheckBox Content="Active" HorizontalAlignment="Left" Margin="20,260,0,0" VerticalAlignment="Top" Width="67.28"/>
-        <Label Content="Version:" HorizontalAlignment="Left" Margin="15,169,0,0" VerticalAlignment="Top" Width="53" Height="27"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="78,171,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="35"/>
-        <DatePicker HorizontalAlignment="Left" Margin="138,199,0,0" VerticalAlignment="Top"/>
-        <DatePicker HorizontalAlignment="Left" Margin="138,228,0,0" VerticalAlignment="Top"/>
-        <Label Content="Effective Start Date:" HorizontalAlignment="Left" Margin="15,199,0,0" VerticalAlignment="Top" Width="118" Height="27"/>
-        <Label Content="Effective Stop Date:" HorizontalAlignment="Left" Margin="15,228,0,0" VerticalAlignment="Top" Width="118" Height="27"/>
-        <ComboBox HorizontalAlignment="Left" Margin="15,141,0,0" VerticalAlignment="Top" Width="35"/>
-        <ComboBox HorizontalAlignment="Left" Margin="68,141,0,0" VerticalAlignment="Top" Width="35"/>
-        <Label Content=":" HorizontalAlignment="Left" Margin="50,141,0,0" VerticalAlignment="Top" Width="18" Height="21.96" FontSize="13.333" FontFamily="Arial Black"/>
-        <Label Content="Shift Start" HorizontalAlignment="Left" Margin="15,65.04,0,0" VerticalAlignment="Top" Width="108" Height="27"/>
-        <ComboBox HorizontalAlignment="Left" Margin="15,92.04,0,0" VerticalAlignment="Top" Width="35"/>
-        <ComboBox HorizontalAlignment="Left" Margin="68,92.04,0,0" VerticalAlignment="Top" Width="35"/>
-        <Label Content=":" HorizontalAlignment="Left" Margin="50,92.04,0,0" VerticalAlignment="Top" Width="18" Height="21.96" FontSize="13.333" FontFamily="Arial Black"/>
-        <Button Content="Shift Order ..." HorizontalAlignment="Left" Margin="20,300,0,0" VerticalAlignment="Top" Width="113"/>
+        <CheckBox x:Name="ActiveCB" Content="Active" HorizontalAlignment="Left" Margin="28,187,0,0" VerticalAlignment="Top" Width="67.28"/>
+        <Label Content="Version:" HorizontalAlignment="Left" Margin="20,98,0,0" VerticalAlignment="Top" Width="53" Height="27"/>
+        <TextBox x:Name="VersionNo" HorizontalAlignment="Left" Height="23" Margin="90,100,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="35"/>
+        <DatePicker x:Name="EffectiveStartDate" HorizontalAlignment="Left" Margin="143,128,0,0" VerticalAlignment="Top"/>
+        <DatePicker x:Name="EffectiveStopDate" HorizontalAlignment="Left" Margin="143,157,0,0" VerticalAlignment="Top"/>
+        <Label Content="Effective Start Date:" HorizontalAlignment="Left" Margin="20,128,0,0" VerticalAlignment="Top" Width="118" Height="27"/>
+        <Label Content="Effective Stop Date:" HorizontalAlignment="Left" Margin="20,157,0,0" VerticalAlignment="Top" Width="118" Height="27"/>
+        <ComboBox x:Name="StopHour" HorizontalAlignment="Left" Margin="90,71.96,0,0" VerticalAlignment="Top" Width="46" Loaded="Hours_Loaded"/>
+        <ComboBox x:Name="StopMin" HorizontalAlignment="Left" Margin="154,71.96,0,0" VerticalAlignment="Top" Width="46" Loaded="Mins_Loaded"/>
+        <Label Content=":" HorizontalAlignment="Left" Margin="136,71.297,0,0" VerticalAlignment="Top" Width="18" Height="21.96" FontSize="13.333" FontFamily="Arial Black"/>
+        <Label Content="Shift Start" HorizontalAlignment="Left" Margin="17,44.337,0,0" VerticalAlignment="Top" Width="68" Height="27"/>
+        <ComboBox x:Name="StartHour" HorizontalAlignment="Left" Margin="90,45,0,0" VerticalAlignment="Top" Width="46" Loaded="Hours_Loaded"/>
+        <ComboBox x:Name="StartMin" HorizontalAlignment="Left" Margin="154,45,0,0" VerticalAlignment="Top" Width="46" Loaded="Mins_Loaded"/>
+        <Label Content=":" HorizontalAlignment="Left" Margin="136,45,0,0" VerticalAlignment="Top" Width="18" Height="21.96" FontSize="13.333" FontFamily="Arial Black"/>
+        <Button x:Name="MoveUpBtn" Content="Move Up" HorizontalAlignment="Left" Margin="249.64,290.09,0,0" VerticalAlignment="Top" Width="75"/>
+        <ListView x:Name="ShiftListView" HorizontalAlignment="Left" Height="199.04" Margin="25,212.96,0,0" VerticalAlignment="Top" Width="219.64">
+        	<ListView.View>
+        	   	<GridView>
+    				<GridViewColumn x:Name="ShftDesc"  Header="Shift Description:" Width="219.64" DisplayMemberBinding ="{Binding Description}"  >
+    					<GridViewColumn.HeaderContainerStyle>
+    						<Style TargetType="GridViewColumnHeader">
+								<Setter Property="HorizontalContentAlignment"
+									Value="left" />
+								</Style>
+						</GridViewColumn.HeaderContainerStyle></GridViewColumn>
+        		</GridView>
+        	</ListView.View>
+        </ListView>
+        <Button x:Name="MoveDownBtn" Content="Move Down" HorizontalAlignment="Left" Margin="249.64,317.05,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="SaveBtn" Content="Save" HorizontalAlignment="Left" Margin="249.64,426.04,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button x:Name="ExitBtn" Content="Cancel" HorizontalAlignment="Left" Margin="169.64,426.04,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.635,4.506"/>
+        <Button x:Name="EditBtn" Content="Edit" HorizontalAlignment="Left" Margin="20,426.04,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.635,4.506"/>
 
     </Grid>
 </UserControl>

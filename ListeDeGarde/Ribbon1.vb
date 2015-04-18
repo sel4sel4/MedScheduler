@@ -25,4 +25,9 @@ Public Class Ribbon1
         Dim aform1 As New DrInterfaceForm
         aform1.ShowDialog()
     End Sub
+
+    Private Sub ShiftButton_Click(sender As Object, e As RibbonControlEventArgs) Handles ShiftButton.Click
+        Dim aform1 As New ShiftInterfaceF
+        aform1.ShowDialog()
+    End Sub
 End Class

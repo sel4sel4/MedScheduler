@@ -54,7 +54,7 @@ Public Class ScheduleMonth
     End Property
 
     Public Sub New(aMonth As Integer, aYear As Integer)
-        globalShiftTypes = New ScheduleShiftType
+        globalShiftTypes = New ScheduleShiftType(aMonth, aYear)
         Dim theDaysInMonth As Integer = DateTime.DaysInMonth(aYear, aMonth)
         pYear = aYear
         pMonth = aMonth
@@ -223,8 +223,36 @@ Public Class ScheduleShiftType
     Private pShiftType As T_DBRefTypeI
     Private pActive As T_DBRefTypeB
     Private pDescription As T_DBRefTypeS
-    Shared pCollection As Collection
+    Private pEffectiveDateStart As T_DBRefTypeD
+    Private pEffectiveDateStop As T_DBRefTypeD
+    Private pCollection As Collection
+    Private pVersion As T_DBRefTypeI
 
+
+    Public Property Version() As Integer
+        Get
+            Return pVersion.theValue
+        End Get
+        Set(ByVal value As Integer)
+            pVersion.theValue = value
+        End Set
+    End Property
+    Public Property EffectiveDateStart() As Date
+        Get
+            Return pEffectiveDateStart.theValue
+        End Get
+        Set(ByVal value As Date)
+            pEffectiveDateStart.theValue = value
+        End Set
+    End Property
+    Public Property EffectiveDateStop() As Date
+        Get
+            Return pEffectiveDateStop.theValue
+        End Get
+        Set(ByVal value As Date)
+            pEffectiveDateStop.theValue = value
+        End Set
+    End Property
     Public Property ShiftStart() As Integer
         Get
             Return pShiftStart.theValue
@@ -271,28 +299,47 @@ Public Class ScheduleShiftType
         End Get
     End Property
 
+    Public Sub New(aMonth As Integer, aYear As Integer, Optional getall As Boolean = False)
+        pShiftStart.theSQLName = SQLShiftStart
+        pShiftStop.theSQLName = SQLShiftStop
+        pShiftType.theSQLName = SQLShiftType
+        pActive.theSQLName = SQLActive
+        pDescription.theSQLName = SQLDescription
+        pEffectiveDateStart.theSQLName = SQLEffectiveStart
+        pEffectiveDateStop.theSQLName = SQLEffectiveEnd
+        pVersion.theSQLName = SQLVersion
+
+        pCollection = New Collection
+        loadActiveShiftTypesFromDB(aMonth, aYear, getall)
+
+    End Sub
+
     Public Sub New()
         pShiftStart.theSQLName = SQLShiftStart
         pShiftStop.theSQLName = SQLShiftStop
         pShiftType.theSQLName = SQLShiftType
         pActive.theSQLName = SQLActive
         pDescription.theSQLName = SQLDescription
-
-        If pCollection Is Nothing Then
-            pCollection = New Collection
-            loadActiveShiftTypesFromDB()
-        End If
-
+        pEffectiveDateStart.theSQLName = SQLEffectiveStart
+        pEffectiveDateStop.theSQLName = SQLEffectiveEnd
     End Sub
-    Public Sub loadActiveShiftTypesFromDB()
+
+    Public Sub loadActiveShiftTypesFromDB(aMonth As Integer, aYear As Integer, Optional getall As Boolean = False)
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
         Dim theDBAC As New DBAC
+        Dim theDate As Date
+        Dim aShifttype As ScheduleShiftType
+        theDate = DateSerial(aYear, aMonth, 15)
 
         With theBuiltSql
             .SQL_Select("*")
             .SQL_From(TABLE_shiftType)
             .SQL_Where(pActive.theSQLName, "=", True)
+            If getall = False Then
+                .SQL_Where(pEffectiveDateStart.theSQLName, "<", cAccessDateStr(theDate), "AND", EnumWhereSubClause.EW_None, 1, True)
+                .SQL_Where(pEffectiveDateStop.theSQLName, ">", cAccessDateStr(theDate), "AND", EnumWhereSubClause.EW_None, 1, True)
+            End If
             .SQL_Order_By(pShiftType.theSQLName)
 
             theDBAC.COpenDB(.SQLStringSelect, theRS)
@@ -302,12 +349,21 @@ Public Class ScheduleShiftType
         If theCount > 0 Then
             theRS.MoveFirst()
             For x As Integer = 1 To theCount
-                Dim aShifttype As New ScheduleShiftType
-                aShifttype.ShiftStart = theRS.Fields(pShiftStart.theSQLName).Value
-                aShifttype.ShiftStop = theRS.Fields(pShiftStop.theSQLName).Value
-                aShifttype.ShiftType = theRS.Fields(pShiftType.theSQLName).Value
-                aShifttype.Active = theRS.Fields(pActive.theSQLName).Value
-                aShifttype.Description = theRS.Fields(pDescription.theSQLName).Value
+                aShifttype = New ScheduleShiftType
+                If Not IsDBNull(theRS.Fields(pShiftStart.theSQLName).Value) Then _
+                    aShifttype.ShiftStart = theRS.Fields(pShiftStart.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pShiftStop.theSQLName).Value) Then _
+                    aShifttype.ShiftStop = theRS.Fields(pShiftStop.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pShiftType.theSQLName).Value) Then _
+                    aShifttype.ShiftType = theRS.Fields(pShiftType.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pActive.theSQLName).Value) Then _
+                    aShifttype.Active = theRS.Fields(pActive.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pDescription.theSQLName).Value) Then _
+                    aShifttype.Description = theRS.Fields(pDescription.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pEffectiveDateStart.theSQLName).Value) Then _
+                    aShifttype.EffectiveDateStart = theRS.Fields(pEffectiveDateStart.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pEffectiveDateStop.theSQLName).Value) Then _
+                    aShifttype.EffectiveDateStop = theRS.Fields(pEffectiveDateStop.theSQLName).Value
 
                 pCollection.Add(aShifttype)
                 theRS.MoveNext()
@@ -1165,12 +1221,7 @@ errhandler:
 
     End Sub
 
-    Protected Overrides Sub finalize()
 
-        'mConnection.Close()
-        mConnection = Nothing
-
-    End Sub
 
 
     '    Private Sub StoreToAuditFile(theSQLstr As String)
@@ -1348,7 +1399,10 @@ Public Class SQLStrBuilder
             Case "String"
                 If isFieldName = False Then
                     theValueStr = "'" + theValue + "'"
+                Else
+                    theValueStr = theValue
                 End If
+
             Case "Date"
                 theValueStr = cAccessDateStr(theValue)
             Case "Boolean"

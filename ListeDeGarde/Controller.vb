@@ -20,7 +20,7 @@
         controlledMonth = New ScheduleMonth(aMonth, aYear)
 
         'Load shift types collection into global
-        controlledShiftTypes = New ScheduleShiftType
+        controlledShiftTypes = New ScheduleShiftType(aMonth, aYear)
         resetSheet()
        
 
