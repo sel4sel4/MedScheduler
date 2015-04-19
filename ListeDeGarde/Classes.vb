@@ -34,6 +34,8 @@ Public Class ScheduleMonth
     Private pYear As Integer
     Private pMonth As Integer
     Private pDays As Collection
+    Private pShiftypes As Collection
+    Private pDocList As Collection
 
     ReadOnly Property Year() As Integer
         Get
@@ -50,19 +52,29 @@ Public Class ScheduleMonth
             Return pDays
         End Get
     End Property
+    ReadOnly Property ShiftTypes() As Collection
+        Get
+            Return pShiftypes
+        End Get
+    End Property
+    ReadOnly Property DocList() As Collection
+        Get
+            Return pDocList
+        End Get
+    End Property
+
     Public Sub New(aMonth As Integer, aYear As Integer)
-        globalShiftTypes = New ScheduleShiftType(aMonth, aYear)
+        pShiftypes = ScheduleShiftType.loadShiftTypesFromDBPerMonth(aMonth, aYear)
+        pDocList = ScheduleDoc.LoadAllDocsPerMonth(aYear, aMonth)
         Dim theDaysInMonth As Integer = DateTime.DaysInMonth(aYear, aMonth)
         pYear = aYear
         pMonth = aMonth
         pDays = New Collection
         For x = 1 To theDaysInMonth
             Dim theDay As ScheduleDay
-            theDay = New ScheduleDay(x, aMonth, aYear)
+            theDay = New ScheduleDay(x, aMonth, aYear, Me)
             pDays.Add(theDay, x.ToString())
         Next
-
-
     End Sub
 
 End Class
@@ -70,6 +82,7 @@ End Class
 Public Class ScheduleDay
     Private pDate As DateTime 'uniqueID
     Private pShifts As Collection
+    Private pMonth As ScheduleMonth
 
     ReadOnly Property Shifts() As Collection
         Get
@@ -81,21 +94,28 @@ Public Class ScheduleDay
             Return pDate
         End Get
     End Property
+    ReadOnly Property Month() As ScheduleMonth
+        Get
+            Return pMonth
+        End Get
+    End Property
 
-    Public Sub New(aDay As Integer, aMonth As Integer, aYear As Integer)
+    Public Sub New(aDay As Integer, aMonth As Integer, aYear As Integer, ByRef CMonth As ScheduleMonth)
         pDate = New DateTime(aYear, aMonth, aDay)
+        pMonth = CMonth
         pShifts = New Collection
 
         'populate the shift collection by cycling through 
         'the active ScheduleShiftTypes collection
         Dim aShiftType As ScheduleShiftType
         Dim theCounter As Integer = 1
-        For Each aShiftType In globalShiftTypes.ShiftCollection
+        For Each aShiftType In pMonth.ShiftTypes
             Dim theShift As New ScheduleShift(aShiftType.ShiftType, _
                                               pDate, _
                                               aShiftType.ShiftStart, _
                                               aShiftType.ShiftStop, _
-                                              aShiftType.Description)
+                                              aShiftType.Description, _
+                                              Me)
             pShifts.Add(theShift, aShiftType.ShiftType.ToString())
         Next
 
@@ -113,9 +133,7 @@ Public Class ScheduleShift
     Private pDate As DateTime
     Private pStatus As Integer
     Private pRange As Excel.Range
-
-    'FIX: need to remove the shared doclist property. (make it non-shared or find another way to access it. maybe one instance with several references to it)
-    Private Shared DocList As Collection
+    Private pDay As ScheduleDay
 
     Public Property Doc() As String
         Get
@@ -179,42 +197,47 @@ Public Class ScheduleShift
                    aDate As DateTime, _
                    aShiftStart As Integer, _
                    aShiftStop As Integer, _
-                   aDescription As String)
+                   aDescription As String, _
+                   ByRef aDay As ScheduleDay)
         pDate = aDate
         pShiftType = aShiftType
         pShiftStart = aShiftStart
         pShiftStop = aShiftStop
         pStatus = 0 ' for empty
         pDescription = aDescription
+        pDay = aDay
 
-        If IsNothing(DocList) Then
-            DocList = New Collection
-            Dim theScheduleDoc As New ScheduleDoc(pDate.Year, pDate.Month)
-            DocList = theScheduleDoc.DocList
-        End If
         pDocAvailabilities = New Collection
         Dim theScheduleDocAvailable As scheduleDocAvailable
         Dim aScheduleDoc As ScheduleDoc
-        For Each aScheduleDoc In DocList
+        Dim theDispo As PublicEnums.Availability
+        For Each aScheduleDoc In pDay.Month.DocList
+            'conditional code to make doc unavailable if shift is not active for the doc
+            Select Case (aShiftType)
+                Case 1, 2, 3, 4 'urgence
+                    If aScheduleDoc.UrgenceTog = False Then theDispo = Availability.NonDispoPermanente _
+                        Else theDispo = Availability.Dispo
+                Case 5 'urgence nuit
+                    If aScheduleDoc.UrgenceTog = False Or aScheduleDoc.NuitsTog = False Then _
+                        theDispo = Availability.NonDispoPermanente Else theDispo = Availability.Dispo
 
-            'FIX: add conditional code to make doc_perm unavailable if shift is not active for the doc
+                Case 6 'hospit
+                    If aScheduleDoc.HospitTog = False Then theDispo = Availability.NonDispoPermanente _
+                        Else theDispo = Availability.Dispo
+                Case 7 'soins
+                    If aScheduleDoc.SoinsTog = False Then theDispo = Availability.NonDispoPermanente _
+                        Else theDispo = Availability.Dispo
+                Case Else
+                    theDispo = Availability.Dispo
+            End Select
             theScheduleDocAvailable = New scheduleDocAvailable(aScheduleDoc.Initials, _
-                                                               PublicEnums.Availability.Dispo, _
+                                                               theDispo, _
                                                                pDate, _
                                                                pShiftType)
             pDocAvailabilities.Add(theScheduleDocAvailable, aScheduleDoc.Initials)
         Next
 
     End Sub
-    Public Sub addDoc(aDoc As String)
-        'modify tally for the doc
-        'change docs schedule
-    End Sub
-    Public Sub clearDoc()
-        'modify tally for the doc
-        'Change docs schedule
-    End Sub
-
 
 End Class
 
@@ -314,7 +337,6 @@ Public Class ScheduleShiftType
         loadActiveShiftTypesFromDB(aMonth, aYear, getall)
 
     End Sub
-
     Public Sub New()
         pShiftStart.theSQLName = SQLShiftStart
         pShiftStop.theSQLName = SQLShiftStop
@@ -324,7 +346,6 @@ Public Class ScheduleShiftType
         pEffectiveDateStart.theSQLName = SQLEffectiveStart
         pEffectiveDateStop.theSQLName = SQLEffectiveEnd
     End Sub
-
     Public Sub loadActiveShiftTypesFromDB(aMonth As Integer, aYear As Integer, Optional getall As Boolean = False)
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
@@ -373,6 +394,56 @@ Public Class ScheduleShiftType
         End If
 
     End Sub
+    Public Shared Function loadShiftTypesFromDBPerMonth(aMonth As Integer, aYear As Integer) As Collection
+        Dim theBuiltSql As New SQLStrBuilder
+        Dim theRS As New ADODB.Recordset
+        Dim theDBAC As New DBAC
+        Dim theDate As Date
+        Dim aShifttype As ScheduleShiftType
+        Dim theShiftTypeCollection As Collection
+        theShiftTypeCollection = New Collection
+        theDate = DateSerial(aYear, aMonth, 15)
+
+        With theBuiltSql
+            .SQL_Select("*")
+            .SQL_From(TABLE_shiftType)
+            .SQL_Where(SQLActive, "=", True)
+            .SQL_Where(SQLEffectiveStart, "<", cAccessDateStr(theDate), "AND", EnumWhereSubClause.EW_None, 1, True)
+            .SQL_Where(SQLEffectiveEnd, ">", cAccessDateStr(theDate), "AND", EnumWhereSubClause.EW_None, 1, True)
+            .SQL_Order_By(SQLShiftType)
+
+            theDBAC.COpenDB(.SQLStringSelect, theRS)
+        End With
+
+        Dim theCount As Integer = theRS.RecordCount
+        If theCount > 0 Then
+
+            theRS.MoveFirst()
+            For x As Integer = 1 To theCount
+                aShifttype = New ScheduleShiftType
+                If Not IsDBNull(theRS.Fields(SQLShiftStart).Value) Then _
+                    aShifttype.ShiftStart = theRS.Fields(SQLShiftStart).Value
+                If Not IsDBNull(theRS.Fields(SQLShiftStop).Value) Then _
+                    aShifttype.ShiftStop = theRS.Fields(SQLShiftStop).Value
+                If Not IsDBNull(theRS.Fields(SQLShiftType).Value) Then _
+                    aShifttype.ShiftType = theRS.Fields(SQLShiftType).Value
+                If Not IsDBNull(theRS.Fields(SQLActive).Value) Then _
+                    aShifttype.Active = theRS.Fields(SQLActive).Value
+                If Not IsDBNull(theRS.Fields(SQLDescription).Value) Then _
+                    aShifttype.Description = theRS.Fields(SQLDescription).Value
+                If Not IsDBNull(theRS.Fields(SQLEffectiveStart).Value) Then _
+                    aShifttype.EffectiveDateStart = theRS.Fields(SQLEffectiveStart).Value
+                If Not IsDBNull(theRS.Fields(SQLEffectiveEnd).Value) Then _
+                    aShifttype.EffectiveDateStop = theRS.Fields(SQLEffectiveEnd).Value
+
+                theShiftTypeCollection.Add(aShifttype)
+                theRS.MoveNext()
+            Next
+
+        End If
+        Return theShiftTypeCollection
+    End Function
+
 
 End Class
 
@@ -761,11 +832,63 @@ Public Class ScheduleDoc
         End If
 
     End Function
+    Public Shared Function LoadAllDocsPerMonth(aYear As Integer, aMonth As Integer) As Collection
+        Dim theBuiltSql As New SQLStrBuilder
+        Dim theRS As New ADODB.Recordset
+        Dim theDBAC As New DBAC
+        Dim theCurrentMonthDate As Date = DateSerial(aYear, aMonth, 1)
+        Dim aCollection As Collection
+        aCollection = New Collection
+        With theBuiltSql
+            .SQL_Select("*")
+            .SQL_From(TABLE_Doc)
+            .SQL_Where(SQLActive, "=", True)
+            '.SQL_Where(pEffectiveStart.theSQLName, "<= ", True)
+            .SQL_Order_By(SQLLastName)
 
+            theDBAC.COpenDB(.SQLStringSelect, theRS)
+        End With
+
+        If theRS.RecordCount > 0 Then
+            theRS.MoveFirst()
+            For x As Integer = 1 To theRS.RecordCount
+                Dim aScheduleDoc As New ScheduleDoc(aYear, aMonth)
+                If Not IsDBNull(theRS.Fields(SQLFirstName).Value) Then _
+                aScheduleDoc.FirstName = theRS.Fields(SQLFirstName).Value
+                If Not IsDBNull(theRS.Fields(SQLLastName).Value) Then _
+                aScheduleDoc.LastName = theRS.Fields(SQLLastName).Value
+                If Not IsDBNull(theRS.Fields(SQLInitials).Value) Then _
+                aScheduleDoc.Initials = theRS.Fields(SQLInitials).Value
+                If Not IsDBNull(theRS.Fields(SQLActive).Value) Then _
+                aScheduleDoc.Active = theRS.Fields(SQLActive).Value
+                If Not IsDBNull(theRS.Fields(SQLVersion).Value) Then _
+                aScheduleDoc.Version = theRS.Fields(SQLVersion).Value
+                If Not IsDBNull(theRS.Fields(SQLEffectiveStart).Value) Then _
+                    aScheduleDoc.EffectiveStart = theRS.Fields(SQLEffectiveStart).Value
+                If Not IsDBNull(theRS.Fields(SQLEffectiveEnd).Value) Then _
+                aScheduleDoc.EffectiveEnd = theRS.Fields(SQLEffectiveEnd).Value
+                If Not IsDBNull(theRS.Fields(SQLMinShift).Value) Then _
+                    aScheduleDoc.MinShift = theRS.Fields(SQLMinShift).Value
+                If Not IsDBNull(theRS.Fields(SQLMaxShift).Value) Then _
+                    aScheduleDoc.MaxShift = theRS.Fields(SQLMaxShift).Value
+                If Not IsDBNull(theRS.Fields(SQLUrgenceTog).Value) Then _
+                    aScheduleDoc.UrgenceTog = theRS.Fields(SQLUrgenceTog).Value
+                If Not IsDBNull(theRS.Fields(SQLHospitTog).Value) Then _
+                    aScheduleDoc.HospitTog = theRS.Fields(SQLHospitTog).Value
+                If Not IsDBNull(theRS.Fields(SQLSoinsTog).Value) Then _
+                    aScheduleDoc.SoinsTog = theRS.Fields(SQLSoinsTog).Value
+                If Not IsDBNull(theRS.Fields(SQLNuitsTog).Value) Then _
+                    aScheduleDoc.NuitsTog = theRS.Fields(SQLNuitsTog).Value
+
+                acollection.Add(aScheduleDoc, aScheduleDoc.Initials)
+                theRS.MoveNext()
+            Next
+        End If
+        Return aCollection
+    End Function
 End Class
 
 Public Class scheduleDocAvailable
-
     Private pDocInitial As T_DBRefTypeS
     Private pAvailability As PublicEnums.Availability
     Private pDate As T_DBRefTypeD
@@ -814,6 +937,7 @@ Public Class scheduleDocAvailable
             pShiftType.theValue = value
         End Set
     End Property
+
     Public Sub New(aDocInitial As String, _
                    aAvailability As Integer, _
                    aDate As Date, _
@@ -882,7 +1006,6 @@ Public Class scheduleDocAvailable
 
         End Select
     End Sub
-
     Public Sub DeleteScheduleDataEntry()
         'check if an entry already exists for this date and shift
         Dim theBuiltSql As New SQLStrBuilder
@@ -898,8 +1021,6 @@ Public Class scheduleDocAvailable
             theDBAC.CExecuteDB(.SQLStringDelete, numaffected)
         End With
     End Sub
-
-
     Public Function doesDataExistForThisMonth() As Collection
 
         Dim theBuiltSql As New SQLStrBuilder
