@@ -40,19 +40,16 @@ Public Class ScheduleMonth
             Return pYear
         End Get
     End Property
-
     ReadOnly Property Month() As Integer
         Get
             Return pMonth
         End Get
     End Property
-
     ReadOnly Property Days() As Collection
         Get
             Return pDays
         End Get
     End Property
-
     Public Sub New(aMonth As Integer, aYear As Integer)
         globalShiftTypes = New ScheduleShiftType(aMonth, aYear)
         Dim theDaysInMonth As Integer = DateTime.DaysInMonth(aYear, aMonth)
@@ -116,6 +113,8 @@ Public Class ScheduleShift
     Private pDate As DateTime
     Private pStatus As Integer
     Private pRange As Excel.Range
+
+    'FIX: need to remove the shared doclist property. (make it non-shared or find another way to access it. maybe one instance with several references to it)
     Private Shared DocList As Collection
 
     Public Property Doc() As String
@@ -197,6 +196,8 @@ Public Class ScheduleShift
         Dim theScheduleDocAvailable As scheduleDocAvailable
         Dim aScheduleDoc As ScheduleDoc
         For Each aScheduleDoc In DocList
+
+            'FIX: add conditional code to make doc_perm unavailable if shift is not active for the doc
             theScheduleDocAvailable = New scheduleDocAvailable(aScheduleDoc.Initials, _
                                                                PublicEnums.Availability.Dispo, _
                                                                pDate, _
@@ -1308,7 +1309,6 @@ Public Class SQLStrBuilder
             Return theStrSQL
         End Get
     End Property
-
     ReadOnly Property SQLStringUpdate() As String
         Get
             If theUpdateCounter < 1 Or theSetCounter < 1 Then Return ""
@@ -1316,7 +1316,6 @@ Public Class SQLStrBuilder
             Return theStrSQL
         End Get
     End Property
-
     ReadOnly Property SQLStringInsert() As String
         Get
             If theInsertCounter < 1 Or theValuesCounter < 1 Then Return ""
@@ -1324,7 +1323,6 @@ Public Class SQLStrBuilder
             Return theStrSQL
         End Get
     End Property
-
     ReadOnly Property SQLStringDelete() As String
         Get
             theStrSQL = "DELETE" & theFrom & theWhere
@@ -1357,7 +1355,6 @@ Public Class SQLStrBuilder
         theValuesCounter = 0
 
     End Sub
-
     Public Sub SQL_Select(theColumnName As String)
 
         If theSelectCounter = 0 Then
@@ -1369,7 +1366,6 @@ Public Class SQLStrBuilder
         End If
 
     End Sub
-
     Public Sub SQL_From(theTableName As String)
 
         If theFromCounter = 0 Then
@@ -1381,7 +1377,6 @@ Public Class SQLStrBuilder
         End If
 
     End Sub
-
     Public Sub SQL_Where(theColumnName As String, _
                             theCondition As String, _
                             theValue As Object, _
@@ -1442,7 +1437,6 @@ Public Class SQLStrBuilder
         End If
 
     End Sub
-
     Public Sub SQL_Where_in(theColumnName As String, theItems As String)
 
         If theWhereCounter = 0 Then
@@ -1454,7 +1448,6 @@ Public Class SQLStrBuilder
         End If
 
     End Sub
-
     Public Sub SQL_Group_By(theColumnName As String)
 
         If theGroupByCounter = 0 Then
@@ -1466,7 +1459,6 @@ Public Class SQLStrBuilder
         End If
 
     End Sub
-
     Public Sub SQL_Order_By(theColumnName As String, Optional SortOrder As String = "ASC")
 
         If theOrderByCounter = 0 Then
@@ -1478,7 +1470,6 @@ Public Class SQLStrBuilder
         End If
 
     End Sub
-
     Public Sub SQL_Set(theColumnName As String, theValue As Object)
 
         Dim theValueStr As String
@@ -1500,21 +1491,18 @@ Public Class SQLStrBuilder
         End If
 
     End Sub
-
     Public Sub SQL_Update(theTableName As String)
 
         theUpdate = "UPDATE " & theTableName
         theUpdateCounter = theUpdateCounter + 1
 
     End Sub
-
     Public Sub SQL_Insert(theTableName As String)
 
         theInsert = "INSERT INTO " & theTableName
         theInsertCounter = theInsertCounter + 1
 
     End Sub
-
     Public Sub SQL_Values(theColumnName As String, theValue As Object)
 
         Dim theValueStr As String
@@ -1538,7 +1526,6 @@ Public Class SQLStrBuilder
         End If
 
     End Sub
-
     Public Sub SQLClear()
 
         theStrSQL = ""

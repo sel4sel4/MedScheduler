@@ -366,11 +366,11 @@
     End Sub
 
     Private Sub resetSheet()
-        monthloaded = False
+        monthloaded = False 'set boolean toggle to false to stop event triggers
 
         Dim amonthstring As String = monthstrings(aControlledMonth.Month - 1)
 
-        controlledExcelSheet.Cells.Clear()
+        controlledExcelSheet.Cells.Clear() 'clear the worksheet
         Dim theDay As ScheduleDay
         Dim row As Integer
         Dim col As Integer = 0
@@ -388,7 +388,7 @@
         Dim theRangeA3 As Excel.Range = controlledExcelSheet.Range("A3")
         Dim theRange As Excel.Range
 
-
+        'create the month to display in worksheet
         For Each theDay In controlledMonth.Days
             col = CInt(theDay.theDate.DayOfWeek)
             theRange = theRangeA3.Offset(row * rowheight1, col * colwidth1)
@@ -399,7 +399,6 @@
 
             Dim theCounter1 As Integer = 1
             For Each theShift In theDay.Shifts
-                ' Dim theSetValue As String = ""
                 theRangeForShiftType = theRange.Offset(theCounter1, 0)
                 theRangeForShiftType.Value2 = "'" + theShift.Description
                 TheRAngeForDocLists = theRange.Offset(theCounter1, 1)
