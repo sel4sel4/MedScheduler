@@ -10,7 +10,7 @@ Imports System.Diagnostics
         'act
         MySettingsGlobal = New Settings1
         Dim testMonth As ScheduleMonth
-        testMonth = New ScheduleMonth(1, 2014)
+        testMonth = New ScheduleMonth(4, 2015)
         'assert
         Assert.IsTrue(testMonth.Days.Count > 0)
     End Sub
@@ -21,7 +21,7 @@ Imports System.Diagnostics
         Dim theDay As ScheduleDay
         MySettingsGlobal = New Settings1
         Dim testMonth As ScheduleMonth
-        testMonth = New ScheduleMonth(1, 2014)
+        testMonth = New ScheduleMonth(4, 2015)
 
         theDay = testMonth.Days(1)
         'assert

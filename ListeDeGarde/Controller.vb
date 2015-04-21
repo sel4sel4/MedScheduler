@@ -355,9 +355,12 @@
                                     Dim thedocAvail As scheduleDocAvailable
                                     thedocAvail = ashift.DocAvailabilities.Item(ascheduleDoc.Initials)
                                     'check if doc is assigned and ask to clear (provide some info.. make surutlisé
-                                    thedocAvail.Availability = PublicEnums.Availability.NonDispoPermanente
+                                    If thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
+                                        thedocAvail.Availability = PublicEnums.Availability.NonDispoPermanente
+                                    End If
                                     fixlist(ashift)
                                 End If
+
                             Next
                         End If
                     Next
@@ -377,7 +380,7 @@
         Dim col As Integer = 0
 
         'get number of shifts
-        Dim rowheight1 As Integer = controlledMonth.ShiftTypes.Count + 1
+        Dim rowheight1 As Integer = controlledMonth.Days(1).shifts.Count + 1
         'assign colwidth as 2
         Dim colwidth1 As Integer = 2
 

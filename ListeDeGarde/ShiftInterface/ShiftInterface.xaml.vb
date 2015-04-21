@@ -114,7 +114,8 @@ Public Class UserControl3
         Me.StopHour.SelectedIndex = theStopInMinutes \ 60
         Me.StopMin.SelectedIndex = (ascheduleshiftType.ShiftStop Mod 60) \ 5
         Me.EffectiveStartDate.SelectedDate = ascheduleshiftType.EffectiveDateStart
-        Me.EffectiveStopDate.SelectedDate = ascheduleshiftType.EffectiveDateStop
+        Me.EffectiveStopDate.SelectedDate = aScheduleshiftType.EffectiveDateStop
+        Me.ActiveCB.IsChecked = aScheduleshiftType.Active
 
         Lock(True)
     End Sub

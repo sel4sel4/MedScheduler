@@ -62,7 +62,6 @@ Public Class ScheduleMonth
             Return pDocList
         End Get
     End Property
-
     Public Sub New(aMonth As Integer, aYear As Integer)
         pShiftypes = ScheduleShiftType.loadShiftTypesFromDBPerMonth(aMonth, aYear)
         pDocList = ScheduleDoc.LoadAllDocsPerMonth(aYear, aMonth)
@@ -110,13 +109,15 @@ Public Class ScheduleDay
         Dim aShiftType As ScheduleShiftType
         Dim theCounter As Integer = 1
         For Each aShiftType In pMonth.ShiftTypes
-            Dim theShift As New ScheduleShift(aShiftType.ShiftType, _
-                                              pDate, _
-                                              aShiftType.ShiftStart, _
-                                              aShiftType.ShiftStop, _
-                                              aShiftType.Description, _
-                                              Me)
-            pShifts.Add(theShift, aShiftType.ShiftType.ToString())
+            If aShiftType.Active Then
+                Dim theShift As New ScheduleShift(aShiftType.ShiftType, _
+                                                  pDate, _
+                                                  aShiftType.ShiftStart, _
+                                                  aShiftType.ShiftStop, _
+                                                  aShiftType.Description, _
+                                                  Me)
+                pShifts.Add(theShift, aShiftType.ShiftType.ToString())
+            End If
         Next
 
     End Sub

@@ -16,7 +16,7 @@ Public Class UserControl2
         End If
 
         'if sheet already exists exit
-        If Globals.ThisAddIn.theControllerCollection.Contains(Me.combo1.Text + "-" + Me.combo2.Text) Then Exit Sub
+        If Globals.ThisAddIn.theControllerCollection.Contains(Me.combo2.Text + "-" + Me.combo1.Text) Then Exit Sub
 
         'create a new sheet
         Globals.ThisAddIn.xlSheet1 = _
