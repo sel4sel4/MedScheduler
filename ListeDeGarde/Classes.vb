@@ -345,6 +345,7 @@ Public Class ScheduleShiftType
         pDescription.theSQLName = SQLDescription
         pEffectiveDateStart.theSQLName = SQLEffectiveStart
         pEffectiveDateStop.theSQLName = SQLEffectiveEnd
+        pVersion.theSQLName = SQLVersion
     End Sub
     Public Sub loadActiveShiftTypesFromDB(aMonth As Integer, aYear As Integer, Optional getall As Boolean = False)
         Dim theBuiltSql As New SQLStrBuilder
@@ -403,15 +404,97 @@ Public Class ScheduleShiftType
         Dim theShiftTypeCollection As Collection
         theShiftTypeCollection = New Collection
         theDate = DateSerial(aYear, aMonth, 15)
+        Dim theVersion As Integer : theVersion = ((aYear - 2000) * 100) + aMonth
+
+        'check if a version exists for the month
 
         With theBuiltSql
             .SQL_Select("*")
             .SQL_From(TABLE_shiftType)
-            .SQL_Where(SQLActive, "=", True)
-            .SQL_Where(SQLEffectiveStart, "<", cAccessDateStr(theDate), "AND", EnumWhereSubClause.EW_None, 1, True)
-            .SQL_Where(SQLEffectiveEnd, ">", cAccessDateStr(theDate), "AND", EnumWhereSubClause.EW_None, 1, True)
+            .SQL_Where(SQLVersion, "=", theVersion)
             .SQL_Order_By(SQLShiftType)
+            theDBAC.COpenDB(.SQLStringSelect, theRS)
+        End With
 
+        Dim theCount As Integer = theRS.RecordCount
+
+
+        If theCount > 0 Then 'if a version exists load it
+
+            theRS.MoveFirst()
+            For x As Integer = 1 To theCount
+                aShifttype = New ScheduleShiftType
+                If Not IsDBNull(theRS.Fields(SQLShiftStart).Value) Then _
+                    aShifttype.ShiftStart = theRS.Fields(SQLShiftStart).Value
+                If Not IsDBNull(theRS.Fields(SQLShiftStop).Value) Then _
+                    aShifttype.ShiftStop = theRS.Fields(SQLShiftStop).Value
+                If Not IsDBNull(theRS.Fields(SQLShiftType).Value) Then _
+                    aShifttype.ShiftType = theRS.Fields(SQLShiftType).Value
+                If Not IsDBNull(theRS.Fields(SQLActive).Value) Then _
+                    aShifttype.Active = theRS.Fields(SQLActive).Value
+                If Not IsDBNull(theRS.Fields(SQLVersion).Value) Then _
+                    aShifttype.Version = theRS.Fields(SQLVersion).Value
+                If Not IsDBNull(theRS.Fields(SQLDescription).Value) Then _
+                    aShifttype.Description = theRS.Fields(SQLDescription).Value
+                If Not IsDBNull(theRS.Fields(SQLEffectiveStart).Value) Then _
+                    aShifttype.EffectiveDateStart = theRS.Fields(SQLEffectiveStart).Value
+                If Not IsDBNull(theRS.Fields(SQLEffectiveEnd).Value) Then _
+                    aShifttype.EffectiveDateStop = theRS.Fields(SQLEffectiveEnd).Value
+
+                theShiftTypeCollection.Add(aShifttype)
+                theRS.MoveNext()
+            Next
+        Else 'if no version exists, load the template version (0)
+            With theBuiltSql
+                .SQLClear()
+                .SQL_Select("*")
+                .SQL_From(TABLE_shiftType)
+                .SQL_Where(SQLVersion, "=", 0)
+                .SQL_Order_By(SQLShiftType)
+                theDBAC.COpenDB(.SQLStringSelect, theRS)
+            End With
+            theCount = theRS.RecordCount
+            If theCount > 0 Then 'if at last one template shifttype exists load it as a collection
+
+                theRS.MoveFirst()
+                For x As Integer = 1 To theCount
+                    aShifttype = New ScheduleShiftType
+                    If Not IsDBNull(theRS.Fields(SQLShiftStart).Value) Then _
+                        aShifttype.ShiftStart = theRS.Fields(SQLShiftStart).Value
+                    If Not IsDBNull(theRS.Fields(SQLShiftStop).Value) Then _
+                        aShifttype.ShiftStop = theRS.Fields(SQLShiftStop).Value
+                    If Not IsDBNull(theRS.Fields(SQLShiftType).Value) Then _
+                        aShifttype.ShiftType = theRS.Fields(SQLShiftType).Value
+                    If Not IsDBNull(theRS.Fields(SQLActive).Value) Then _
+                        aShifttype.Active = theRS.Fields(SQLActive).Value
+                    aShifttype.Version = theVersion 'change version to YYYYMM integer
+                    If Not IsDBNull(theRS.Fields(SQLDescription).Value) Then _
+                        aShifttype.Description = theRS.Fields(SQLDescription).Value
+                    If Not IsDBNull(theRS.Fields(SQLEffectiveStart).Value) Then _
+                        aShifttype.EffectiveDateStart = theRS.Fields(SQLEffectiveStart).Value
+                    If Not IsDBNull(theRS.Fields(SQLEffectiveEnd).Value) Then _
+                        aShifttype.EffectiveDateStop = theRS.Fields(SQLEffectiveEnd).Value
+                    aShifttype.Save() 'save the shifttype version to DB
+                    theShiftTypeCollection.Add(aShifttype)
+                    theRS.MoveNext()
+                Next
+
+            End If
+        End If
+        Return theShiftTypeCollection
+    End Function
+    Public Shared Function loadTemplateShiftTypesFromDB() As Collection
+        Dim theBuiltSql As New SQLStrBuilder
+        Dim theRS As New ADODB.Recordset
+        Dim theDBAC As New DBAC
+        Dim aShifttype As ScheduleShiftType
+        Dim theShiftTypeCollection As Collection
+        theShiftTypeCollection = New Collection
+        With theBuiltSql
+            .SQL_Select("*")
+            .SQL_From(TABLE_shiftType)
+            .SQL_Where(SQLVersion, "=", 0)
+            .SQL_Order_By(SQLShiftType)
             theDBAC.COpenDB(.SQLStringSelect, theRS)
         End With
 
@@ -439,11 +522,96 @@ Public Class ScheduleShiftType
                 theShiftTypeCollection.Add(aShifttype)
                 theRS.MoveNext()
             Next
-
         End If
         Return theShiftTypeCollection
     End Function
+    Public Sub Copy(TheInstanceToBeCopied As ScheduleShiftType)
 
+        With TheInstanceToBeCopied
+
+            Me.pCollection = .ShiftCollection
+            Me.ShiftStart = .ShiftStart
+            Me.ShiftStop = .ShiftStop
+            Me.ShiftType = .ShiftType
+            Me.Version = .Version
+            Me.Active = .Active
+            Me.EffectiveDateStart = .EffectiveDateStart
+            Me.EffectiveDateStop = .EffectiveDateStop
+            Me.Description = .Description
+
+        End With
+    End Sub
+    Public Sub Save()
+        Dim theBuiltSql As New SQLStrBuilder
+        Dim theRS As New ADODB.Recordset
+        Dim theDBAC As New DBAC
+
+        With theBuiltSql
+            .SQL_Select("*")
+            .SQL_From(TABLE_shiftType)
+            .SQL_Where(pShiftType.theSQLName, "=", Me.ShiftType)
+            .SQL_Where(pVersion.theSQLName, "=", Me.Version)
+            theDBAC.COpenDB(.SQLStringSelect, theRS)
+        End With
+
+        Dim theCount As Integer = theRS.RecordCount
+
+        Select Case theCount
+            Case 0  'if not create a new entry
+                With theBuiltSql
+                    .SQLClear()
+                    .SQL_Insert(TABLE_shiftType)
+                    .SQL_Values(pShiftStart.theSQLName, ShiftStart)
+                    .SQL_Values(pShiftStop.theSQLName, ShiftStop)
+                    .SQL_Values(pVersion.theSQLName, Version)
+                    .SQL_Values(pShiftType.theSQLName, ShiftType)
+                    .SQL_Values(pActive.theSQLName, Active)
+                    .SQL_Values(pEffectiveDateStart.theSQLName, EffectiveDateStart)
+                    .SQL_Values(pEffectiveDateStop.theSQLName, EffectiveDateStop)
+                    .SQL_Values(pDescription.theSQLName, Description)
+
+                    Dim numaffected As Integer
+                    theDBAC.CExecuteDB(.SQLStringInsert, numaffected)
+                End With
+            Case Else
+                Debug.WriteLine("there is already an existing instance with this version number ... this is bad")
+        End Select
+    End Sub
+    Public Sub Update()
+        Dim theBuiltSql As New SQLStrBuilder
+        Dim theRS As New ADODB.Recordset
+        Dim theDBAC As New DBAC
+
+        With theBuiltSql
+            .SQL_Select("*")
+            .SQL_From(TABLE_shiftType)
+            .SQL_Where(pShiftType.theSQLName, "=", Me.ShiftType)
+            .SQL_Where(pVersion.theSQLName, "=", Me.Version)
+            theDBAC.COpenDB(.SQLStringSelect, theRS)
+        End With
+
+        Dim theCount As Integer = theRS.RecordCount
+
+        Select Case theCount
+            Case 0
+                Debug.WriteLine("there is nothing to update ... this is bad")
+
+            Case 1 'if yes update it with the new value
+                theRS.Fields(pShiftStart.theSQLName).Value = ShiftStart
+                theRS.Fields(pShiftStop.theSQLName).Value = ShiftStop
+                theRS.Fields(pVersion.theSQLName).Value = Version
+                theRS.Fields(pActive.theSQLName).Value = Active
+                theRS.Fields(pShiftType.theSQLName).Value = ShiftType
+                theRS.Fields(pEffectiveDateStart.theSQLName).Value = EffectiveDateStart
+                theRS.Fields(pEffectiveDateStop.theSQLName).Value = EffectiveDateStop
+                theRS.Fields(pDescription.theSQLName).Value = Description
+                theRS.ActiveConnection = theDBAC.aConnection
+                theRS.UpdateBatch()
+                theRS.Close()
+            Case Else
+                Debug.WriteLine("there is more than one copy of this entry ... this is bad")
+        End Select
+    End Sub
 
 End Class
 
@@ -886,6 +1054,7 @@ Public Class ScheduleDoc
         End If
         Return aCollection
     End Function
+
 End Class
 
 Public Class scheduleDocAvailable
