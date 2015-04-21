@@ -251,50 +251,99 @@
     End Sub
 
     Public Sub statsMensuelles()
-        Dim theShiftTypeCounts As Collection
-        Dim ascheduleshifttype As ScheduleShiftType
+        'Dim theShiftTypeCounts As Collection
+        'Dim ascheduleshifttype As ScheduleShiftType
         'pour chaque medecin compter chaque type de shift
-        Dim theScheduleDoc As New ScheduleDoc(controlledMonth.Year, controlledMonth.Month)
+        Dim theDocCollection As Collection = ScheduleDoc.LoadAllDocsPerMonth(controlledMonth.Year, controlledMonth.Month)
         Dim aScheduleDoc As ScheduleDoc
         Dim ashift As ScheduleShift
         Dim aDay As ScheduleDay
-        Dim StartingRange As Excel.Range
-        StartingRange = controlledExcelSheet.Range("p3")
+        'Dim StartingRange As Excel.Range
+        'StartingRange = controlledExcelSheet.Range("p3")
 
-        For Each ascheduleshifttype In globalShiftTypes.ShiftCollection
-            StartingRange.Offset(-1, ascheduleshifttype.ShiftType).Value = "'" + ascheduleshifttype.Description
-        Next
+        'For Each ascheduleshifttype In controlledMonth.ShiftTypes
+        '    StartingRange.Offset(-1, ascheduleshifttype.ShiftType).Value = "'" + ascheduleshifttype.Description
+        'Next
 
         Dim aDOcAvail As scheduleDocAvailable
 
-        For Each aScheduleDoc In theScheduleDoc.DocList
-            StartingRange.Value = aScheduleDoc.Initials
-            theShiftTypeCounts = New Collection
+        'For Each aScheduleDoc In theDocCollection
+        '    StartingRange.Value = aScheduleDoc.Initials
+        '    theShiftTypeCounts = New Collection
 
-            For Each ascheduleshifttype In globalShiftTypes.ShiftCollection
-                StartingRange.Offset(0, ascheduleshifttype.ShiftType).Value = 0
-            Next
+        '    For Each ascheduleshifttype In globalShiftTypes.ShiftCollection
+        '        StartingRange.Offset(0, ascheduleshifttype.ShiftType).Value = 0
+        '    Next
 
 
+        '    For Each aDay In controlledMonth.Days
+        '        For Each ashift In aDay.Shifts
+        '            aDOcAvail = ashift.DocAvailabilities(aScheduleDoc.Initials)
+        '            If aDOcAvail.Availability = PublicEnums.Availability.Assigne Then
+        '                StartingRange.Offset(0, aDOcAvail.ShiftType).Value = StartingRange.Offset(0, aDOcAvail.ShiftType).Value + 1
+        '            End If
+        '        Next
+
+        '    Next
+
+
+        '    StartingRange = StartingRange.Offset(1, 0)
+        'Next
+        Dim anArray As Integer(,)
+
+        ReDim anArray(theDocCollection.Count - 1, controlledMonth.ShiftTypes.Count - 1)
+        Dim docCount As Integer = 0
+        Dim shiftCount As Integer = 0
+        For Each aScheduleDoc In theDocCollection
             For Each aDay In controlledMonth.Days
+                shiftCount = 0
                 For Each ashift In aDay.Shifts
                     aDOcAvail = ashift.DocAvailabilities(aScheduleDoc.Initials)
                     If aDOcAvail.Availability = PublicEnums.Availability.Assigne Then
-                        StartingRange.Offset(0, aDOcAvail.ShiftType).Value = StartingRange.Offset(0, aDOcAvail.ShiftType).Value + 1
+                        anArray(docCount, shiftCount) = anArray(docCount, shiftCount) + 1
                     End If
+                    shiftCount = shiftCount + 1
                 Next
-
             Next
-
-
-            StartingRange = StartingRange.Offset(1, 0)
+            docCount = docCount + 1
         Next
+
+        Dim alist As List(Of Integer)
+        Dim theList As List(Of List(Of Integer))
+
+        Dim x As Integer
+        Dim y As Integer
+        theList = New List(Of List(Of Integer))
+        For x = 0 To theDocCollection.Count - 1
+            alist = New List(Of Integer)
+            For y = 0 To controlledMonth.ShiftTypes.Count - 1
+                alist.Add(anArray(x, y))
+            Next
+            theList.Add(alist)
+        Next
+
+
+
+
 
         'noter le medecin sur le WS
         'dans un array de dimension n= types de shifts
         'compter les assignations
         'transferer les donnees sur la page
 
+        'Dim StartingRange As Excel.Range = controlledExcelSheet.Range("p3")
+        'StartingRange = StartingRange.Resize(8, 8)
+        'StartingRange.Value = anArray
+
+        Dim theFOrm As New Form2
+        theFOrm.Show()
+
+        'need to rebuild the taskpane on the basis of the currentlyselected month
+        'code below retreives the handle to the UserControl to trigger redraw() public function
+        Dim aCollection As System.Windows.Forms.Control.ControlCollection = theFOrm.Controls
+        Dim aElementHost As System.Windows.Forms.Integration.ElementHost = aCollection(0)
+        Dim aUserControl4 As UserControl4 = aElementHost.Child
+        aUserControl4.loadarray(theList)
 
     End Sub
 

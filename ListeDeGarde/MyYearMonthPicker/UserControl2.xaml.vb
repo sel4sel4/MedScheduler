@@ -119,6 +119,8 @@ Public Class UserControl2
         If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
         Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
         aController.statsMensuelles()
+       
+
     End Sub
 End Class
 

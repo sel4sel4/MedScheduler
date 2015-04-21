@@ -217,6 +217,12 @@
     <Compile Include="DrInterface\DrInterfaceForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Form2.Designer.vb">
+      <DependentUpon>Form2.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Form2.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GetNonDispos\Form1.Designer.vb">
       <DependentUpon>Form1.vb</DependentUpon>
     </Compile>
@@ -252,6 +258,9 @@
     <Compile Include="ShiftInterface\ShiftInterface.xaml.vb">
       <DependentUpon>ShiftInterface.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControl4.xaml.vb">
+      <DependentUpon>UserControl4.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Using EventsModules\UseDelegateM.vb" />
     <Compile Include="MyYearMonthPicker\UserControl2.xaml.vb">
       <DependentUpon>UserControl2.xaml</DependentUpon>
@@ -267,6 +276,9 @@
     </Compile>
     <EmbeddedResource Include="DrInterface\DrInterfaceForm.resx">
       <DependentUpon>DrInterfaceForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form2.resx">
+      <DependentUpon>Form2.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GetNonDispos\Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
@@ -376,6 +388,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ShiftInterface\ShiftInterface.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControl4.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
