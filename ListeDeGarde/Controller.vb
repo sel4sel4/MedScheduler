@@ -1,7 +1,6 @@
 ﻿Public Class Controller
     Private WithEvents controlledExcelSheet As Excel.Worksheet
     Private controlledMonth As ScheduleMonth
-    'Private controlledShiftTypes As ScheduleShiftType
     Private monthloaded As Boolean = False
     Private Const theRestTime As Long = 432000000000
 

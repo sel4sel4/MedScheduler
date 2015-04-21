@@ -24,13 +24,10 @@ Public Class UserControl3
         initializeShiftList()
         Lock(True)
     End Sub
-
-
     Private Sub MenuItem1Clicked(sender As Object, e As System.Windows.RoutedEventArgs)
         Dim ascheduleshift As ScheduleShiftType
         ascheduleshift = ShiftListView.Items(ShiftListView.SelectedIndex)
     End Sub
-
     Private Sub GetYearMonth()
         If Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then
             Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
@@ -59,7 +56,6 @@ Public Class UserControl3
         Me.ShiftListView.SelectedIndex = 0
 
     End Sub
-
     Private Sub Lock(locked As Boolean)
         Me.Description.IsReadOnly = locked
         Me.VersionNo.IsReadOnly = True
@@ -70,11 +66,9 @@ Public Class UserControl3
         Me.EffectiveStartDate.IsEnabled = Not locked
         Me.EffectiveStopDate.IsEnabled = Not locked
     End Sub
-
     Private Sub ShiftListView_selectionChanged(sender As Object, e As System.Windows.RoutedEventArgs) Handles ShiftListView.SelectionChanged
         UpdateListValues()
     End Sub
-
     Private Sub Hours_Loaded(sender As Object, e As Windows.RoutedEventArgs)
         Dim theComboBox As ComboBox
         theComboBox = CType(sender, ComboBox)
@@ -82,7 +76,6 @@ Public Class UserControl3
         theComboBox.SelectedIndex = 0
         UpdateListValues()
     End Sub
-
     Private Sub Mins_Loaded(sender As Object, e As Windows.RoutedEventArgs)
         Dim theComboBox As ComboBox
         theComboBox = CType(sender, ComboBox)
@@ -90,13 +83,9 @@ Public Class UserControl3
         theComboBox.SelectedIndex = 0
         UpdateListValues()
     End Sub
-
-
     Private Sub EditBtn_Click(sender As Object, e As Windows.RoutedEventArgs) Handles EditBtn.Click
         Lock(False)
-
     End Sub
-
     Private Sub UpdateListValues()
         'If IsDBNull(ShiftListView.SelectedItem) Then Exit Sub
         If changesOngoing Then Exit Sub
@@ -126,7 +115,6 @@ Public Class UserControl3
         theComboBox.ItemsSource = monthstrings
         changesOngoing = False
     End Sub
-
     Private Sub aYear_Loaded(sender As Object, e As Windows.RoutedEventArgs)
         changesOngoing = True
         Dim theComboBox As ComboBox
@@ -134,21 +122,18 @@ Public Class UserControl3
         theComboBox.ItemsSource = yearstrings
         changesOngoing = False
     End Sub
-
     Private Sub Year_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles Year.SelectionChanged
         If changesOngoing Then Exit Sub
         aYearP = CInt(Year.SelectedValue)
         initializeShiftList()
 
     End Sub
-
     Private Sub Month_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles Month.SelectionChanged
         If changesOngoing Then Exit Sub
         aMonthP = Month.SelectedIndex + 1
         initializeShiftList()
 
     End Sub
-
     Private Sub Edit_Template_Checked(sender As Object, e As Windows.RoutedEventArgs) Handles Edit_Template.Checked
         Month.IsEnabled = False
         Year.IsEnabled = False
@@ -159,7 +144,6 @@ Public Class UserControl3
         Year.IsEnabled = True
         initializeShiftList()
     End Sub
-
     Private Sub SaveBtn_Click(sender As Object, e As Windows.RoutedEventArgs) Handles SaveBtn.Click
         aScheduleshiftType.Description = Me.Description.Text
         aScheduleshiftType.ShiftStart = Me.StartHour.SelectedIndex * 60 + Me.StartMin.SelectedIndex * 5
