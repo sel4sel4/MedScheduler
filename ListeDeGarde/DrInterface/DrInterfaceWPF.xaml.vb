@@ -119,7 +119,7 @@ Public Class DrInterface
         End If
 
         Dim aDocList As Collection
-        aDocList = ScheduleDoc.LoadAllDocs2(aYearP, aMonthP)
+        aDocList = ScheduleDoc.LoadAllDocsPerMonth(aYearP, aMonthP)
         Me.DocListView.ItemsSource = aDocList
         Me.DocListView.SelectedIndex = 0
     End Sub

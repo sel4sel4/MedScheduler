@@ -358,7 +358,7 @@
         Dim aDay As ScheduleDay
         Dim ashift As ScheduleShift
         Dim theScheduledoc As New ScheduleDoc(controlledMonth.Year, controlledMonth.Month)
-        Dim docCollection As Collection = theScheduledoc.DocList
+        Dim docCollection As Collection = controlledMonth.DocList
         Dim ascheduleDoc As ScheduleDoc
         Dim nonDispoStart As Long
         Dim nonDispoStop As Long

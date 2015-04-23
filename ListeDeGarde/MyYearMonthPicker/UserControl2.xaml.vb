@@ -29,10 +29,16 @@ Public Class UserControl2
 
 
         'Get list of doc names and create a button for each. Assign initals as button name
-        Dim theScheduleDoc As New ScheduleDoc(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
-        Dim aScheduleDoc As ScheduleDoc
+        'Dim theScheduleDoc As New ScheduleDoc(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
+        'Dim aScheduleDoc As ScheduleDoc
+        'RemoveDocButtons()
+        'For Each aScheduleDoc In theScheduleDoc.DocList
+        '    Me.addDocButton(aScheduleDoc.FirstName + " " + aScheduleDoc.LastName, aScheduleDoc.Initials)
+        'Next
+        Dim theDocCollection As Collection = ScheduleDoc.LoadAllDocsPerMonth(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
         RemoveDocButtons()
-        For Each aScheduleDoc In theScheduleDoc.DocList
+        Dim aScheduleDoc As ScheduleDoc
+        For Each aScheduleDoc In theDocCollection
             Me.addDocButton(aScheduleDoc.FirstName + " " + aScheduleDoc.LastName, aScheduleDoc.Initials)
         Next
 
@@ -88,18 +94,24 @@ Public Class UserControl2
     End Sub
 
     Public Sub redraw()
-        Dim theScheduleDoc As New ScheduleDoc(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
-        Dim aScheduleDoc As ScheduleDoc
-        RemoveDocButtons()
-        For Each aScheduleDoc In theScheduleDoc.DocList
-            Me.addDocButton(aScheduleDoc.FirstName + " " + aScheduleDoc.LastName, aScheduleDoc.Initials)
-        Next
+        'Dim theScheduleDoc As New ScheduleDoc(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
+
+        'RemoveDocButtons()
+        'For Each aScheduleDoc In theScheduleDoc.DocList
+        '    Me.addDocButton(aScheduleDoc.FirstName + " " + aScheduleDoc.LastName, aScheduleDoc.Initials)
+        'Next
         If Globals.ThisAddIn.theControllerCollection.Count < 1 Then Exit Sub
         If Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then
             theController = Globals.ThisAddIn.theControllerCollection(Globals.ThisAddIn.Application.ActiveSheet.name)
 
             If Not IsNothing(theController) Then
                 Me.MoisAnnee.Content = theController.aControlledMonth.Year.ToString + "-" + monthstrings(theController.aControlledMonth.Month - 1)
+                Dim theDocCollection As Collection = ScheduleDoc.LoadAllDocsPerMonth(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
+                RemoveDocButtons()
+                Dim aScheduleDoc As ScheduleDoc
+                For Each aScheduleDoc In theDocCollection
+                    Me.addDocButton(aScheduleDoc.FirstName + " " + aScheduleDoc.LastName, aScheduleDoc.Initials)
+                Next
             Else : Me.MoisAnnee.Content = ""
             End If
         End If
