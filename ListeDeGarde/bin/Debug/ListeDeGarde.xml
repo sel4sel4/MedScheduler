@@ -14,14 +14,6 @@ InitializeComponent
 	<summary>
 UserControl3
 </summary>
-</member><member name="M:ListeDeGarde.UserControl4.InitializeComponent">
-	<summary>
-InitializeComponent
-</summary>
-</member><member name="T:ListeDeGarde.UserControl4">
-	<summary>
-UserControl4
-</summary>
 </member><member name="M:ListeDeGarde.DrInterface.InitializeComponent">
 	<summary>
 InitializeComponent
@@ -45,6 +37,14 @@ InitializeComponent
 </member><member name="T:ListeDeGarde.UserControl2">
 	<summary>
 UserControl2
+</summary>
+</member><member name="M:ListeDeGarde.UserControl4.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:ListeDeGarde.UserControl4">
+	<summary>
+UserControl4
 </summary>
 </member><member name="M:ListeDeGarde.ThisAddIn.#ctor(Microsoft.Office.Tools.Excel.ApplicationFactory,System.IServiceProvider)">
 </member><member name="M:ListeDeGarde.ThisAddIn.Initialize">

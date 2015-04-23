@@ -308,20 +308,23 @@
             Next
             docCount = docCount + 1
         Next
-
-        Dim alist As List(Of Integer)
-        Dim theList As List(Of List(Of Integer))
-
-        Dim x As Integer
-        Dim y As Integer
-        theList = New List(Of List(Of Integer))
-        For x = 0 To theDocCollection.Count - 1
-            alist = New List(Of Integer)
-            For y = 0 To controlledMonth.ShiftTypes.Count - 1
-                alist.Add(anArray(x, y))
-            Next
-            theList.Add(alist)
+        docCount = 0
+        Dim aCollection As New Collection
+        Dim theScheduleDocStats As ScheduleDocStats
+        For Each aScheduleDoc In theDocCollection
+            theScheduleDocStats = New ScheduleDocStats(aScheduleDoc.Initials, _
+                                                       anArray(docCount, 0), _
+                                                       anArray(docCount, 1), _
+                                                       anArray(docCount, 2), _
+                                                       anArray(docCount, 3), _
+                                                       anArray(docCount, 4), _
+                                                       anArray(docCount, 5), _
+                                                       anArray(docCount, 6), _
+                                                       anArray(docCount, 7))
+            aCollection.Add(theScheduleDocStats)
+            docCount = docCount + 1
         Next
+
 
 
 
@@ -341,10 +344,10 @@
 
         'need to rebuild the taskpane on the basis of the currentlyselected month
         'code below retreives the handle to the UserControl to trigger redraw() public function
-        Dim aCollection As System.Windows.Forms.Control.ControlCollection = theFOrm.Controls
-        Dim aElementHost As System.Windows.Forms.Integration.ElementHost = aCollection(0)
+        Dim bCollection As System.Windows.Forms.Control.ControlCollection = theFOrm.Controls
+        Dim aElementHost As System.Windows.Forms.Integration.ElementHost = bCollection(0)
         Dim aUserControl4 As UserControl4 = aElementHost.Child
-        aUserControl4.loadarray(theList)
+        aUserControl4.loadarray(aCollection)
 
     End Sub
 
@@ -495,12 +498,14 @@
             Dim theAssignedDocs As scheduleDocAvailable
             For Each theAssignedDocs In aCollection
                 theDay2 = controlledMonth.Days.Item(theAssignedDocs.Date_.Day)
-                theShift2 = theDay2.Shifts.Item(theAssignedDocs.ShiftType.ToString())
-                theShift2.Doc = theAssignedDocs.DocInitial
-                theDocAvailble = theShift2.DocAvailabilities(theAssignedDocs.DocInitial)
-                theDocAvailble.SetAvailabilityfromDB = PublicEnums.Availability.Assigne
-                theShift2.aRange.Value = theAssignedDocs.DocInitial
-                fixAvailability(theShift2.Doc, controlledMonth, theShift2)
+                If theDay2.Shifts.Contains(theAssignedDocs.ShiftType.ToString()) Then
+                    theShift2 = theDay2.Shifts.Item(theAssignedDocs.ShiftType.ToString())
+                    theShift2.Doc = theAssignedDocs.DocInitial
+                    theDocAvailble = theShift2.DocAvailabilities(theAssignedDocs.DocInitial)
+                    theDocAvailble.SetAvailabilityfromDB = PublicEnums.Availability.Assigne
+                    theShift2.aRange.Value = theAssignedDocs.DocInitial
+                    fixAvailability(theShift2.Doc, controlledMonth, theShift2)
+                End If
             Next
 
         End If

@@ -13,13 +13,16 @@ C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\GetNonDispos\UserControl1.baml
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\DrInterface\DrInterfaceWPF.baml
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ShiftInterface\ShiftInterface.baml
+C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\MonthlyStats\UserControl4.baml
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\MyYearMonthPicker\UserControl2.g.vb
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\GetNonDispos\UserControl1.g.vb
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\DrInterface\DrInterfaceWPF.g.vb
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ShiftInterface\ShiftInterface.g.vb
+C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\MonthlyStats\UserControl4.g.vb
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde_MarkupCompile.cache
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde.g.resources
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde.DrInterfaceForm.resources
+C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde.Form2.resources
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde.Form1.resources
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde.Ribbon1.resources
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde.YearMonthPicker.resources
@@ -29,6 +32,3 @@ C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde.dll
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde.xml
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde.pdb
-C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\UserControl4.baml
-C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\UserControl4.g.vb
-C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde.Form2.resources

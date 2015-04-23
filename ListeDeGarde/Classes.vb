@@ -1057,6 +1057,115 @@ Public Class ScheduleDoc
     End Function
 
 End Class
+Public Class ScheduleDocStats
+    Private pInitials As String
+    Private pShift1 As Integer
+    Private pShift2 As Integer
+    Private pShift3 As Integer
+    Private pShift4 As Integer
+    Private pShift5 As Integer
+    Private pShift6 As Integer
+    Private pShift7 As Integer
+    Private pShift8 As Integer
+
+
+    Public Property Initials() As String
+        Get
+            Return pInitials
+        End Get
+        Set(value As String)
+            pInitials = value
+        End Set
+    End Property
+
+    Public Property shift1() As Integer
+        Get
+            Return pShift1
+        End Get
+        Set(ByVal value As Integer)
+            pShift1 = value
+        End Set
+    End Property
+    Public Property shift2() As Integer
+        Get
+            Return pShift2
+        End Get
+        Set(ByVal value As Integer)
+            pShift2 = value
+        End Set
+    End Property
+    Public Property shift3() As Integer
+        Get
+            Return pShift3
+        End Get
+        Set(ByVal value As Integer)
+            pShift3 = value
+        End Set
+    End Property
+    Public Property shift4() As Integer
+        Get
+            Return pShift4
+        End Get
+        Set(ByVal value As Integer)
+            pShift4 = value
+        End Set
+    End Property
+    Public Property shift5() As Integer
+        Get
+            Return pShift5
+        End Get
+        Set(ByVal value As Integer)
+            pShift5 = value
+        End Set
+    End Property
+    Public Property shift6() As Integer
+        Get
+            Return pShift6
+        End Get
+        Set(ByVal value As Integer)
+            pShift6 = value
+        End Set
+    End Property
+    Public Property shift7() As Integer
+        Get
+            Return pShift7
+        End Get
+        Set(ByVal value As Integer)
+            pShift7 = value
+        End Set
+    End Property
+    Public Property shift8() As Integer
+        Get
+            Return pShift8
+        End Get
+        Set(ByVal value As Integer)
+            pShift8 = value
+        End Set
+    End Property
+
+    Public Sub New(aInitials As String, aShift1 As Integer, _
+                    aShift2 As Integer, _
+                     aShift3 As Integer, _
+                      aShift4 As Integer, _
+                       aShift5 As Integer, _
+                        aShift6 As Integer, _
+                         aShift7 As Integer, _
+                          aShift8 As Integer)
+        Initials = aInitials
+        shift1 = aShift1
+        shift2 = aShift2
+        shift3 = aShift3
+        shift4 = aShift4
+        shift5 = aShift5
+        shift6 = aShift6
+        shift7 = aShift7
+        shift8 = aShift8
+
+
+    End Sub
+
+
+End Class
 
 Public Class scheduleDocAvailable
     Private pDocInitial As T_DBRefTypeS
