@@ -96,6 +96,7 @@ Public Module PublicEnums
         NonDispoPermanente = 2
         NonDispoTemporaire = 3
         SurUtilise = 4
+        AssigneSpecial = 5
     End Enum
 
     Public Enum Weekdays

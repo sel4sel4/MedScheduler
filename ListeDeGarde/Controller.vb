@@ -193,6 +193,7 @@
                 Case PublicEnums.Availability.Dispo
                     thelist = thelist + theDocAvailable.DocInitial + ","
                 Case PublicEnums.Availability.Assigne
+                    thelist = thelist + theDocAvailable.DocInitial + ","
                     theSetValue = theDocAvailable.DocInitial
                 Case Else
 
@@ -473,9 +474,14 @@
     End Sub
 
     Public Sub resetSheetExt()
-        ClearAvailability()
-        SetUpPermNonDispos()
-        SetupAssignedDocs()
+        'clear the sheet
+        controlledExcelSheet.Cells.Clear()
+        'create a month
+        controlledMonth = New ScheduleMonth(controlledMonth.Month, controlledMonth.Year)
+
+        'Load shift types collection into global
+        'controlledShiftTypes = controlledMonth.ShiftTypes
+        resetSheet()
     End Sub
 
     Private Sub SetupAssignedDocs()
