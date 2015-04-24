@@ -2,6 +2,8 @@
     Private WithEvents controlledExcelSheet As Excel.Worksheet
     Private controlledMonth As ScheduleMonth
     Private monthloaded As Boolean = False
+    Private monthlystats As UserControl4
+    Private theMonthlyStatsForm As Form2
     Private Const theRestTime As Long = 432000000000
 
     Public ReadOnly Property aControlledMonth() As ScheduleMonth
@@ -70,9 +72,12 @@
         Next
         If anExitNotice = True Then
             ' resetSheet()
-            'statsMensuelles()
+            If Not theMonthlyStatsForm Is Nothing Then
+                If Not theMonthlyStatsForm.IsDisposed Then
+                    statsMensuellesUpdate()
+                End If
+            End If
         End If
-
     End Sub
 
     Public Sub HighLightDocAvailablilities(Initials As String)
@@ -252,44 +257,30 @@
     End Sub
 
     Public Sub statsMensuelles()
-        'Dim theShiftTypeCounts As Collection
-        'Dim ascheduleshifttype As ScheduleShiftType
+
+
+
+        If theMonthlyStatsForm Is Nothing Then
+            theMonthlyStatsForm = New Form2
+        Else
+            theMonthlyStatsForm.Dispose()
+            theMonthlyStatsForm = New Form2
+        End If
+        theMonthlyStatsForm.TopMost = True
+        theMonthlyStatsForm.Show()
+        statsMensuellesUpdate()
+
+
+    End Sub
+
+    Private Sub statsMensuellesUpdate()
         'pour chaque medecin compter chaque type de shift
         Dim theDocCollection As Collection = ScheduleDoc.LoadAllDocsPerMonth(controlledMonth.Year, controlledMonth.Month)
         Dim aScheduleDoc As ScheduleDoc
         Dim ashift As ScheduleShift
         Dim aDay As ScheduleDay
-        'Dim StartingRange As Excel.Range
-        'StartingRange = controlledExcelSheet.Range("p3")
-
-        'For Each ascheduleshifttype In controlledMonth.ShiftTypes
-        '    StartingRange.Offset(-1, ascheduleshifttype.ShiftType).Value = "'" + ascheduleshifttype.Description
-        'Next
-
         Dim aDOcAvail As scheduleDocAvailable
 
-        'For Each aScheduleDoc In theDocCollection
-        '    StartingRange.Value = aScheduleDoc.Initials
-        '    theShiftTypeCounts = New Collection
-
-        '    For Each ascheduleshifttype In globalShiftTypes.ShiftCollection
-        '        StartingRange.Offset(0, ascheduleshifttype.ShiftType).Value = 0
-        '    Next
-
-
-        '    For Each aDay In controlledMonth.Days
-        '        For Each ashift In aDay.Shifts
-        '            aDOcAvail = ashift.DocAvailabilities(aScheduleDoc.Initials)
-        '            If aDOcAvail.Availability = PublicEnums.Availability.Assigne Then
-        '                StartingRange.Offset(0, aDOcAvail.ShiftType).Value = StartingRange.Offset(0, aDOcAvail.ShiftType).Value + 1
-        '            End If
-        '        Next
-
-        '    Next
-
-
-        '    StartingRange = StartingRange.Offset(1, 0)
-        'Next
         Dim anArray As Integer(,)
 
         ReDim anArray(theDocCollection.Count - 1, controlledMonth.ShiftTypes.Count - 1)
@@ -325,29 +316,12 @@
             docCount = docCount + 1
         Next
 
-
-
-
-
-
-        'noter le medecin sur le WS
-        'dans un array de dimension n= types de shifts
-        'compter les assignations
-        'transferer les donnees sur la page
-
-        'Dim StartingRange As Excel.Range = controlledExcelSheet.Range("p3")
-        'StartingRange = StartingRange.Resize(8, 8)
-        'StartingRange.Value = anArray
-
-        Dim theFOrm As New Form2
-        theFOrm.Show()
-
         'need to rebuild the taskpane on the basis of the currentlyselected month
         'code below retreives the handle to the UserControl to trigger redraw() public function
-        Dim bCollection As System.Windows.Forms.Control.ControlCollection = theFOrm.Controls
+        Dim bCollection As System.Windows.Forms.Control.ControlCollection = theMonthlyStatsForm.Controls
         Dim aElementHost As System.Windows.Forms.Integration.ElementHost = bCollection(0)
-        Dim aUserControl4 As UserControl4 = aElementHost.Child
-        aUserControl4.loadarray(aCollection)
+        monthlystats = aElementHost.Child
+        monthlystats.loadarray(aCollection)
 
     End Sub
 
@@ -373,24 +347,6 @@
             If Not IsNothing(aCollection) Then
                 'iterate through the doctors list of unavailabilities
                 For Each aSchedulenondispo In aCollection
-
-                    'start with the day prior to the start of the unavailability (to cover the 0-8 shift)
-                    'If controlledMonth.Days.Contains(aSchedulenondispo.DateStart.Day - 1) Then
-                    '    aDay = controlledMonth.Days.Item(aSchedulenondispo.DateStart.Day - 1)
-                    '    For Each ashift In aDay.Shifts
-                    '        If aSchedulenondispo.TimeStart + 1440 < ashift.ShiftStop Then
-                    '            Dim thedocAvail As scheduleDocAvailable
-                    '            If ashift.DocAvailabilities.Contains(ascheduleDoc.Initials) Then
-                    '                thedocAvail = ashift.DocAvailabilities.Item(ascheduleDoc.Initials)
-                    '                thedocAvail.Availability = PublicEnums.Availability.NonDispoPermanente
-                    '                fixlist(ashift)
-                    '            End If
-                    '        End If
-                    '    Next
-                    'End If
-                    'FIX: non-dispos spanning more than one month
-                    'cycle through the days included in the non dispo
-
                     For y As Integer = aSchedulenondispo.DateStart.Day - 1 To aSchedulenondispo.DateStop.Day
                         If controlledMonth.Days.Contains(y) Then
                             aDay = controlledMonth.Days.Item(y)
@@ -412,7 +368,6 @@
                                     End If
                                     fixlist(ashift)
                                 End If
-
                             Next
                         End If
                     Next
@@ -501,13 +456,21 @@
                 If theDay2.Shifts.Contains(theAssignedDocs.ShiftType.ToString()) Then
                     theShift2 = theDay2.Shifts.Item(theAssignedDocs.ShiftType.ToString())
                     theShift2.Doc = theAssignedDocs.DocInitial
-                    theDocAvailble = theShift2.DocAvailabilities(theAssignedDocs.DocInitial)
-                    theDocAvailble.SetAvailabilityfromDB = PublicEnums.Availability.Assigne
-                    theShift2.aRange.Value = theAssignedDocs.DocInitial
-                    fixAvailability(theShift2.Doc, controlledMonth, theShift2)
+                    If theShift2.DocAvailabilities.Contains(theAssignedDocs.DocInitial) Then
+                        theDocAvailble = theShift2.DocAvailabilities(theAssignedDocs.DocInitial)
+                        theDocAvailble.SetAvailabilityfromDB = PublicEnums.Availability.Assigne
+                        theShift2.aRange.Value = theAssignedDocs.DocInitial
+                        fixAvailability(theShift2.Doc, controlledMonth, theShift2)
+                    Else
+                        Windows.MessageBox.Show("Un medecin avec les initialles " _
+                                                + theAssignedDocs.DocInitial + " Etait assigné au quart de travail " _
+                                                + theShift2.Description.ToString() + " le " + theDay2.theDate.Day.ToString() _
+                                                + ", mais le medecin a été retiré de la liste des médecins. Son assignation au quart de travail a été retiré.")
+                        Dim aScheduleDocAvailable As New scheduleDocAvailable(" ", PublicEnums.Availability.Assigne, theDay2.theDate, theShift2.ShiftType)
+                        aScheduleDocAvailable.DeleteScheduleDataEntry()
+                    End If
                 End If
             Next
-
         End If
     End Sub
 

@@ -63,8 +63,6 @@ Public Class UserControl3
         Me.StartMin.IsEnabled = Not locked
         Me.StopHour.IsEnabled = Not locked
         Me.StopMin.IsEnabled = Not locked
-        Me.EffectiveStartDate.IsEnabled = Not locked
-        Me.EffectiveStopDate.IsEnabled = Not locked
     End Sub
     Private Sub ShiftListView_selectionChanged(sender As Object, e As System.Windows.RoutedEventArgs) Handles ShiftListView.SelectionChanged
         UpdateListValues()
@@ -102,8 +100,6 @@ Public Class UserControl3
         End If
         Me.StopHour.SelectedIndex = theStopInMinutes \ 60
         Me.StopMin.SelectedIndex = (ascheduleshiftType.ShiftStop Mod 60) \ 5
-        Me.EffectiveStartDate.SelectedDate = ascheduleshiftType.EffectiveDateStart
-        Me.EffectiveStopDate.SelectedDate = aScheduleshiftType.EffectiveDateStop
         Me.ActiveCB.IsChecked = aScheduleshiftType.Active
 
         Lock(True)

@@ -4,20 +4,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" Height="584" Width="310">
+             mc:Ignorable="d" Height="508" Width="307">
 	
   
 
     <Grid >
-    	<TextBox x:Name="version1" HorizontalAlignment="Left" Height="23" Margin="108.077,69.92,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="45.999"/>
-    	<TextBox x:Name="lastName1" HorizontalAlignment="Left" Height="23" Margin="154.23,25.96,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="138.53"/>
-    	<TextBox x:Name="firstName1" HorizontalAlignment="Left" Height="23" Margin="12.5,25.96,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="132.433"/>
-    	<TextBox x:Name="initials1" HorizontalAlignment="Left" Height="23" Margin="10,69.92,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="67.207"/>
-    	<TextBlock HorizontalAlignment="Left" Margin="12.5,53.96,0,0" TextWrapping="Wrap" Text="Initials" VerticalAlignment="Top"/>
-    	<TextBlock HorizontalAlignment="Left" Margin="12.5,10,0,0" TextWrapping="Wrap" Text="First Name" VerticalAlignment="Top"/>
-    	<TextBlock HorizontalAlignment="Left" Margin="154.23,10,0,0" TextWrapping="Wrap" Text="Last Name" VerticalAlignment="Top"/>
-    	<TextBlock HorizontalAlignment="Left" Margin="108.077,53.96,0,0" TextWrapping="Wrap" Text="Version" VerticalAlignment="Top"/>
-    	<ListView x:Name="DocListView" HorizontalAlignment="Left" Height="232.24" Margin="12.5,220.38,0,0" VerticalAlignment="Top" Width="287.5">
+    	<TextBox x:Name="version1" HorizontalAlignment="Left" Height="23" Margin="104.63,125.92,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="45.999"/>
+    	<TextBox x:Name="lastName1" HorizontalAlignment="Left" Height="23" Margin="150.783,81.96,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="138.53"/>
+    	<TextBox x:Name="firstName1" HorizontalAlignment="Left" Height="23" Margin="9.053,81.96,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="132.433"/>
+    	<TextBox x:Name="initials1" HorizontalAlignment="Left" Height="23" Margin="6.553,125.92,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="67.207"/>
+    	<TextBlock HorizontalAlignment="Left" Margin="9.053,109.96,0,0" TextWrapping="Wrap" Text="Surnom:" VerticalAlignment="Top" Width="55.97"/>
+    	<TextBlock HorizontalAlignment="Left" Margin="9.053,66,0,0" TextWrapping="Wrap" Text="Prénom:" VerticalAlignment="Top"/>
+    	<TextBlock HorizontalAlignment="Left" Margin="150.783,66,0,0" TextWrapping="Wrap" Text="Nom de famille" VerticalAlignment="Top"/>
+    	<TextBlock HorizontalAlignment="Left" Margin="104.63,109.96,0,0" TextWrapping="Wrap" VerticalAlignment="Top"><Run Text="Version"/><Run Text=":"/></TextBlock>
+    	<ListView x:Name="DocListView" HorizontalAlignment="Left" Height="232.24" Margin="9.053,208.34,0,0" VerticalAlignment="Top" Width="287.5">
     		<ListView.View>
     			<GridView>
     				<GridViewColumn x:Name="FirstName"  Header="Prénom:" Width="110" DisplayMemberBinding ="{Binding FirstName}"  >
@@ -44,18 +44,20 @@
     			</GridView>
     		</ListView.View>
     	</ListView>
-    	<Button Content="Sauvegarder" HorizontalAlignment="Left" Margin="226,513.04,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-    	<Button Content="Nouveau Medecin" HorizontalAlignment="Left" Margin="183,459.12,0,0" VerticalAlignment="Top" Width="117" Click="Button_Click_1"/>
-    	<Button Content="Modifier Medecin" HorizontalAlignment="Left" Margin="183,486.08,0,0" VerticalAlignment="Top" Width="117" Click="Button_Click_2"/>
-    	<TextBlock HorizontalAlignment="Left" Margin="12.5,99,0,0" TextWrapping="Wrap" Text="Applicable du: " VerticalAlignment="Top"/>
-    	<TextBlock HorizontalAlignment="Left" Margin="130.67,99,0,0" TextWrapping="Wrap" Text="Au:" VerticalAlignment="Top"/>
-    	<DatePicker x:Name="Du1" HorizontalAlignment="Left" Margin="13.447,114.96,0,0" VerticalAlignment="Top" Height="30.04" Width="103.493"/>
-    	<DatePicker x:Name="Au1" HorizontalAlignment="Left" Margin="130.67,114.96,0,0" VerticalAlignment="Top" Height="30.04" Width="103.493"/>
-    	<CheckBox x:Name="Nuits" Content="Fait les nuits&#xD;&#xA;" HorizontalAlignment="Left" Margin="18.384,158.01,0,0" VerticalAlignment="Top" Height="16.04" Width="87.44"/>
-    	<CheckBox x:Name="Soins" Content="Fait les soins" HorizontalAlignment="Left" Margin="18.384,179.05,0,0" VerticalAlignment="Top"/>
-    	<CheckBox x:Name="Hospit" Content="Fait l'Hospit&#xD;&#xA;" HorizontalAlignment="Left" Margin="117.81,158.09,0,0" VerticalAlignment="Top" Height="15.96" Width="100.563"/>
-    	<CheckBox x:Name="Urgence" Content="Fait de l'urgence&#xD;&#xA;" HorizontalAlignment="Left" Margin="117.81,179.05,0,0" VerticalAlignment="Top" Height="16.92" Width="109.44"/>
-    	<CheckBox x:Name="Active" Content="Actif&#xA;" HorizontalAlignment="Left" Margin="183,72.92,0,0" VerticalAlignment="Top" Height="15.96" Width="100.563"/>
+    	<Button x:Name="SaveBtn" Content="Sauvegarder" HorizontalAlignment="Left" Margin="179.553,474.04,0,0" VerticalAlignment="Top" Width="117" Click="SaveBtn_Click"/>
+    	<Button x:Name="NewBtn" Content="Nouveau Medecin" HorizontalAlignment="Left" Margin="10,445.58,0,0" VerticalAlignment="Top" Width="117" Click="NewBtn_Click"/>
+    	<Button x:Name="ModifyBtn" Content="Modifier Medecin" HorizontalAlignment="Left" Margin="179.553,445.58,0,0" VerticalAlignment="Top" Width="117" Click="ModifyBtn_Click"/>
+    	<CheckBox x:Name="Nuits" Content="Fait les nuits&#xD;&#xA;" HorizontalAlignment="Left" Margin="21.85,165.38,0,0" VerticalAlignment="Top" Height="16.04" Width="87.44"/>
+    	<CheckBox x:Name="Soins" Content="Fait les soins" HorizontalAlignment="Left" Margin="21.85,186.42,0,0" VerticalAlignment="Top"/>
+    	<CheckBox x:Name="Hospit" Content="Fait l'Hospit&#xD;&#xA;" HorizontalAlignment="Left" Margin="121.276,165.46,0,0" VerticalAlignment="Top" Height="15.96" Width="100.563"/>
+    	<CheckBox x:Name="Urgence" Content="Fait de l'urgence&#xD;&#xA;" HorizontalAlignment="Left" Margin="121.276,186.42,0,0" VerticalAlignment="Top" Height="16.92" Width="109.44"/>
+    	<CheckBox x:Name="Active" Content="Actif&#xA;" HorizontalAlignment="Left" Margin="179.553,128.92,0,0" VerticalAlignment="Top" Height="15.96" Width="100.563"/>
+    	<Button x:Name="EraseBtn" Content="Effacer Medecin" HorizontalAlignment="Left" Margin="10,474.04,0,0" VerticalAlignment="Top" Width="117" Click="EraseBtn_Click"/>
+    	<ComboBox x:Name="Year" HorizontalAlignment="Left" Margin="80,10,0,0" VerticalAlignment="Top" Width="64" Loaded="aYear_Loaded"/>
+    	<ComboBox x:Name="Month" HorizontalAlignment="Left" Margin="80,36.96,0,0" VerticalAlignment="Top" Width="97" Loaded="aMonth_Loaded"/>
+    	<Label Content="Année:" HorizontalAlignment="Left" Margin="5,5.92,0,0" VerticalAlignment="Top" Width="58" Height="27" RenderTransformOrigin="0.485,-2.235"/>
+    	<Label Content="Mois:" HorizontalAlignment="Left" Margin="5,32.92,0,0" VerticalAlignment="Top" Width="68" Height="27" RenderTransformOrigin="0.485,-2.235"/>
+    	<CheckBox x:Name="Edit_Template" Content="Modifier Gabarit" HorizontalAlignment="Left" Margin="183,10.92,0,0" VerticalAlignment="Top" Width="109"/>
             
     </Grid>
 </UserControl>
