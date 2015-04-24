@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="UserControl4"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" Height="311.835" Width="306.326">
+    <Grid>
+	   	<DataGrid x:Name="MyData" HorizontalAlignment="Center" Margin="21,10,0,0" VerticalAlignment="Top" Height="280" Width="auto"  AutoGenerateColumns="False">
+    		    <DataGrid.Columns>
+
+			<DataGridTextColumn   Header="Doc Initials"  Binding="{Binding Initials}"/>
+			<DataGridTextColumn  Header="8-16 Urg."  Binding="{Binding shift1}"/>
+			<DataGridTextColumn Header="10-15 Urg."  Binding="{Binding shift2}"/>
+			<DataGridTextColumn Header="15-20 Urg."  Binding="{Binding shift3}"/>
+			<DataGridTextColumn Header="16-24 Urg."  Binding="{Binding shift4}"/>
+			<DataGridTextColumn Header="0-8 Urg."  Binding="{Binding shift5}"/>
+			<DataGridTextColumn Header="8-16 Hos."  Binding="{Binding shift6}"/>
+			<DataGridTextColumn Header="8-20 Soins"  Binding="{Binding shift7}"/>
+			<DataGridTextColumn Header="Transfert"  Binding="{Binding shift8}"/>
+			    </DataGrid.Columns>
+
+		</DataGrid>
+
+    
+            
+    </Grid>
+</UserControl>
