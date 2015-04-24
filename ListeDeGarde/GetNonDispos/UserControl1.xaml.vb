@@ -155,20 +155,11 @@ Public Class UserControl1
     End Sub
 
     Private Sub LoadDocList()
-        Dim theScheduleDoc As New ScheduleDoc(aYearP, aMonthP)
-        'theDocList2 = theScheduleDoc.DocList
-        'Dim aScheduleDoc As ScheduleDoc
-        'Dim x As Integer
-        'ReDim theDocList(0 To theScheduleDoc.DocList.Count - 1)
-        'ReDim theInitialsList(0 To theScheduleDoc.DocList.Count - 1)
-        'For Each aScheduleDoc In theScheduleDoc.DocList
-        '    theDocList(x) = aScheduleDoc.FirstName + " " + aScheduleDoc.LastName
-        '    theInitialsList(x) = aScheduleDoc.Initials
-        '    x = x + 1
-        'Next
+        Dim theScheduleDocCollection As New Collection
+        theScheduleDocCollection = ScheduleDoc.LoadAllDocsPerMonth(aYearP, aMonthP)
         changesOngoing = True
-        If theScheduleDoc.DocList.Count > 0 Then
-            Me.DocList.ItemsSource = theScheduleDoc.DocList
+        If theScheduleDocCollection.Count > 0 Then
+            Me.DocList.ItemsSource = theScheduleDocCollection
             Me.DocList.DisplayMemberPath = "FistAndLastName"
             Me.DocList.SelectedValuePath = "Initials"
             Me.DocList.SelectedIndex = 0
