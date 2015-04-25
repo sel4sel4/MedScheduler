@@ -509,21 +509,18 @@ Public Class ScheduleDoc
     Private pInitials As T_DBRefTypeS
     Private pActive As T_DBRefTypeB
     Private pVersion As T_DBRefTypeI
-    Private pMinShift As T_DBRefTypeI
-    Private pMaxShift As T_DBRefTypeI
+    Private pShift1 As T_DBRefTypeI
+    Private pShift2 As T_DBRefTypeI
+    Private pShift3 As T_DBRefTypeI
+    Private pShift4 As T_DBRefTypeI
+    Private pShift5 As T_DBRefTypeI
     Private pUrgenceTog As T_DBRefTypeB
     Private pHospitTog As T_DBRefTypeB
     Private pSoinsTog As T_DBRefTypeB
     Private pNuitsTog As T_DBRefTypeB
     Private pYear As Integer
     Private pMonth As Integer
-    'Private Shared pDocList As Collection
 
-    'Public ReadOnly Property DocList() As Collection
-    '    Get
-    '        Return pDocList
-    '    End Get
-    'End Property
     Public Property FirstName() As String
         Get
             Return pFirstName.theValue
@@ -564,20 +561,44 @@ Public Class ScheduleDoc
             pVersion.theValue = value
         End Set
     End Property
-    Public Property MinShift() As Integer
+    Public Property Shift1() As Integer
         Get
-            Return pMinShift.theValue
+            Return pShift1.theValue
         End Get
         Set(ByVal value As Integer)
-            pMinShift.theValue = value
+            pShift1.theValue = value
         End Set
     End Property
-    Public Property MaxShift() As Integer
+    Public Property Shift2() As Integer
         Get
-            Return pMaxShift.theValue
+            Return pShift2.theValue
         End Get
         Set(ByVal value As Integer)
-            pMaxShift.theValue = value
+            pShift2.theValue = value
+        End Set
+    End Property
+    Public Property Shift3() As Integer
+        Get
+            Return pShift3.theValue
+        End Get
+        Set(ByVal value As Integer)
+            pShift3.theValue = value
+        End Set
+    End Property
+    Public Property Shift4() As Integer
+        Get
+            Return pShift4.theValue
+        End Get
+        Set(ByVal value As Integer)
+            pShift4.theValue = value
+        End Set
+    End Property
+    Public Property Shift5() As Integer
+        Get
+            Return pShift5.theValue
+        End Get
+        Set(ByVal value As Integer)
+            pShift5.theValue = value
         End Set
     End Property
     Public Property UrgenceTog() As Boolean
@@ -623,8 +644,11 @@ Public Class ScheduleDoc
         pInitials.theSQLName = SQLInitials
         pActive.theSQLName = SQLActive
         pVersion.theSQLName = SQLVersion
-        pMinShift.theSQLName = SQLMinShift
-        pMaxShift.theSQLName = SQLMaxShift
+        pShift1.theSQLName = SQLShift1
+        pShift2.theSQLName = SQLShift2
+        pShift3.theSQLName = SQLShift3
+        pShift4.theSQLName = SQLShift4
+        pShift5.theSQLName = SQLShift5
         pUrgenceTog.theSQLName = SQLUrgenceTog
         pHospitTog.theSQLName = SQLHospitTog
         pSoinsTog.theSQLName = SQLSoinsTog
@@ -635,8 +659,11 @@ Public Class ScheduleDoc
         Initials = "Initialles"
         Active = True
         Version = 1
-        MinShift = 0
-        MaxShift = 99
+        Shift1 = 0
+        Shift2 = 0
+        Shift3 = 0
+        Shift4 = 0
+        Shift5 = 0
         UrgenceTog = True
         HospitTog = True
         SoinsTog = True
@@ -654,8 +681,11 @@ Public Class ScheduleDoc
             .SQL_Where(pInitials.theSQLName, "=", Initials)
             .SQL_Where(pActive.theSQLName, "=", Active)
             .SQL_Where(pVersion.theSQLName, "=", Version)
-            .SQL_Where(pMinShift.theSQLName, "=", MinShift)
-            .SQL_Where(pMaxShift.theSQLName, "=", MaxShift)
+            .SQL_Where(pShift1.theSQLName, "=", Shift1)
+            .SQL_Where(pShift2.theSQLName, "=", Shift2)
+            .SQL_Where(pShift3.theSQLName, "=", Shift3)
+            .SQL_Where(pShift4.theSQLName, "=", Shift4)
+            .SQL_Where(pShift5.theSQLName, "=", Shift5)
             .SQL_Where(pUrgenceTog.theSQLName, "=", UrgenceTog)
             .SQL_Where(pHospitTog.theSQLName, "=", HospitTog)
             .SQL_Where(pSoinsTog.theSQLName, "=", SoinsTog)
@@ -672,8 +702,11 @@ Public Class ScheduleDoc
         pInitials.theSQLName = SQLInitials
         pActive.theSQLName = SQLActive
         pVersion.theSQLName = SQLVersion
-        pMinShift.theSQLName = SQLMinShift
-        pMaxShift.theSQLName = SQLMaxShift
+        pShift1.theSQLName = SQLShift1
+        pShift2.theSQLName = SQLShift2
+        pShift3.theSQLName = SQLShift3
+        pShift4.theSQLName = SQLShift4
+        pShift5.theSQLName = SQLShift5
         pUrgenceTog.theSQLName = SQLUrgenceTog
         pHospitTog.theSQLName = SQLHospitTog
         pSoinsTog.theSQLName = SQLSoinsTog
@@ -684,8 +717,11 @@ Public Class ScheduleDoc
         Initials = "Initialles"
         Active = True
         Version = 1
-        MinShift = 0
-        MaxShift = 99
+        Shift1 = 0
+        Shift2 = 0
+        Shift3 = 0
+        Shift4 = 0
+        Shift5 = 0
         UrgenceTog = True
         HospitTog = True
         SoinsTog = True
@@ -705,8 +741,11 @@ Public Class ScheduleDoc
                     aInitials As String, _
                     aActive As Boolean, _
                     aVersion As Integer, _
-                    aMinShift As Integer, _
-                    aMaxShift As Integer, _
+                    aShift1 As Integer, _
+                    aShift2 As Integer, _
+                    aShift3 As Integer, _
+                    aShift4 As Integer, _
+                    aShift5 As Integer, _
                     aUrgenceTog As Boolean, _
                     aHospitTog As Boolean, _
                     aSoinsTog As Boolean, _
@@ -717,8 +756,11 @@ Public Class ScheduleDoc
         pInitials.theSQLName = SQLInitials
         pActive.theSQLName = SQLActive
         pVersion.theSQLName = SQLVersion
-        pMinShift.theSQLName = SQLMinShift
-        pMaxShift.theSQLName = SQLMaxShift
+        pShift1.theSQLName = SQLShift1
+        pShift2.theSQLName = SQLShift2
+        pShift3.theSQLName = SQLShift3
+        pShift4.theSQLName = SQLShift4
+        pShift5.theSQLName = SQLShift5
         pUrgenceTog.theSQLName = SQLUrgenceTog
         pHospitTog.theSQLName = SQLHospitTog
         pSoinsTog.theSQLName = SQLSoinsTog
@@ -729,8 +771,12 @@ Public Class ScheduleDoc
         Initials = aInitials
         Active = aActive
         Version = aVersion
-        MinShift = aMinShift
-        MaxShift = aMaxShift
+        Shift1 = aShift1
+        Shift2 = aShift2
+        Shift3 = aShift3
+        Shift4 = aShift4
+        Shift5 = aShift5
+
         UrgenceTog = aUrgenceTog
         HospitTog = aHospitTog
         SoinsTog = aSoinsTog
@@ -762,8 +808,11 @@ Public Class ScheduleDoc
                     .SQL_Values(pInitials.theSQLName, Initials)
                     .SQL_Values(pActive.theSQLName, Active)
                     .SQL_Values(pVersion.theSQLName, Version)
-                    .SQL_Values(pMinShift.theSQLName, MinShift)
-                    .SQL_Values(pMaxShift.theSQLName, MaxShift)
+                    .SQL_Values(pShift1.theSQLName, Shift1)
+                    .SQL_Values(pShift2.theSQLName, Shift2)
+                    .SQL_Values(pShift3.theSQLName, Shift3)
+                    .SQL_Values(pShift4.theSQLName, Shift4)
+                    .SQL_Values(pShift5.theSQLName, Shift5)
                     .SQL_Values(pUrgenceTog.theSQLName, UrgenceTog)
                     .SQL_Values(pHospitTog.theSQLName, HospitTog)
                     .SQL_Values(pSoinsTog.theSQLName, SoinsTog)
@@ -781,8 +830,11 @@ Public Class ScheduleDoc
                 theRS.Fields(pInitials.theSQLName).Value = Initials
                 theRS.Fields(pActive.theSQLName).Value = Active
                 theRS.Fields(pVersion.theSQLName).Value = Version
-                theRS.Fields(pMinShift.theSQLName).Value = MinShift
-                theRS.Fields(pMaxShift.theSQLName).Value = MaxShift
+                theRS.Fields(pShift1.theSQLName).Value = Shift1
+                theRS.Fields(pShift2.theSQLName).Value = Shift2
+                theRS.Fields(pShift3.theSQLName).Value = Shift3
+                theRS.Fields(pShift4.theSQLName).Value = Shift4
+                theRS.Fields(pShift5.theSQLName).Value = Shift5
                 theRS.Fields(pUrgenceTog.theSQLName).Value = UrgenceTog
                 theRS.Fields(pHospitTog.theSQLName).Value = HospitTog
                 theRS.Fields(pSoinsTog.theSQLName).Value = SoinsTog
@@ -827,10 +879,17 @@ Public Class ScheduleDoc
                 aScheduleDoc.Active = theRS.Fields(SQLActive).Value
                 If Not IsDBNull(theRS.Fields(SQLVersion).Value) Then _
                 aScheduleDoc.Version = theRS.Fields(SQLVersion).Value
-                If Not IsDBNull(theRS.Fields(SQLMinShift).Value) Then _
-                    aScheduleDoc.MinShift = theRS.Fields(SQLMinShift).Value
-                If Not IsDBNull(theRS.Fields(SQLMaxShift).Value) Then _
-                    aScheduleDoc.MaxShift = theRS.Fields(SQLMaxShift).Value
+                If Not IsDBNull(theRS.Fields(SQLShift1).Value) Then _
+                aScheduleDoc.Shift1 = theRS.Fields(SQLShift1).Value
+                If Not IsDBNull(theRS.Fields(SQLShift2).Value) Then _
+                aScheduleDoc.Shift2 = theRS.Fields(SQLShift2).Value
+                If Not IsDBNull(theRS.Fields(SQLShift3).Value) Then _
+                aScheduleDoc.Shift3 = theRS.Fields(SQLShift3).Value
+                If Not IsDBNull(theRS.Fields(SQLShift4).Value) Then _
+                aScheduleDoc.Shift4 = theRS.Fields(SQLShift4).Value
+                If Not IsDBNull(theRS.Fields(SQLShift5).Value) Then _
+                aScheduleDoc.Shift5 = theRS.Fields(SQLShift5).Value
+
                 If Not IsDBNull(theRS.Fields(SQLUrgenceTog).Value) Then _
                     aScheduleDoc.UrgenceTog = theRS.Fields(SQLUrgenceTog).Value
                 If Not IsDBNull(theRS.Fields(SQLHospitTog).Value) Then _
@@ -866,10 +925,16 @@ Public Class ScheduleDoc
                     If Not IsDBNull(theRS.Fields(SQLActive).Value) Then _
                     aScheduleDoc.Active = theRS.Fields(SQLActive).Value
                     aScheduleDoc.Version = theVersion 'change version to YYYYMM integer
-                    If Not IsDBNull(theRS.Fields(SQLMinShift).Value) Then _
-                        aScheduleDoc.MinShift = theRS.Fields(SQLMinShift).Value
-                    If Not IsDBNull(theRS.Fields(SQLMaxShift).Value) Then _
-                        aScheduleDoc.MaxShift = theRS.Fields(SQLMaxShift).Value
+                    If Not IsDBNull(theRS.Fields(SQLShift1).Value) Then _
+                    aScheduleDoc.Shift1 = theRS.Fields(SQLShift1).Value
+                    If Not IsDBNull(theRS.Fields(SQLShift2).Value) Then _
+                    aScheduleDoc.Shift2 = theRS.Fields(SQLShift2).Value
+                    If Not IsDBNull(theRS.Fields(SQLShift3).Value) Then _
+                    aScheduleDoc.Shift3 = theRS.Fields(SQLShift3).Value
+                    If Not IsDBNull(theRS.Fields(SQLShift4).Value) Then _
+                    aScheduleDoc.Shift4 = theRS.Fields(SQLShift4).Value
+                    If Not IsDBNull(theRS.Fields(SQLShift5).Value) Then _
+                    aScheduleDoc.Shift5 = theRS.Fields(SQLShift5).Value
                     If Not IsDBNull(theRS.Fields(SQLUrgenceTog).Value) Then _
                         aScheduleDoc.UrgenceTog = theRS.Fields(SQLUrgenceTog).Value
                     If Not IsDBNull(theRS.Fields(SQLHospitTog).Value) Then _
@@ -917,10 +982,16 @@ Public Class ScheduleDoc
                 aScheduleDoc.Active = theRS.Fields(SQLActive).Value
                 If Not IsDBNull(theRS.Fields(SQLVersion).Value) Then _
                 aScheduleDoc.Version = theRS.Fields(SQLVersion).Value
-                If Not IsDBNull(theRS.Fields(SQLMinShift).Value) Then _
-                    aScheduleDoc.MinShift = theRS.Fields(SQLMinShift).Value
-                If Not IsDBNull(theRS.Fields(SQLMaxShift).Value) Then _
-                    aScheduleDoc.MaxShift = theRS.Fields(SQLMaxShift).Value
+                If Not IsDBNull(theRS.Fields(SQLShift1).Value) Then _
+                aScheduleDoc.Shift1 = theRS.Fields(SQLShift1).Value
+                If Not IsDBNull(theRS.Fields(SQLShift2).Value) Then _
+                aScheduleDoc.Shift2 = theRS.Fields(SQLShift2).Value
+                If Not IsDBNull(theRS.Fields(SQLShift3).Value) Then _
+                aScheduleDoc.Shift3 = theRS.Fields(SQLShift3).Value
+                If Not IsDBNull(theRS.Fields(SQLShift4).Value) Then _
+                aScheduleDoc.Shift4 = theRS.Fields(SQLShift4).Value
+                If Not IsDBNull(theRS.Fields(SQLShift5).Value) Then _
+                aScheduleDoc.Shift5 = theRS.Fields(SQLShift5).Value
                 If Not IsDBNull(theRS.Fields(SQLUrgenceTog).Value) Then _
                     aScheduleDoc.UrgenceTog = theRS.Fields(SQLUrgenceTog).Value
                 If Not IsDBNull(theRS.Fields(SQLHospitTog).Value) Then _
@@ -938,6 +1009,7 @@ Public Class ScheduleDoc
     End Function
 
 End Class
+
 Public Class ScheduleDocStats
     Private pInitials As String
     Private pShift1 As Integer
@@ -945,10 +1017,11 @@ Public Class ScheduleDocStats
     Private pShift3 As Integer
     Private pShift4 As Integer
     Private pShift5 As Integer
-    Private pShift6 As Integer
-    Private pShift7 As Integer
-    Private pShift8 As Integer
-
+    Private pShift1E As Integer
+    Private pShift2E As Integer
+    Private pShift3E As Integer
+    Private pShift4E As Integer
+    Private pShift5E As Integer
 
     Public Property Initials() As String
         Get
@@ -958,7 +1031,6 @@ Public Class ScheduleDocStats
             pInitials = value
         End Set
     End Property
-
     Public Property shift1() As Integer
         Get
             Return pShift1
@@ -999,52 +1071,66 @@ Public Class ScheduleDocStats
             pShift5 = value
         End Set
     End Property
-    Public Property shift6() As Integer
+    Public Property shift1E() As Integer
         Get
-            Return pShift6
+            Return pShift1E
         End Get
         Set(ByVal value As Integer)
-            pShift6 = value
+            pShift1E = value
         End Set
     End Property
-    Public Property shift7() As Integer
+    Public Property shift2E() As Integer
         Get
-            Return pShift7
+            Return pShift2E
         End Get
         Set(ByVal value As Integer)
-            pShift7 = value
+            pShift2E = value
         End Set
     End Property
-    Public Property shift8() As Integer
+    Public Property shift3E() As Integer
         Get
-            Return pShift8
+            Return pShift3E
         End Get
         Set(ByVal value As Integer)
-            pShift8 = value
+            pShift3E = value
+        End Set
+    End Property
+    Public Property shift4E() As Integer
+        Get
+            Return pShift4E
+        End Get
+        Set(ByVal value As Integer)
+            pShift4E = value
+        End Set
+    End Property
+    Public Property shift5E() As Integer
+        Get
+            Return pShift5E
+        End Get
+        Set(ByVal value As Integer)
+            pShift5E = value
         End Set
     End Property
 
-    Public Sub New(aInitials As String, aShift1 As Integer, _
-                    aShift2 As Integer, _
-                     aShift3 As Integer, _
-                      aShift4 As Integer, _
-                       aShift5 As Integer, _
-                        aShift6 As Integer, _
-                         aShift7 As Integer, _
-                          aShift8 As Integer)
+    Public Sub New(aInitials As String,
+                        aShift1 As Integer, _
+                        aShift2 As Integer, _
+                        aShift3 As Integer, _
+                        aShift4 As Integer, _
+                        aShift5 As Integer)
         Initials = aInitials
         shift1 = aShift1
         shift2 = aShift2
         shift3 = aShift3
         shift4 = aShift4
         shift5 = aShift5
-        shift6 = aShift6
-        shift7 = aShift7
-        shift8 = aShift8
-
+        shift1E = aShift1
+        shift2E = aShift2
+        shift3E = aShift3
+        shift4E = aShift4
+        shift5E = aShift5
 
     End Sub
-
 
 End Class
 
@@ -1421,7 +1507,6 @@ Public Class DBAC
         End Get
     End Property
 
-
     Public Sub New()
         On Error GoTo errhandler
         If cnn.State = ADODB.ObjectStateEnum.adStateClosed Then
@@ -1448,8 +1533,6 @@ errhandler:
         'add code to select current location for the database !!FEATURE!!
 
     End Sub
-
-
     Public Sub COpenDB(theSQLstr As String, theRS As ADODB.Recordset)
 
         'if myReadonly is true file is open as readonly, otherwise it is modifiable
@@ -1480,8 +1563,6 @@ errhandler:
                theSQLstr)
 
     End Sub
-
-
     Public Sub CExecuteDB(theSQLstr As String, numAffected As Long)
 
         On Error GoTo errhandler
@@ -1502,9 +1583,6 @@ errhandler:
         ''LogError theError
 
     End Sub
-
-
-
 
     '    Private Sub StoreToAuditFile(theSQLstr As String)
 

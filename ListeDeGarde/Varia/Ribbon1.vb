@@ -1,7 +1,7 @@
 ﻿Imports Microsoft.Office.Tools.Ribbon
 
 Public Class Ribbon1
-
+    Private WithEvents aform1 As Form1
     Private Sub Ribbon1_Load(ByVal sender As System.Object, ByVal e As RibbonUIEventArgs) Handles MyBase.Load
 
     End Sub
@@ -13,7 +13,7 @@ Public Class Ribbon1
 
     Private Sub Button2_Click(sender As Object, e As RibbonControlEventArgs) Handles Button2.Click
         'UseDelegate()
-        Dim aform1 As New Form1
+        aform1 = New Form1
         aform1.ShowDialog()
     End Sub
 
@@ -29,5 +29,18 @@ Public Class Ribbon1
     Private Sub ShiftButton_Click(sender As Object, e As RibbonControlEventArgs) Handles ShiftButton.Click
         Dim aform1 As New ShiftInterfaceF
         aform1.ShowDialog()
+    End Sub
+
+    Private Sub aForm1_close() Handles aform1.FormClosing
+        If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
+        Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
+        aController.resetSheetExt()
+    End Sub
+
+ 
+    Private Sub ExpectDoc_Click(sender As Object, e As RibbonControlEventArgs) Handles ExpectDoc.Click
+        Dim aDocExpecationF As DocExpectationsF
+        aDocExpecationF = New DocExpectationsF
+        aDocExpecationF.Show()
     End Sub
 End Class

@@ -33,11 +33,12 @@ Public Class UserControl1
                                                         Me.StopTime.SelectedIndex * 60)
 
         updateListview()
+        'If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
+        'Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
 
 
-        If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
-        Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
-        aController.resetSheetExt()
+        'aController.resetSheetExt()
+       
 
 
     End Sub
@@ -167,4 +168,6 @@ Public Class UserControl1
         End If
         changesOngoing = False
     End Sub
+
+
 End Class

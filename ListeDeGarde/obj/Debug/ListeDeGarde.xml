@@ -6,7 +6,23 @@ ListeDeGarde
 </name>
 </assembly>
 <members>
-<member name="M:ListeDeGarde.UserControl3.InitializeComponent">
+<member name="M:ListeDeGarde.UserControl4.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:ListeDeGarde.UserControl4">
+	<summary>
+UserControl4
+</summary>
+</member><member name="M:ListeDeGarde.UserControl2.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:ListeDeGarde.UserControl2">
+	<summary>
+UserControl2
+</summary>
+</member><member name="M:ListeDeGarde.UserControl3.InitializeComponent">
 	<summary>
 InitializeComponent
 </summary>
@@ -22,6 +38,14 @@ InitializeComponent
 	<summary>
 DrInterface
 </summary>
+</member><member name="M:ListeDeGarde.DocExpectations.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:ListeDeGarde.DocExpectations">
+	<summary>
+DocExpectations
+</summary>
 </member><member name="M:ListeDeGarde.UserControl1.InitializeComponent">
 	<summary>
 InitializeComponent
@@ -29,22 +53,6 @@ InitializeComponent
 </member><member name="T:ListeDeGarde.UserControl1">
 	<summary>
 UserControl1
-</summary>
-</member><member name="M:ListeDeGarde.UserControl2.InitializeComponent">
-	<summary>
-InitializeComponent
-</summary>
-</member><member name="T:ListeDeGarde.UserControl2">
-	<summary>
-UserControl2
-</summary>
-</member><member name="M:ListeDeGarde.UserControl4.InitializeComponent">
-	<summary>
-InitializeComponent
-</summary>
-</member><member name="T:ListeDeGarde.UserControl4">
-	<summary>
-UserControl4
 </summary>
 </member><member name="M:ListeDeGarde.ThisAddIn.#ctor(Microsoft.Office.Tools.Excel.ApplicationFactory,System.IServiceProvider)">
 </member><member name="M:ListeDeGarde.ThisAddIn.Initialize">

@@ -35,8 +35,7 @@ Partial Public NotInheritable Class Settings1
             Return CType(Me("DataBaseLocation"),String)
         End Get
         Set
-            Me("DataBaseLocation") = Value
-
+            Me("DataBaseLocation") = value
         End Set
     End Property
 End Class

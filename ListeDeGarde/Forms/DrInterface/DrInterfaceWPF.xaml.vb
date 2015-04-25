@@ -55,8 +55,11 @@ Public Class DrInterface
     End Sub
     Private Sub MenuItem1Clicked(sender As Object, e As System.Windows.RoutedEventArgs)
         Dim ascheduleDoc As ScheduleDoc
-        ascheduleDoc = DocListView.Items(DocListView.SelectedIndex)
-        System.Diagnostics.Debug.WriteLine(ascheduleDoc.FirstName + " " + ascheduleDoc.LastName)
+        ascheduleDoc = DocListView.SelectedItem
+        ascheduleDoc.Delete()
+        changesongoing = True
+        initializeDocList(Edit_Template.IsChecked)
+        changesongoing = False
     End Sub
     Private Sub EraseBtn_Click(sender As Object, e As Windows.RoutedEventArgs) 'erase doc button
         Dim ascheduleDoc As ScheduleDoc
@@ -107,7 +110,9 @@ Public Class DrInterface
         ascheduleDoc.UrgenceTog = Me.Urgence.IsChecked
         ascheduleDoc.save()
         changesongoing = True
-        initializeDocList()
+        Dim isTemplate As Boolean
+        If Me.version1.Text = 0 Then isTemplate = True Else isTemplate = False
+        initializeDocList(isTemplate)
         changesongoing = False
         Me.initials1.IsReadOnly = True
     End Sub

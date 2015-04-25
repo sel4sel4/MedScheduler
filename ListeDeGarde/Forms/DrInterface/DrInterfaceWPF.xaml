@@ -10,9 +10,9 @@
 
     <Grid >
     	<TextBox x:Name="version1" HorizontalAlignment="Left" Height="23" Margin="104.63,125.92,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="45.999"/>
-    	<TextBox x:Name="lastName1" HorizontalAlignment="Left" Height="23" Margin="150.783,81.96,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="138.53"/>
-    	<TextBox x:Name="firstName1" HorizontalAlignment="Left" Height="23" Margin="9.053,81.96,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="132.433"/>
-    	<TextBox x:Name="initials1" HorizontalAlignment="Left" Height="23" Margin="6.553,125.92,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="67.207"/>
+    	<TextBox x:Name="lastName1" HorizontalAlignment="Left" Height="23" Margin="150.783,81.96,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="138.53" KeyboardNavigation.TabIndex="1"/>
+    	<TextBox x:Name="firstName1" HorizontalAlignment="Left" Height="23" Margin="9.053,81.96,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="132.433" KeyboardNavigation.TabIndex="0"/>
+    	<TextBox x:Name="initials1" HorizontalAlignment="Left" Height="23" Margin="6.553,125.92,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="67.207" KeyboardNavigation.TabIndex="2"/>
     	<TextBlock HorizontalAlignment="Left" Margin="9.053,109.96,0,0" TextWrapping="Wrap" Text="Surnom:" VerticalAlignment="Top" Width="55.97"/>
     	<TextBlock HorizontalAlignment="Left" Margin="9.053,66,0,0" TextWrapping="Wrap" Text="Prénom:" VerticalAlignment="Top"/>
     	<TextBlock HorizontalAlignment="Left" Margin="150.783,66,0,0" TextWrapping="Wrap" Text="Nom de famille" VerticalAlignment="Top"/>
@@ -34,7 +34,7 @@
 									Value="left" />
 								</Style>
 						</GridViewColumn.HeaderContainerStyle></GridViewColumn>
-				<GridViewColumn x:Name="Initials" Header="Initialles:" Width="Auto"  DisplayMemberBinding="{Binding Initials}"  >
+				<GridViewColumn x:Name="Initials" Header="Initiales:" Width="Auto"  DisplayMemberBinding="{Binding Initials}"  >
     					<GridViewColumn.HeaderContainerStyle>
     						<Style TargetType="GridViewColumnHeader">
 								<Setter Property="HorizontalContentAlignment"
@@ -47,10 +47,10 @@
     	<Button x:Name="SaveBtn" Content="Sauvegarder" HorizontalAlignment="Left" Margin="179.553,474.04,0,0" VerticalAlignment="Top" Width="117" Click="SaveBtn_Click"/>
     	<Button x:Name="NewBtn" Content="Nouveau Medecin" HorizontalAlignment="Left" Margin="10,445.58,0,0" VerticalAlignment="Top" Width="117" Click="NewBtn_Click"/>
     	<Button x:Name="ModifyBtn" Content="Modifier Medecin" HorizontalAlignment="Left" Margin="179.553,445.58,0,0" VerticalAlignment="Top" Width="117" Click="ModifyBtn_Click"/>
-    	<CheckBox x:Name="Nuits" Content="Fait les nuits&#xD;&#xA;" HorizontalAlignment="Left" Margin="21.85,165.38,0,0" VerticalAlignment="Top" Height="16.04" Width="87.44"/>
-    	<CheckBox x:Name="Soins" Content="Fait les soins" HorizontalAlignment="Left" Margin="21.85,186.42,0,0" VerticalAlignment="Top"/>
-    	<CheckBox x:Name="Hospit" Content="Fait l'Hospit&#xD;&#xA;" HorizontalAlignment="Left" Margin="121.276,165.46,0,0" VerticalAlignment="Top" Height="15.96" Width="100.563"/>
-    	<CheckBox x:Name="Urgence" Content="Fait de l'urgence&#xD;&#xA;" HorizontalAlignment="Left" Margin="121.276,186.42,0,0" VerticalAlignment="Top" Height="16.92" Width="109.44"/>
+    	<CheckBox x:Name="Nuits" Content="Fait les nuits&#xD;&#xA;" HorizontalAlignment="Left" Margin="21.85,165.38,0,0" VerticalAlignment="Top" Height="16.04" Width="87.44" KeyboardNavigation.TabIndex="3"/>
+    	<CheckBox x:Name="Soins" Content="Fait les soins" HorizontalAlignment="Left" Margin="21.85,186.42,0,0" VerticalAlignment="Top" KeyboardNavigation.TabIndex="5"/>
+    	<CheckBox x:Name="Hospit" Content="Fait l'Hospit&#xD;&#xA;" HorizontalAlignment="Left" Margin="121.276,165.46,0,0" VerticalAlignment="Top" Height="15.96" Width="100.563" KeyboardNavigation.TabIndex="4"/>
+    	<CheckBox x:Name="Urgence" Content="Fait de l'urgence&#xD;&#xA;" HorizontalAlignment="Left" Margin="121.276,186.42,0,0" VerticalAlignment="Top" Height="16.92" Width="109.44" KeyboardNavigation.TabIndex="6"/>
     	<CheckBox x:Name="Active" Content="Actif&#xA;" HorizontalAlignment="Left" Margin="179.553,128.92,0,0" VerticalAlignment="Top" Height="15.96" Width="100.563"/>
     	<Button x:Name="EraseBtn" Content="Effacer Medecin" HorizontalAlignment="Left" Margin="10,474.04,0,0" VerticalAlignment="Top" Width="117" Click="EraseBtn_Click"/>
     	<ComboBox x:Name="Year" HorizontalAlignment="Left" Margin="80,10,0,0" VerticalAlignment="Top" Width="64" Loaded="aYear_Loaded"/>

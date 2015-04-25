@@ -49,6 +49,7 @@
         Me.Group2 = Me.Factory.CreateRibbonGroup
         Me.Button4 = Me.Factory.CreateRibbonButton
         Me.ShiftButton = Me.Factory.CreateRibbonButton
+        Me.ExpectDoc = Me.Factory.CreateRibbonButton
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
         Me.Group2.SuspendLayout()
@@ -88,6 +89,7 @@
         '
         Me.Group2.Items.Add(Me.Button4)
         Me.Group2.Items.Add(Me.ShiftButton)
+        Me.Group2.Items.Add(Me.ExpectDoc)
         Me.Group2.Label = "Group2"
         Me.Group2.Name = "Group2"
         '
@@ -100,6 +102,11 @@
         '
         Me.ShiftButton.Label = "Shifts"
         Me.ShiftButton.Name = "ShiftButton"
+        '
+        'ExpectDoc
+        '
+        Me.ExpectDoc.Label = "Expectations"
+        Me.ExpectDoc.Name = "ExpectDoc"
         '
         'Ribbon1
         '
@@ -123,6 +130,7 @@
     Friend WithEvents Button4 As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents Group2 As Microsoft.Office.Tools.Ribbon.RibbonGroup
     Friend WithEvents ShiftButton As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents ExpectDoc As Microsoft.Office.Tools.Ribbon.RibbonButton
 End Class
 
 Partial Class ThisRibbonCollection

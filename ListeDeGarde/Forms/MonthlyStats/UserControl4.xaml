@@ -14,9 +14,6 @@
 			<DataGridTextColumn Header="15-20 Urg."  Binding="{Binding shift3}"/>
 			<DataGridTextColumn Header="16-24 Urg."  Binding="{Binding shift4}"/>
 			<DataGridTextColumn Header="0-8 Urg."  Binding="{Binding shift5}"/>
-			<DataGridTextColumn Header="8-16 Hos."  Binding="{Binding shift6}"/>
-			<DataGridTextColumn Header="8-20 Soins"  Binding="{Binding shift7}"/>
-			<DataGridTextColumn Header="Transfert"  Binding="{Binding shift8}"/>
 			    </DataGrid.Columns>
 
 		</DataGrid>

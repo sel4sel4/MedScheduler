@@ -209,93 +209,105 @@
   -->
   <ItemGroup>
     <AppDesigner Include="My Project\" />
-    <Compile Include="Controller.vb" />
-    <Compile Include="Classes.vb" />
-    <Compile Include="DrInterface\DrInterfaceForm.Designer.vb">
+    <Compile Include="Classes\Controller.vb" />
+    <Compile Include="Classes\Classes.vb" />
+    <Compile Include="Forms\DocExpectations\DocExpectations.xaml.vb">
+      <DependentUpon>DocExpectations.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DocExpectations\DocExpectationsF.Designer.vb">
+      <DependentUpon>DocExpectationsF.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DocExpectations\DocExpectationsF.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DrInterface\DrInterfaceForm.Designer.vb">
       <DependentUpon>DrInterfaceForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="DrInterface\DrInterfaceForm.vb">
+    <Compile Include="Forms\DrInterface\DrInterfaceForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MonthlyStats\Form2.Designer.vb">
+    <Compile Include="Forms\MonthlyStats\Form2.Designer.vb">
       <DependentUpon>Form2.vb</DependentUpon>
     </Compile>
-    <Compile Include="MonthlyStats\Form2.vb">
+    <Compile Include="Forms\MonthlyStats\Form2.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GetNonDispos\Form1.Designer.vb">
+    <Compile Include="Forms\GetNonDispos\Form1.Designer.vb">
       <DependentUpon>Form1.vb</DependentUpon>
     </Compile>
-    <Compile Include="GetNonDispos\Form1.vb">
+    <Compile Include="Forms\GetNonDispos\Form1.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GlobalSuppressions.vb" />
+    <Compile Include="Varia\GlobalSuppressions.vb" />
     <Compile Include="Public Declarations\PublicConstants.vb" />
-    <Compile Include="MyYearMonthPicker\YearMonthPicker.Designer.vb">
+    <Compile Include="CustomTaskPanes\MyYearMonthPicker\YearMonthPicker.Designer.vb">
       <DependentUpon>YearMonthPicker.vb</DependentUpon>
     </Compile>
-    <Compile Include="MyYearMonthPicker\YearMonthPicker.vb">
+    <Compile Include="CustomTaskPanes\MyYearMonthPicker\YearMonthPicker.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="GetNonDispos\UserControl1.xaml.vb">
+    <Compile Include="Forms\GetNonDispos\UserControl1.xaml.vb">
       <DependentUpon>UserControl1.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings1.Designer.vb">
+    <Compile Include="Varia\Settings1.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings1.settings</DependentUpon>
     </Compile>
-    <Compile Include="Settings1.vb" />
-    <Compile Include="DrInterface\DrInterfaceWPF.xaml.vb">
+    <Compile Include="Varia\Settings1.vb" />
+    <Compile Include="Forms\DrInterface\DrInterfaceWPF.xaml.vb">
       <DependentUpon>DrInterfaceWPF.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ShiftInterface\ShiftInterfaceF.Designer.vb">
+    <Compile Include="Forms\ShiftInterface\ShiftInterfaceF.Designer.vb">
       <DependentUpon>ShiftInterfaceF.vb</DependentUpon>
     </Compile>
-    <Compile Include="ShiftInterface\ShiftInterfaceF.vb">
+    <Compile Include="Forms\ShiftInterface\ShiftInterfaceF.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ShiftInterface\ShiftInterface.xaml.vb">
+    <Compile Include="Forms\ShiftInterface\ShiftInterface.xaml.vb">
       <DependentUpon>ShiftInterface.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MonthlyStats\UserControl4.xaml.vb">
+    <Compile Include="Forms\MonthlyStats\UserControl4.xaml.vb">
       <DependentUpon>UserControl4.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Using EventsModules\UseDelegateM.vb" />
-    <Compile Include="MyYearMonthPicker\UserControl2.xaml.vb">
+    <Compile Include="Varia\Using EventsModules\UseDelegateM.vb" />
+    <Compile Include="CustomTaskPanes\MyYearMonthPicker\UserControl2.xaml.vb">
       <DependentUpon>UserControl2.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Ribbon1.Designer.vb">
+    <Compile Include="Varia\Ribbon1.Designer.vb">
       <DependentUpon>Ribbon1.vb</DependentUpon>
     </Compile>
-    <Compile Include="Ribbon1.vb">
+    <Compile Include="Varia\Ribbon1.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ThisAddIn.vb">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="DrInterface\DrInterfaceForm.resx">
+    <EmbeddedResource Include="Forms\DocExpectations\DocExpectationsF.resx">
+      <DependentUpon>DocExpectationsF.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DrInterface\DrInterfaceForm.resx">
       <DependentUpon>DrInterfaceForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MonthlyStats\Form2.resx">
+    <EmbeddedResource Include="Forms\MonthlyStats\Form2.resx">
       <DependentUpon>Form2.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GetNonDispos\Form1.resx">
+    <EmbeddedResource Include="Forms\GetNonDispos\Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Ribbon1.resx">
+    <EmbeddedResource Include="Varia\Ribbon1.resx">
       <DependentUpon>Ribbon1.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MyYearMonthPicker\YearMonthPicker.resx">
+    <EmbeddedResource Include="CustomTaskPanes\MyYearMonthPicker\YearMonthPicker.resx">
       <DependentUpon>YearMonthPicker.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ShiftInterface\ShiftInterfaceF.resx">
+    <EmbeddedResource Include="Forms\ShiftInterface\ShiftInterfaceF.resx">
       <DependentUpon>ShiftInterfaceF.vb</DependentUpon>
     </EmbeddedResource>
-    <None Include="app.config" />
-    <None Include="ListeDeGarde_TemporaryKey.pfx" />
+    <None Include="Varia\app.config" />
+    <None Include="Varia\ListeDeGarde_TemporaryKey.pfx" />
     <None Include="My Project\DataSources\ScheduleDoc.datasource" />
-    <None Include="Settings1.settings">
+    <None Include="Varia\Settings1.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings1.Designer.vb</LastGenOutput>
     </None>
@@ -375,23 +387,27 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="MyYearMonthPicker\UserControl2.xaml">
+    <Page Include="Forms\DocExpectations\DocExpectations.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="GetNonDispos\UserControl1.xaml">
+    <Page Include="CustomTaskPanes\MyYearMonthPicker\UserControl2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DrInterface\DrInterfaceWPF.xaml">
+    <Page Include="Forms\GetNonDispos\UserControl1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ShiftInterface\ShiftInterface.xaml">
+    <Page Include="Forms\DrInterface\DrInterfaceWPF.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MonthlyStats\UserControl4.xaml">
+    <Page Include="Forms\ShiftInterface\ShiftInterface.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\MonthlyStats\UserControl4.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

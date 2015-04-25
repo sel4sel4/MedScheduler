@@ -5,7 +5,7 @@ Public Class UserControl4
 
 
     Public Sub loadarray(aCollection As Collection)
-
+        MyData.ItemsSource = Nothing
         MyData.ItemsSource = aCollection
 
 

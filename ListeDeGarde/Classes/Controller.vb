@@ -3,7 +3,8 @@
     Private controlledMonth As ScheduleMonth
     Private monthloaded As Boolean = False
     Private monthlystats As UserControl4
-    Private theMonthlyStatsForm As Form2
+    Private WithEvents theMonthlyStatsForm As Form2
+    Private ScheduleDocStatsCollection As Collection
     Private Const theRestTime As Long = 432000000000
 
     Public ReadOnly Property aControlledMonth() As ScheduleMonth
@@ -47,6 +48,7 @@
                             adocAvail = aShift.DocAvailabilities.Item(aShift.Doc)
                             adocAvail.Availability = PublicEnums.Availability.Dispo
                             firstDoc = aShift.Doc
+                            anExitNotice = True
                         End If
                     End If
 
@@ -85,7 +87,7 @@
         Dim aday As ScheduleDay
         Dim aShift As ScheduleShift
         Dim adocAvail As scheduleDocAvailable
-
+        Globals.ThisAddIn.Application.ScreenUpdating = False
         For Each aday In controlledMonth.Days
             For Each aShift In aday.Shifts
                 For Each adocAvail In aShift.DocAvailabilities
@@ -109,6 +111,7 @@
                 Next
             Next
         Next
+        Globals.ThisAddIn.Application.ScreenUpdating = True
     End Sub
 
     Private Sub fixAvailability(aDoc As String, aMonth As ScheduleMonth, ashift As ScheduleShift, Optional firstDoc As String = "")
@@ -256,9 +259,11 @@
 
     End Sub
 
+    Private Sub theMonthlyStatsForm_close() Handles theMonthlyStatsForm.FormClosing
+        ScheduleDocStatsCollection = Nothing
+    End Sub
+
     Public Sub statsMensuelles()
-
-
 
         If theMonthlyStatsForm Is Nothing Then
             theMonthlyStatsForm = New Form2
@@ -270,7 +275,6 @@
         theMonthlyStatsForm.Show()
         statsMensuellesUpdate()
 
-
     End Sub
 
     Private Sub statsMensuellesUpdate()
@@ -280,48 +284,62 @@
         Dim ashift As ScheduleShift
         Dim aDay As ScheduleDay
         Dim aDOcAvail As scheduleDocAvailable
+        Dim theScheduleDocStats As ScheduleDocStats
+        If ScheduleDocStatsCollection Is Nothing Then
+            ScheduleDocStatsCollection = New Collection
+            For Each aScheduleDoc In theDocCollection
+                theScheduleDocStats = New ScheduleDocStats(aScheduleDoc.Initials, _
+                                                           aScheduleDoc.Shift1, _
+                                                          aScheduleDoc.Shift2, _
+                                                          aScheduleDoc.Shift3, _
+                                                          aScheduleDoc.Shift4, _
+                                                          aScheduleDoc.Shift5)
+                ScheduleDocStatsCollection.Add(theScheduleDocStats, aScheduleDoc.Initials)
 
-        Dim anArray As Integer(,)
+            Next
+        Else
+            For Each theScheduleDocStats In ScheduleDocStatsCollection
+                theScheduleDocStats.shift1 = theScheduleDocStats.shift1E
+                theScheduleDocStats.shift2 = theScheduleDocStats.shift2E
+                theScheduleDocStats.shift3 = theScheduleDocStats.shift3E
+                theScheduleDocStats.shift4 = theScheduleDocStats.shift4E
+                theScheduleDocStats.shift5 = theScheduleDocStats.shift5E
+            Next
 
-        ReDim anArray(theDocCollection.Count - 1, controlledMonth.ShiftTypes.Count - 1)
+        End If
+
         Dim docCount As Integer = 0
         Dim shiftCount As Integer = 0
-        For Each aScheduleDoc In theDocCollection
+        For Each theScheduleDocStats In ScheduleDocStatsCollection
             For Each aDay In controlledMonth.Days
                 shiftCount = 0
                 For Each ashift In aDay.Shifts
-                    aDOcAvail = ashift.DocAvailabilities(aScheduleDoc.Initials)
+                    If ashift.ShiftType > 5 Then Exit For
+                    aDOcAvail = ashift.DocAvailabilities(theScheduleDocStats.Initials)
                     If aDOcAvail.Availability = PublicEnums.Availability.Assigne Then
-                        anArray(docCount, shiftCount) = anArray(docCount, shiftCount) + 1
+                        Select Case ashift.ShiftType
+                            Case 1
+                                theScheduleDocStats.shift1 = theScheduleDocStats.shift1 - 1
+                            Case 2
+                                theScheduleDocStats.shift2 = theScheduleDocStats.shift2 - 1
+                            Case 3
+                                theScheduleDocStats.shift3 = theScheduleDocStats.shift3 - 1
+                            Case 4
+                                theScheduleDocStats.shift4 = theScheduleDocStats.shift4 - 1
+                            Case 5
+                                theScheduleDocStats.shift5 = theScheduleDocStats.shift5 - 1
+                        End Select
                     End If
                     shiftCount = shiftCount + 1
                 Next
             Next
             docCount = docCount + 1
         Next
-        docCount = 0
-        Dim aCollection As New Collection
-        Dim theScheduleDocStats As ScheduleDocStats
-        For Each aScheduleDoc In theDocCollection
-            theScheduleDocStats = New ScheduleDocStats(aScheduleDoc.Initials, _
-                                                       anArray(docCount, 0), _
-                                                       anArray(docCount, 1), _
-                                                       anArray(docCount, 2), _
-                                                       anArray(docCount, 3), _
-                                                       anArray(docCount, 4), _
-                                                       anArray(docCount, 5), _
-                                                       anArray(docCount, 6), _
-                                                       anArray(docCount, 7))
-            aCollection.Add(theScheduleDocStats)
-            docCount = docCount + 1
-        Next
 
-        'need to rebuild the taskpane on the basis of the currentlyselected month
-        'code below retreives the handle to the UserControl to trigger redraw() public function
         Dim bCollection As System.Windows.Forms.Control.ControlCollection = theMonthlyStatsForm.Controls
         Dim aElementHost As System.Windows.Forms.Integration.ElementHost = bCollection(0)
         monthlystats = aElementHost.Child
-        monthlystats.loadarray(aCollection)
+        monthlystats.loadarray(ScheduleDocStatsCollection)
 
     End Sub
 
@@ -347,7 +365,22 @@
             If Not IsNothing(aCollection) Then
                 'iterate through the doctors list of unavailabilities
                 For Each aSchedulenondispo In aCollection
-                    For y As Integer = aSchedulenondispo.DateStart.Day - 1 To aSchedulenondispo.DateStop.Day
+                    Dim stopDay As Integer
+                    Dim startday As Integer
+                    Select Case aSchedulenondispo.DateStart.Month
+                        Case controlledMonth.Month
+                            startday = aSchedulenondispo.DateStart.Day
+                        Case Is < controlledMonth.Month
+                            startday = 1
+                    End Select
+                    Select Case aSchedulenondispo.DateStop.Month
+                        Case controlledMonth.Month
+                            stopDay = aSchedulenondispo.DateStop.Day
+                        Case Is > controlledMonth.Month
+                            stopDay = System.DateTime.DaysInMonth(controlledMonth.Year, controlledMonth.Month)
+                    End Select
+
+                    For y As Integer = startday - 1 To stopDay
                         If controlledMonth.Days.Contains(y) Then
                             aDay = controlledMonth.Days.Item(y)
                             For Each ashift In aDay.Shifts
@@ -380,7 +413,7 @@
         monthloaded = False 'set boolean toggle to false to stop event triggers
 
         Dim amonthstring As String = monthstrings(aControlledMonth.Month - 1)
-
+        Globals.ThisAddIn.Application.ScreenUpdating = False
         controlledExcelSheet.Cells.Clear() 'clear the worksheet
         Dim theDay As ScheduleDay
         Dim row As Integer
@@ -424,9 +457,9 @@
             addBordersAroundRange(theRange)
             If col = 6 Then row = row + 1
         Next
-
         SetupAssignedDocs()
         SetUpPermNonDispos()
+        Globals.ThisAddIn.Application.ScreenUpdating = True
         monthloaded = True
 
     End Sub
