@@ -172,6 +172,12 @@ Public Class UserControl2
             theController.resetSheetExt()
         End If
     End Sub
+
+    Public Sub TestClick()
+        Me.combo1.SelectedIndex = 3 'year (2017)
+        Me.combo2.SelectedIndex = 3 'month (april)
+        Button_Click(New Object(), New Windows.RoutedEventArgs())
+    End Sub
 End Class
 
 

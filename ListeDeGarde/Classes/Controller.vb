@@ -87,7 +87,7 @@
         Dim aday As ScheduleDay
         Dim aShift As ScheduleShift
         Dim adocAvail As scheduleDocAvailable
-        Globals.ThisAddIn.Application.ScreenUpdating = False
+        'Globals.ThisAddIn.Application.ScreenUpdating = False
         For Each aday In controlledMonth.Days
             For Each aShift In aday.Shifts
                 For Each adocAvail In aShift.DocAvailabilities
@@ -111,7 +111,7 @@
                 Next
             Next
         Next
-        Globals.ThisAddIn.Application.ScreenUpdating = True
+        'Globals.ThisAddIn.Application.ScreenUpdating = True
     End Sub
 
     Private Sub fixAvailability(aDoc As String, aMonth As ScheduleMonth, ashift As ScheduleShift, Optional firstDoc As String = "")
@@ -413,7 +413,7 @@
         monthloaded = False 'set boolean toggle to false to stop event triggers
 
         Dim amonthstring As String = monthstrings(aControlledMonth.Month - 1)
-        Globals.ThisAddIn.Application.ScreenUpdating = False
+        ' Globals.ThisAddIn.Application.ScreenUpdating = False
         controlledExcelSheet.Cells.Clear() 'clear the worksheet
         Dim theDay As ScheduleDay
         Dim row As Integer
@@ -459,7 +459,7 @@
         Next
         SetupAssignedDocs()
         SetUpPermNonDispos()
-        Globals.ThisAddIn.Application.ScreenUpdating = True
+        'Globals.ThisAddIn.Application.ScreenUpdating = True
         monthloaded = True
 
     End Sub
