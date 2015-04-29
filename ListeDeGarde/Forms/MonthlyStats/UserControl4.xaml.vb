@@ -7,8 +7,6 @@ Public Class UserControl4
     Private aCollection As Collection
 
     Public Sub loadarray(theCollection As Collection)
-        MyData.ItemsSource = Nothing
-        MyData.ItemsSource = theCollection
         aCollection = theCollection
         DrawGrid()
     End Sub
