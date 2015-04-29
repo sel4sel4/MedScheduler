@@ -6,11 +6,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="491" d:DesignWidth="384">
     <Grid>
-    	<ScrollViewer  HorizontalAlignment="Left" Height="445.04" Margin="10,10,0,0" VerticalAlignment="Top" Width="365">
-    		<StackPanel x:Name="MyPanel"  Height="359" Width="481"/>
+    	<ScrollViewer Margin="5,5,5,35">
+    		<StackPanel x:Name="MyPanel"/>
             
     	</ScrollViewer>
-    	<Button x:Name="SaveBtn" Content="Sauvegarder" HorizontalAlignment="Left" Margin="300,460.04,0,0" VerticalAlignment="Top" Width="75"/>
+    	<Button x:Name="SaveBtn" Content="Sauvegarder" HorizontalAlignment="Right" Margin="0,0,5,5" VerticalAlignment="Bottom" Width="75"/>
+    	<CheckBox x:Name="Edit_Template" Content="Modifier le gabarit" HorizontalAlignment="Right" Margin="0,0,100,8" VerticalAlignment="Bottom" Width="115.42"/>
             
     </Grid>
 </UserControl>

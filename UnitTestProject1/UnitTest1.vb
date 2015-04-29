@@ -61,7 +61,7 @@ Imports Microsoft.Office.Interop
 
     <TestMethod()> Public Sub AddDoc()
         xlsSheet.Range("h4").Value = "MM"
-        Dim aDay As ScheduleDay = aController.aControlledMonth.Days(1)
+        Dim aDay As ScheduleDay = aController.aControlledMonth.Days(2)
         Dim aShift As ScheduleShift = aDay.Shifts(1)
         Dim acollection As Collection = aShift.DocAvailabilities
         Dim aDocAvail As scheduleDocAvailable = acollection.Item("MM")
@@ -71,14 +71,14 @@ Imports Microsoft.Office.Interop
 
     <TestMethod()> Public Sub HighlightingRepeated()
         xlsSheet.Range("h4").Value = "MM"
-        aController.HighLightDocAvailablilities("MM")
+        'aController.HighLightDocAvailablilities("MM")
         Assert.IsTrue(xlsSheet.Range("h4").Interior.Color = RGB(0, 255, 255))
         xlsSheet.Range("h4").Value = ""
     End Sub
 
     <TestMethod()> Public Sub HighlightingTempNonDispos()
         xlsSheet.Range("h4").Value = "MM"
-        aController.HighLightDocAvailablilities("MM")
+        'aController.HighLightDocAvailablilities("MM")
         Assert.IsTrue(xlsSheet.Range("h5").Interior.Color = RGB(219, 112, 147))
         xlsSheet.Range("h4").Value = ""
     End Sub

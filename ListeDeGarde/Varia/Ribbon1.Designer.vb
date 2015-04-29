@@ -50,47 +50,48 @@
         Me.Button4 = Me.Factory.CreateRibbonButton
         Me.ShiftButton = Me.Factory.CreateRibbonButton
         Me.ExpectDoc = Me.Factory.CreateRibbonButton
+        Me.Group3 = Me.Factory.CreateRibbonGroup
         Me.Tab1.SuspendLayout()
         Me.Group1.SuspendLayout()
         Me.Group2.SuspendLayout()
+        Me.Group3.SuspendLayout()
         '
         'Tab1
         '
         Me.Tab1.ControlId.ControlIdType = Microsoft.Office.Tools.Ribbon.RibbonControlIdType.Office
-        Me.Tab1.Groups.Add(Me.Group1)
         Me.Tab1.Groups.Add(Me.Group2)
-        Me.Tab1.Label = "TabAddIns"
+        Me.Tab1.Groups.Add(Me.Group3)
+        Me.Tab1.Groups.Add(Me.Group1)
+        Me.Tab1.Label = "Liste de Garde"
         Me.Tab1.Name = "Tab1"
         '
         'Group1
         '
-        Me.Group1.Items.Add(Me.Button1)
-        Me.Group1.Items.Add(Me.Button2)
         Me.Group1.Items.Add(Me.Button3)
-        Me.Group1.Label = "Group1"
+        Me.Group1.Label = "Base de donnés"
         Me.Group1.Name = "Group1"
         '
         'Button1
         '
-        Me.Button1.Label = "Create Calendar"
+        Me.Button1.Label = "Créer un mois"
         Me.Button1.Name = "Button1"
         '
         'Button2
         '
-        Me.Button2.Label = "Non Dispos"
+        Me.Button2.Label = "Non Disponibilités"
         Me.Button2.Name = "Button2"
         '
         'Button3
         '
-        Me.Button3.Label = "Change DB File"
+        Me.Button3.Label = "Adresse de BD"
         Me.Button3.Name = "Button3"
         '
         'Group2
         '
         Me.Group2.Items.Add(Me.Button4)
-        Me.Group2.Items.Add(Me.ShiftButton)
+        Me.Group2.Items.Add(Me.Button2)
         Me.Group2.Items.Add(Me.ExpectDoc)
-        Me.Group2.Label = "Group2"
+        Me.Group2.Label = "Médecins"
         Me.Group2.Name = "Group2"
         '
         'Button4
@@ -100,13 +101,20 @@
         '
         'ShiftButton
         '
-        Me.ShiftButton.Label = "Shifts"
+        Me.ShiftButton.Label = "Définition des quarts"
         Me.ShiftButton.Name = "ShiftButton"
         '
         'ExpectDoc
         '
-        Me.ExpectDoc.Label = "Expectations"
+        Me.ExpectDoc.Label = "Répartition Mensuelle des quarts"
         Me.ExpectDoc.Name = "ExpectDoc"
+        '
+        'Group3
+        '
+        Me.Group3.Items.Add(Me.ShiftButton)
+        Me.Group3.Items.Add(Me.Button1)
+        Me.Group3.Label = "Quarts de travail"
+        Me.Group3.Name = "Group3"
         '
         'Ribbon1
         '
@@ -119,6 +127,8 @@
         Me.Group1.PerformLayout()
         Me.Group2.ResumeLayout(False)
         Me.Group2.PerformLayout()
+        Me.Group3.ResumeLayout(False)
+        Me.Group3.PerformLayout()
 
     End Sub
 
@@ -131,6 +141,7 @@
     Friend WithEvents Group2 As Microsoft.Office.Tools.Ribbon.RibbonGroup
     Friend WithEvents ShiftButton As Microsoft.Office.Tools.Ribbon.RibbonButton
     Friend WithEvents ExpectDoc As Microsoft.Office.Tools.Ribbon.RibbonButton
+    Friend WithEvents Group3 As Microsoft.Office.Tools.Ribbon.RibbonGroup
 End Class
 
 Partial Class ThisRibbonCollection

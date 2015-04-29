@@ -6,6 +6,7 @@
     Private WithEvents theMonthlyStatsForm As Form2
     Private ScheduleDocStatsCollection As Collection
     Private Const theRestTime As Long = 432000000000
+    Private theHighlightedDoc As String
 
     Public ReadOnly Property aControlledMonth() As ScheduleMonth
         Get
@@ -23,6 +24,8 @@
 
         'Load shift types collection into global
         'controlledShiftTypes = controlledMonth.ShiftTypes
+        theHighlightedDoc = ""
+        Globals.ThisAddIn.theCurrentController = Me
         resetSheet()
        
 
@@ -111,8 +114,33 @@
                 Next
             Next
         Next
+        theHighlightedDoc = Initials
         'Globals.ThisAddIn.Application.ScreenUpdating = True
     End Sub
+
+    Public Sub HighLightDocAvailSingleCell(theShift As ScheduleShift, Initials As String)
+        'cycle through the month and highlight everywhere theDoc is available.
+
+        Dim adocAvail As scheduleDocAvailable
+        For Each adocAvail In theShift.DocAvailabilities
+            If adocAvail.DocInitial = Initials Then
+                Select Case adocAvail.Availability
+                    Case PublicEnums.Availability.Dispo
+                        theShift.aRange.Interior.Color = RGB(0, 233, 118)
+                    Case PublicEnums.Availability.Assigne
+                        theShift.aRange.Interior.Color = RGB(0, 255, 255)
+                    Case PublicEnums.Availability.NonDispoPermanente
+                        theShift.aRange.Interior.Color = RGB(220, 20, 60)
+                    Case PublicEnums.Availability.NonDispoTemporaire
+                        theShift.aRange.Interior.Color = RGB(219, 112, 147)
+                    Case PublicEnums.Availability.SurUtilise
+                        theShift.aRange.Interior.Color = RGB(209, 95, 238)
+                    Case Else
+                End Select
+            End If
+        Next
+    End Sub
+
 
     Private Sub fixAvailability(aDoc As String, aMonth As ScheduleMonth, ashift As ScheduleShift, Optional firstDoc As String = "")
         Dim theDate As Date = ashift.aDate
@@ -179,6 +207,9 @@
                         End If
 
                         
+                    End If
+                    If theHighlightedDoc <> "" Then
+                        HighLightDocAvailSingleCell(myShift, theHighlightedDoc)
                     End If
                 Next
             End If
@@ -434,7 +465,12 @@
 
         'create the month to display in worksheet
         For Each theDay In controlledMonth.Days
-            col = CInt(theDay.theDate.DayOfWeek)
+            Select Case (theDay.theDate.DayOfWeek)
+                Case 0
+                    col = 6
+                Case Else
+                    col = theDay.theDate.DayOfWeek - 1
+            End Select
             theRange = theRangeA3.Offset(row * rowheight1, col * colwidth1)
 
             Dim theRangeForShiftType As Excel.Range
@@ -453,6 +489,9 @@
             Next
 
             theRange.Offset(0, colwidth1 - 1).Value = theDay.theDate.Day
+            theRange.Offset(0, colwidth1 - 1).Interior.Color = RGB(160, 160, 160)
+            theRange.Offset(0, colwidth1 - 2).Value = daystrings(theDay.theDate.DayOfWeek)
+            theRange.Offset(0, colwidth1 - 2).Interior.Color = RGB(160, 160, 160)
             theRange = theRange.Resize(rowheight1, colwidth1)
             addBordersAroundRange(theRange)
             If col = 6 Then row = row + 1
@@ -469,7 +508,8 @@
         controlledExcelSheet.Cells.Clear()
         'create a month
         controlledMonth = New ScheduleMonth(controlledMonth.Month, controlledMonth.Year)
-
+        theHighlightedDoc = ""
+        Globals.ThisAddIn.theCurrentController = Me
         'Load shift types collection into global
         'controlledShiftTypes = controlledMonth.ShiftTypes
         resetSheet()

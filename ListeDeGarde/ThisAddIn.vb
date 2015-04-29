@@ -5,6 +5,7 @@ Public Class ThisAddIn
     Public WithEvents xlBook As Excel.Workbook
     Public WithEvents xlSheet1 As Excel.Worksheet
     Public theControllerCollection As Collection
+    Public theCurrentController As Controller
     Private myCustomTaskPane As Microsoft.Office.Tools.CustomTaskPane
 
     ReadOnly Property taskpane()
