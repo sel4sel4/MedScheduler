@@ -35,7 +35,7 @@
     <PublishUrl>C:\Users\Martin\Documents\Scheduling Mira\Published Tool\</PublishUrl>
     <InstallUrl />
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>1.0.0.7</ApplicationVersion>
+    <ApplicationVersion>1.0.0.8</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>7</UpdateInterval>
@@ -238,6 +238,15 @@
     <Compile Include="Forms\GetNonDispos\Form1.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="CustomTaskPanes\MonthlyDocStatsTP.xaml.vb">
+      <DependentUpon>MonthlyDocStatsTP.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomTaskPanes\MonthlyDocStatsTPF.Designer.vb">
+      <DependentUpon>MonthlyDocStatsTPF.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CustomTaskPanes\MonthlyDocStatsTPF.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Varia\GlobalSuppressions.vb" />
     <Compile Include="Public Declarations\PublicConstants.vb" />
     <Compile Include="CustomTaskPanes\MyYearMonthPicker\YearMonthPicker.Designer.vb">
@@ -294,6 +303,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GetNonDispos\Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomTaskPanes\MonthlyDocStatsTPF.resx">
+      <DependentUpon>MonthlyDocStatsTPF.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Varia\Ribbon1.resx">
       <DependentUpon>Ribbon1.vb</DependentUpon>
@@ -408,6 +420,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Forms\MonthlyStats\UserControl4.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomTaskPanes\MonthlyDocStatsTP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -14,6 +14,14 @@ InitializeComponent
 	<summary>
 UserControl4
 </summary>
+</member><member name="M:ListeDeGarde.MonthlyDocStatsTP.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:ListeDeGarde.MonthlyDocStatsTP">
+	<summary>
+MonthlyDocStatsTP
+</summary>
 </member><member name="M:ListeDeGarde.UserControl2.InitializeComponent">
 	<summary>
 InitializeComponent

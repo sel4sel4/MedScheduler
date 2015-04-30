@@ -35,3 +35,6 @@ C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\Forms\ShiftInterface\ShiftInterface.g.vb
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\Forms\MonthlyStats\UserControl4.g.vb
 C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde.DocExpectationsF.resources
+C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde.MonthlyDocStatsTPF.resources
+C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\CustomTaskPanes\MonthlyDocStatsTP.baml
+C:\Users\Martin\documents\visual studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\CustomTaskPanes\MonthlyDocStatsTP.g.vb

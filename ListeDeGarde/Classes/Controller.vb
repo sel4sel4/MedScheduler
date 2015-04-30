@@ -7,6 +7,7 @@
     Private ScheduleDocStatsCollection As Collection
     Private Const theRestTime As Long = 432000000000
     Private theHighlightedDoc As String
+    Private theCustomTaskPane As Microsoft.Office.Tools.CustomTaskPane
 
     Public ReadOnly Property aControlledMonth() As ScheduleMonth
         Get
@@ -304,7 +305,14 @@
         End If
         theMonthlyStatsForm.TopMost = True
         theMonthlyStatsForm.Show()
+
+
+        Dim MyTaskPaneView As MonthlyDocStatsTPF
+        MyTaskPaneView = New MonthlyDocStatsTPF
+        theCustomTaskPane = Globals.ThisAddIn.CustomTaskPanes.Add(MyTaskPaneView, "Statistiques")
+        theCustomTaskPane.Visible = True
         statsMensuellesUpdate()
+
 
     End Sub
 
@@ -371,6 +379,11 @@
         Dim aElementHost As System.Windows.Forms.Integration.ElementHost = bCollection(0)
         monthlystats = aElementHost.Child
         monthlystats.loadarray(ScheduleDocStatsCollection)
+
+        Dim aCollection As System.Windows.Forms.Control.ControlCollection = theCustomTaskPane.Control.Controls
+        Dim bElementHost As System.Windows.Forms.Integration.ElementHost = aCollection(0)
+        Dim theMonthlyDocStatsTP As MonthlyDocStatsTP = bElementHost.Child
+        theMonthlyDocStatsTP.loadarray(ScheduleDocStatsCollection)
 
     End Sub
 
