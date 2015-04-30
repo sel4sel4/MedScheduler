@@ -15,6 +15,12 @@
         End Get
     End Property
 
+    Public ReadOnly Property pHighlightedDoc() As String
+        Get
+            Return theHighlightedDoc
+        End Get
+    End Property
+
     Public Sub New(aSheet As Excel.Worksheet, aYear As Integer, aMonth As Integer, aMonthString As String)
 
         'load the sheet
@@ -78,8 +84,8 @@
         Next
         If anExitNotice = True Then
             ' resetSheet()
-            If Not theMonthlyStatsForm Is Nothing Then
-                If Not theMonthlyStatsForm.IsDisposed Then
+            If Not theCustomTaskPane Is Nothing Then
+                If theCustomTaskPane.Visible Then
                     statsMensuellesUpdate()
                 End If
             End If
@@ -117,6 +123,7 @@
         Next
         theHighlightedDoc = Initials
         'Globals.ThisAddIn.Application.ScreenUpdating = True
+        statsMensuellesUpdate()
     End Sub
 
     Public Sub HighLightDocAvailSingleCell(theShift As ScheduleShift, Initials As String)
@@ -297,14 +304,14 @@
 
     Public Sub statsMensuelles()
 
-        If theMonthlyStatsForm Is Nothing Then
-            theMonthlyStatsForm = New Form2
-        Else
-            theMonthlyStatsForm.Dispose()
-            theMonthlyStatsForm = New Form2
-        End If
-        theMonthlyStatsForm.TopMost = True
-        theMonthlyStatsForm.Show()
+        'If theMonthlyStatsForm Is Nothing Then
+        '    theMonthlyStatsForm = New Form2
+        'Else
+        '    theMonthlyStatsForm.Dispose()
+        '    theMonthlyStatsForm = New Form2
+        'End If
+        'theMonthlyStatsForm.TopMost = True
+        'theMonthlyStatsForm.Show()
 
 
         Dim MyTaskPaneView As MonthlyDocStatsTPF
@@ -375,10 +382,10 @@
             docCount = docCount + 1
         Next
 
-        Dim bCollection As System.Windows.Forms.Control.ControlCollection = theMonthlyStatsForm.Controls
-        Dim aElementHost As System.Windows.Forms.Integration.ElementHost = bCollection(0)
-        monthlystats = aElementHost.Child
-        monthlystats.loadarray(ScheduleDocStatsCollection)
+        'Dim bCollection As System.Windows.Forms.Control.ControlCollection = theMonthlyStatsForm.Controls
+        'Dim aElementHost As System.Windows.Forms.Integration.ElementHost = bCollection(0)
+        'monthlystats = aElementHost.Child
+        'monthlystats.loadarray(ScheduleDocStatsCollection)
 
         Dim aCollection As System.Windows.Forms.Control.ControlCollection = theCustomTaskPane.Control.Controls
         Dim bElementHost As System.Windows.Forms.Integration.ElementHost = aCollection(0)

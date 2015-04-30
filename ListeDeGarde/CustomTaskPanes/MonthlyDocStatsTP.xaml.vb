@@ -18,48 +18,51 @@ Public Class MonthlyDocStatsTP
 
     Private Sub DrawGrid()
 
-        Dim theStats As ScheduleDocStats
-
-        Dim aHorizStackPanel As StackPanel
-        Dim aLabel As Label
-        ' Add any initialization after the InitializeComponent() call.
-        MyPanel.Children.Clear()
-
-        aLabel = New Label
-        aLabel.Content = ""
-        aLabel.Width = 50
-        aLabel.Height = 70
-        Dim aRotateTransform As New RotateTransform()
-        aRotateTransform.Angle = 270
-
-        aHorizStackPanel = New StackPanel
-        aHorizStackPanel.Orientation = Orientation.Horizontal
-        aHorizStackPanel.Height = 100
-        aHorizStackPanel.Children.Add(aLabel)
-
         If Globals.ThisAddIn.theControllerCollection.Count < 1 Then Exit Sub
         If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
         Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
 
+        'clear everything
+        MyPanel.Children.Clear()
+        Dim theStats As ScheduleDocStats
+        Dim aHorizStackPanel As StackPanel
+        Dim aLabel As Label
+
+        'create empty placeholder top left
+        aLabel = New Label
+        aLabel.Content = ""
+        aLabel.Width = 50
+        aLabel.Height = 70
+        aHorizStackPanel = New StackPanel
+        aHorizStackPanel.Orientation = Orientation.Horizontal
+        aHorizStackPanel.Height = 96
+        aHorizStackPanel.Children.Add(aLabel)
+
+        'create shift headers
         For Each aShift In aController.aControlledMonth.ShiftTypes
             If aShift.ShiftType > 5 Then Exit For
             aLabel = New Label
             aLabel.Content = aShift.Description
             aLabel.Width = 70
             aLabel.Height = 25
+            Dim aRotateTransform As New RotateTransform()
+            aRotateTransform.Angle = 270
             aLabel.LayoutTransform = aRotateTransform
             aHorizStackPanel.Children.Add(aLabel)
         Next
-
         Me.MyPanel.Children.Add(aHorizStackPanel)
         aHorizStackPanel.Name = "Header"
 
+        'create doc list with shifts counts
         For Each theStats In aCollection
             aHorizStackPanel = New StackPanel
             aLabel = New Label
             aLabel.Content = theStats.Initials
             aLabel.Width = 50
-            aHorizStackPanel.Height = 21
+            aLabel.Height = 18.5
+            aLabel.Padding = New Windows.Thickness(4)
+
+            aHorizStackPanel.Height = 18.5
             aHorizStackPanel.Orientation = Orientation.Horizontal
             Me.MyPanel.Children.Add(aHorizStackPanel)
             aHorizStackPanel.Children.Add(aLabel)
@@ -79,7 +82,12 @@ Public Class MonthlyDocStatsTP
                     Case 5
                         aLabel.Content = CStr(theStats.shift5)
                 End Select
+                If theStats.Initials = Globals.ThisAddIn.theCurrentController.pHighlightedDoc Then
+                    aLabel.Background = New SolidColorBrush(Color.FromRgb(150, 100, 150))
+                End If
+                aLabel.Padding = New Windows.Thickness(4)
                 aLabel.Width = 25
+                aLabel.Height = 18.5
                 aHorizStackPanel.Children.Add(aLabel)
             Next
         Next
