@@ -41,7 +41,7 @@
     Private Sub controlledExcelSheet_Change(ByVal Target As Excel.Range) Handles controlledExcelSheet.Change
 
         If monthloaded = False Then Exit Sub
-
+        controlledExcelSheet.Unprotect()
         'System.Diagnostics.Debug.WriteLine("WithEvents: You Changed Cells " + Target.Address + " " + controlledExcelSheet.Name)
         Dim aday As ScheduleDay
         Dim aShift As ScheduleShift
@@ -90,6 +90,7 @@
                 End If
             End If
         End If
+        controlledExcelSheet.Protect()
     End Sub
 
     Public Sub HighLightDocAvailablilities(Initials As String)
@@ -98,6 +99,7 @@
         Dim aShift As ScheduleShift
         Dim adocAvail As scheduleDocAvailable
         'Globals.ThisAddIn.Application.ScreenUpdating = False
+        controlledExcelSheet.Unprotect()
         For Each aday In controlledMonth.Days
             For Each aShift In aday.Shifts
                 For Each adocAvail In aShift.DocAvailabilities
@@ -124,6 +126,7 @@
         theHighlightedDoc = Initials
         'Globals.ThisAddIn.Application.ScreenUpdating = True
         statsMensuellesUpdate()
+        controlledExcelSheet.Protect()
     End Sub
 
     Public Sub HighLightDocAvailSingleCell(theShift As ScheduleShift, Initials As String)
@@ -247,7 +250,7 @@
             End Select
         Next
         If thelist.Length > 0 Then thelist = Left(thelist, thelist.Length - 1)
-
+        controlledExcelSheet.Unprotect()
         With theShift.aRange.Validation
             .Delete()
             If thelist <> "" Then
@@ -265,6 +268,8 @@
                 .ShowError = True
             End If
         End With
+        theShift.aRange.Locked = False
+
     End Sub
 
     Private Sub addBordersAroundRange(aRange As Excel.Range)
@@ -386,11 +391,14 @@
         'Dim aElementHost As System.Windows.Forms.Integration.ElementHost = bCollection(0)
         'monthlystats = aElementHost.Child
         'monthlystats.loadarray(ScheduleDocStatsCollection)
-
-        Dim aCollection As System.Windows.Forms.Control.ControlCollection = theCustomTaskPane.Control.Controls
-        Dim bElementHost As System.Windows.Forms.Integration.ElementHost = aCollection(0)
-        Dim theMonthlyDocStatsTP As MonthlyDocStatsTP = bElementHost.Child
-        theMonthlyDocStatsTP.loadarray(ScheduleDocStatsCollection)
+        If Not theCustomTaskPane Is Nothing Then
+            If theCustomTaskPane.Visible = True Then
+                Dim aCollection As System.Windows.Forms.Control.ControlCollection = theCustomTaskPane.Control.Controls
+                Dim bElementHost As System.Windows.Forms.Integration.ElementHost = aCollection(0)
+                Dim theMonthlyDocStatsTP As MonthlyDocStatsTP = bElementHost.Child
+                theMonthlyDocStatsTP.loadarray(ScheduleDocStatsCollection)
+            End If
+        End If
 
     End Sub
 
@@ -462,7 +470,7 @@
 
     Private Sub resetSheet()
         monthloaded = False 'set boolean toggle to false to stop event triggers
-
+        controlledExcelSheet.Unprotect()
         Dim amonthstring As String = monthstrings(aControlledMonth.Month - 1)
         ' Globals.ThisAddIn.Application.ScreenUpdating = False
         controlledExcelSheet.Cells.Clear() 'clear the worksheet
@@ -471,9 +479,10 @@
         Dim col As Integer = 0
 
         'get number of shifts
-        Dim rowheight1 As Integer = controlledMonth.Days(1).shifts.Count + 1
+        Dim rowheight1 As Integer = ScheduleShiftType.ActiveShiftTypesCountPerMonth(aControlledMonth.Month, aControlledMonth.Year) + 1
         'assign colwidth as 2
         Dim colwidth1 As Integer = 2
+
 
         'populate the top left corner of sheet with year and month strings
         controlledExcelSheet.Range("A1").Value = amonthstring
@@ -497,15 +506,13 @@
             Dim TheRAngeForDocLists As Excel.Range
             Dim theShift As ScheduleShift
 
-            Dim theCounter1 As Integer = 1
             For Each theShift In theDay.Shifts
-                theRangeForShiftType = theRange.Offset(theCounter1, 0)
+                theRangeForShiftType = theRange.Offset(theShift.ShiftType, 0)
                 theRangeForShiftType.Value2 = "'" + theShift.Description
-                TheRAngeForDocLists = theRange.Offset(theCounter1, 1)
+                TheRAngeForDocLists = theRange.Offset(theShift.ShiftType, 1)
                 theShift.aRange = TheRAngeForDocLists
 
                 fixlist(theShift)
-                theCounter1 = theCounter1 + 1
             Next
 
             theRange.Offset(0, colwidth1 - 1).Value = theDay.theDate.Day
@@ -519,12 +526,21 @@
         SetupAssignedDocs()
         SetUpPermNonDispos()
         'Globals.ThisAddIn.Application.ScreenUpdating = True
+
         monthloaded = True
+        controlledExcelSheet.Protect(DrawingObjects:=True, Contents:=True, Scenarios:= _
+        True, AllowFormattingCells:=False, AllowFormattingColumns:=False, _
+        AllowFormattingRows:=False, AllowInsertingColumns:=False, AllowInsertingRows _
+        :=False, AllowInsertingHyperlinks:=False, AllowDeletingColumns:=False, _
+        AllowDeletingRows:=True, AllowSorting:=False, AllowFiltering:=False, _
+        AllowUsingPivotTables:=False)
+        controlledExcelSheet.EnableSelection = Microsoft.Office.Interop.Excel.XlEnableSelection.xlUnlockedCells
 
     End Sub
 
     Public Sub resetSheetExt()
         'clear the sheet
+        controlledExcelSheet.Unprotect()
         controlledExcelSheet.Cells.Clear()
         'create a month
         controlledMonth = New ScheduleMonth(controlledMonth.Month, controlledMonth.Year)

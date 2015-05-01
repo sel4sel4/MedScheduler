@@ -14,6 +14,18 @@ Public Module PublicConstants
     Public Const SQLShiftType = "ShiftType"
     Public Const SQLActive = "Active"
     Public Const SQLDescription = "Description"
+    Public Const SQLLundi = "Lundi"
+    Public Const SQLMardi = "Mardi"
+    Public Const SQLMercredi = "Mercredi"
+    Public Const SQLJeudi = "Jeudi"
+    Public Const SQLVendredi = "Vendredi"
+    Public Const SQLSamedi = "Samedi"
+    Public Const SQLDimanche = "Dimanche"
+    Public Const SQLFerie = "Ferie"
+
+
+
+
     'Public Const SQLEffectiveStart = "EffectiveStart"
     'Public Const SQLEffectiveEnd = "EffectiveEnd"
 

@@ -63,6 +63,15 @@ Public Class UserControl3
         Me.StartMin.IsEnabled = Not locked
         Me.StopHour.IsEnabled = Not locked
         Me.StopMin.IsEnabled = Not locked
+        Me.lundi.IsEnabled = Not locked
+        Me.mardi.IsEnabled = Not locked
+        Me.mercredi.IsEnabled = Not locked
+        Me.jeudi.IsEnabled = Not locked
+        Me.vendredi.IsEnabled = Not locked
+        Me.samedi.IsEnabled = Not locked
+        Me.dimache.IsEnabled = Not locked
+        Me.férié.IsEnabled = Not locked
+
     End Sub
     Private Sub ShiftListView_selectionChanged(sender As Object, e As System.Windows.RoutedEventArgs) Handles ShiftListView.SelectionChanged
         UpdateListValues()
@@ -101,6 +110,17 @@ Public Class UserControl3
         Me.StopHour.SelectedIndex = theStopInMinutes \ 60
         Me.StopMin.SelectedIndex = (ascheduleshiftType.ShiftStop Mod 60) \ 5
         Me.ActiveCB.IsChecked = aScheduleshiftType.Active
+
+        Me.lundi.IsChecked = aScheduleshiftType.Lundi
+        Me.mardi.IsChecked = aScheduleshiftType.Mardi
+        Me.mercredi.IsChecked = aScheduleshiftType.Mercredi
+        Me.jeudi.IsChecked = aScheduleshiftType.Jeudi
+        Me.vendredi.IsChecked = aScheduleshiftType.Vendredi
+        Me.samedi.IsChecked = aScheduleshiftType.Samedi
+        Me.dimache.IsChecked = aScheduleshiftType.Dimanche
+        Me.férié.IsChecked = aScheduleshiftType.Ferie
+
+
 
         Lock(True)
     End Sub
@@ -149,6 +169,18 @@ Public Class UserControl3
         End If
         aScheduleshiftType.Version = CInt(Me.VersionNo.Text)
         aScheduleshiftType.Active = Me.ActiveCB.IsChecked
+        aScheduleshiftType.Lundi = Me.lundi.IsChecked
+        aScheduleshiftType.Mardi = Me.mardi.IsChecked
+        aScheduleshiftType.Mercredi = Me.mercredi.IsChecked
+        aScheduleshiftType.Jeudi = Me.jeudi.IsChecked
+        aScheduleshiftType.Vendredi = Me.vendredi.IsChecked
+        aScheduleshiftType.Samedi = Me.samedi.IsChecked
+        aScheduleshiftType.Dimanche = Me.dimache.IsChecked
+        aScheduleshiftType.Ferie = Me.férié.IsChecked
         aScheduleshiftType.Update()
+        Windows.MessageBox.Show("Le quart de travail a été mis a jour.")
+        Globals.ThisAddIn.theCurrentController.resetSheetExt()
+
+
     End Sub
 End Class

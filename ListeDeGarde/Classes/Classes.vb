@@ -103,20 +103,39 @@ Public Class ScheduleDay
         pDate = New DateTime(aYear, aMonth, aDay)
         pMonth = CMonth
         pShifts = New Collection
-
+        Dim addShift As Boolean = False
         'populate the shift collection by cycling through 
         'the active ScheduleShiftTypes collection
         Dim aShiftType As ScheduleShiftType
         Dim theCounter As Integer = 1
         For Each aShiftType In pMonth.ShiftTypes
             If aShiftType.Active Then
-                Dim theShift As New ScheduleShift(aShiftType.ShiftType, _
-                                                  pDate, _
-                                                  aShiftType.ShiftStart, _
-                                                  aShiftType.ShiftStop, _
-                                                  aShiftType.Description, _
-                                                  Me)
-                pShifts.Add(theShift, aShiftType.ShiftType.ToString())
+                Select Case pDate.DayOfWeek
+                    Case DayOfWeek.Monday
+                        If aShiftType.Lundi = True Then addShift = True Else addShift = False
+                    Case DayOfWeek.Tuesday
+                        If aShiftType.Mardi = True Then addShift = True Else addShift = False
+                    Case DayOfWeek.Wednesday
+                        If aShiftType.Mercredi = True Then addShift = True Else addShift = False
+                    Case DayOfWeek.Thursday
+                        If aShiftType.Jeudi = True Then addShift = True Else addShift = False
+                    Case DayOfWeek.Friday
+                        If aShiftType.Vendredi = True Then addShift = True Else addShift = False
+                    Case DayOfWeek.Saturday
+                        If aShiftType.Samedi = True Then addShift = True Else addShift = False
+                    Case DayOfWeek.Sunday
+                        If aShiftType.Dimanche = True Then addShift = True Else addShift = False
+                End Select
+                If addShift = True Then
+                    Dim theShift As New ScheduleShift(aShiftType.ShiftType, _
+                                                      pDate, _
+                                                      aShiftType.ShiftStart, _
+                                                      aShiftType.ShiftStop, _
+                                                      aShiftType.Description, _
+                                                      Me)
+
+                    pShifts.Add(theShift, aShiftType.ShiftType.ToString())
+                End If
             End If
         Next
 
@@ -249,6 +268,15 @@ Public Class ScheduleShiftType
     Private pActive As T_DBRefTypeB
     Private pDescription As T_DBRefTypeS
     Private pVersion As T_DBRefTypeI
+    Private pLundi As T_DBRefTypeB
+    Private pMardi As T_DBRefTypeB
+    Private pMercredi As T_DBRefTypeB
+    Private pJeudi As T_DBRefTypeB
+    Private pVendredi As T_DBRefTypeB
+    Private pSamedi As T_DBRefTypeB
+    Private pDimanche As T_DBRefTypeB
+    Private pFerie As T_DBRefTypeB
+
 
 
     Public Property Version() As Integer
@@ -300,6 +328,72 @@ Public Class ScheduleShiftType
         End Set
     End Property
 
+    Public Property Lundi() As Boolean
+        Get
+            Return pLundi.theValue
+        End Get
+        Set(ByVal value As Boolean)
+            pLundi.theValue = value
+        End Set
+    End Property
+    Public Property Mardi() As Boolean
+        Get
+            Return pMardi.theValue
+        End Get
+        Set(ByVal value As Boolean)
+            pMardi.theValue = value
+        End Set
+    End Property
+    Public Property Mercredi() As Boolean
+        Get
+            Return pMercredi.theValue
+        End Get
+        Set(ByVal value As Boolean)
+            pMercredi.theValue = value
+        End Set
+    End Property
+    Public Property Jeudi() As Boolean
+        Get
+            Return pJeudi.theValue
+        End Get
+        Set(ByVal value As Boolean)
+            pJeudi.theValue = value
+        End Set
+    End Property
+    Public Property Vendredi() As Boolean
+        Get
+            Return pVendredi.theValue
+        End Get
+        Set(ByVal value As Boolean)
+            pVendredi.theValue = value
+        End Set
+    End Property
+    Public Property Samedi() As Boolean
+        Get
+            Return pSamedi.theValue
+        End Get
+        Set(ByVal value As Boolean)
+            pSamedi.theValue = value
+        End Set
+    End Property
+    Public Property Dimanche() As Boolean
+        Get
+            Return pDimanche.theValue
+        End Get
+        Set(ByVal value As Boolean)
+            pDimanche.theValue = value
+        End Set
+    End Property
+    Public Property Ferie() As Boolean
+        Get
+            Return pFerie.theValue
+        End Get
+        Set(ByVal value As Boolean)
+            pFerie.theValue = value
+        End Set
+    End Property
+
+
     Public Sub New()
         pShiftStart.theSQLName = SQLShiftStart
         pShiftStop.theSQLName = SQLShiftStop
@@ -307,7 +401,16 @@ Public Class ScheduleShiftType
         pActive.theSQLName = SQLActive
         pDescription.theSQLName = SQLDescription
         pVersion.theSQLName = SQLVersion
+        pLundi.theSQLName = SQLLundi
+        pMardi.theSQLName = SQLMardi
+        pMercredi.theSQLName = SQLMercredi
+        pJeudi.theSQLName = SQLJeudi
+        pVendredi.theSQLName = SQLVendredi
+        pSamedi.theSQLName = SQLSamedi
+        pDimanche.theSQLName = SQLDimanche
+        pFerie.theSQLName = SQLFerie
     End Sub
+
     Public Shared Function loadShiftTypesFromDBPerMonth(aMonth As Integer, aYear As Integer) As Collection
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
@@ -343,6 +446,23 @@ Public Class ScheduleShiftType
                     aShifttype.Version = theRS.Fields(SQLVersion).Value
                 If Not IsDBNull(theRS.Fields(SQLDescription).Value) Then _
                     aShifttype.Description = theRS.Fields(SQLDescription).Value
+                If Not IsDBNull(theRS.Fields(SQLLundi).Value) Then _
+                    aShifttype.Lundi = theRS.Fields(SQLLundi).Value
+                If Not IsDBNull(theRS.Fields(SQLMardi).Value) Then _
+                    aShifttype.Mardi = theRS.Fields(SQLMardi).Value
+                If Not IsDBNull(theRS.Fields(SQLMercredi).Value) Then _
+                    aShifttype.Mercredi = theRS.Fields(SQLMercredi).Value
+                If Not IsDBNull(theRS.Fields(SQLJeudi).Value) Then _
+                    aShifttype.Jeudi = theRS.Fields(SQLJeudi).Value
+                If Not IsDBNull(theRS.Fields(SQLVendredi).Value) Then _
+                    aShifttype.Vendredi = theRS.Fields(SQLVendredi).Value
+                If Not IsDBNull(theRS.Fields(SQLSamedi).Value) Then _
+                    aShifttype.Samedi = theRS.Fields(SQLSamedi).Value
+                If Not IsDBNull(theRS.Fields(SQLDimanche).Value) Then _
+                    aShifttype.Dimanche = theRS.Fields(SQLDimanche).Value
+                If Not IsDBNull(theRS.Fields(SQLFerie).Value) Then _
+                    aShifttype.Ferie = theRS.Fields(SQLFerie).Value
+
 
                 theShiftTypeCollection.Add(aShifttype)
                 theRS.MoveNext()
@@ -373,6 +493,22 @@ Public Class ScheduleShiftType
                     aShifttype.Version = theVersion 'change version to YYYYMM integer
                     If Not IsDBNull(theRS.Fields(SQLDescription).Value) Then _
                         aShifttype.Description = theRS.Fields(SQLDescription).Value
+                    If Not IsDBNull(theRS.Fields(SQLLundi).Value) Then _
+                        aShifttype.Lundi = theRS.Fields(SQLLundi).Value
+                    If Not IsDBNull(theRS.Fields(SQLMardi).Value) Then _
+                        aShifttype.Mardi = theRS.Fields(SQLMardi).Value
+                    If Not IsDBNull(theRS.Fields(SQLMercredi).Value) Then _
+                        aShifttype.Mercredi = theRS.Fields(SQLMercredi).Value
+                    If Not IsDBNull(theRS.Fields(SQLJeudi).Value) Then _
+                        aShifttype.Jeudi = theRS.Fields(SQLJeudi).Value
+                    If Not IsDBNull(theRS.Fields(SQLVendredi).Value) Then _
+                        aShifttype.Vendredi = theRS.Fields(SQLVendredi).Value
+                    If Not IsDBNull(theRS.Fields(SQLSamedi).Value) Then _
+                        aShifttype.Samedi = theRS.Fields(SQLSamedi).Value
+                    If Not IsDBNull(theRS.Fields(SQLDimanche).Value) Then _
+                        aShifttype.Dimanche = theRS.Fields(SQLDimanche).Value
+                    If Not IsDBNull(theRS.Fields(SQLFerie).Value) Then _
+                        aShifttype.Ferie = theRS.Fields(SQLFerie).Value
                     aShifttype.Save() 'save the shifttype version to DB
                     theShiftTypeCollection.Add(aShifttype)
                     theRS.MoveNext()
@@ -412,12 +548,47 @@ Public Class ScheduleShiftType
                     aShifttype.Active = theRS.Fields(SQLActive).Value
                 If Not IsDBNull(theRS.Fields(SQLDescription).Value) Then _
                     aShifttype.Description = theRS.Fields(SQLDescription).Value
+                If Not IsDBNull(theRS.Fields(SQLLundi).Value) Then _
+                    aShifttype.Lundi = theRS.Fields(SQLLundi).Value
+                If Not IsDBNull(theRS.Fields(SQLMardi).Value) Then _
+                    aShifttype.Mardi = theRS.Fields(SQLMardi).Value
+                If Not IsDBNull(theRS.Fields(SQLMercredi).Value) Then _
+                    aShifttype.Mercredi = theRS.Fields(SQLMercredi).Value
+                If Not IsDBNull(theRS.Fields(SQLJeudi).Value) Then _
+                    aShifttype.Jeudi = theRS.Fields(SQLJeudi).Value
+                If Not IsDBNull(theRS.Fields(SQLVendredi).Value) Then _
+                    aShifttype.Vendredi = theRS.Fields(SQLVendredi).Value
+                If Not IsDBNull(theRS.Fields(SQLSamedi).Value) Then _
+                    aShifttype.Samedi = theRS.Fields(SQLSamedi).Value
+                If Not IsDBNull(theRS.Fields(SQLDimanche).Value) Then _
+                    aShifttype.Dimanche = theRS.Fields(SQLDimanche).Value
+                If Not IsDBNull(theRS.Fields(SQLFerie).Value) Then _
+                    aShifttype.Ferie = theRS.Fields(SQLFerie).Value
 
                 theShiftTypeCollection.Add(aShifttype)
                 theRS.MoveNext()
             Next
         End If
         Return theShiftTypeCollection
+    End Function
+
+    Public Shared Function ActiveShiftTypesCountPerMonth(aMonth As Integer, aYear As Integer) As Integer
+        Dim theBuiltSql As New SQLStrBuilder
+        Dim theRS As New ADODB.Recordset
+        Dim theDBAC As New DBAC
+        Dim theVersion As Integer : theVersion = ((aYear - 2000) * 100) + aMonth
+
+        'check if a version exists for the month
+
+        With theBuiltSql
+            .SQL_Select("*")
+            .SQL_From(TABLE_shiftType)
+            .SQL_Where(SQLVersion, "=", theVersion)
+            .SQL_Where(SQLActive, "=", True)
+            theDBAC.COpenDB(.SQLStringSelect, theRS)
+        End With
+
+        return theRS.RecordCount 
     End Function
     Public Sub Copy(TheInstanceToBeCopied As ScheduleShiftType)
 
@@ -430,6 +601,14 @@ Public Class ScheduleShiftType
             Me.Version = .Version
             Me.Active = .Active
             Me.Description = .Description
+            Me.Lundi = .Lundi
+            Me.Mardi = .Mardi
+            Me.Mercredi = .Mercredi
+            Me.Jeudi = .Jeudi
+            Me.Vendredi = .Vendredi
+            Me.Samedi = .Samedi
+            Me.Dimanche = .Dimanche
+            Me.Ferie = .Ferie
 
         End With
     End Sub
@@ -459,6 +638,14 @@ Public Class ScheduleShiftType
                     .SQL_Values(pShiftType.theSQLName, ShiftType)
                     .SQL_Values(pActive.theSQLName, Active)
                     .SQL_Values(pDescription.theSQLName, Description)
+                    .SQL_Values(pLundi.theSQLName, Lundi)
+                    .SQL_Values(pMardi.theSQLName, Mardi)
+                    .SQL_Values(pMercredi.theSQLName, Mercredi)
+                    .SQL_Values(pJeudi.theSQLName, Jeudi)
+                    .SQL_Values(pVendredi.theSQLName, Vendredi)
+                    .SQL_Values(pSamedi.theSQLName, Samedi)
+                    .SQL_Values(pDimanche.theSQLName, Dimanche)
+                    .SQL_Values(pFerie.theSQLName, Ferie)
 
                     Dim numaffected As Integer
                     theDBAC.CExecuteDB(.SQLStringInsert, numaffected)
@@ -493,6 +680,14 @@ Public Class ScheduleShiftType
                 theRS.Fields(pActive.theSQLName).Value = Active
                 theRS.Fields(pShiftType.theSQLName).Value = ShiftType
                 theRS.Fields(pDescription.theSQLName).Value = Description
+                theRS.Fields(pLundi.theSQLName).Value = Lundi
+                theRS.Fields(pMardi.theSQLName).Value = Mardi
+                theRS.Fields(pMercredi.theSQLName).Value = Mercredi
+                theRS.Fields(pJeudi.theSQLName).Value = Jeudi
+                theRS.Fields(pVendredi.theSQLName).Value = Vendredi
+                theRS.Fields(pSamedi.theSQLName).Value = Samedi
+                theRS.Fields(pDimanche.theSQLName).Value = Dimanche
+                theRS.Fields(pFerie.theSQLName).Value = Ferie
                 theRS.ActiveConnection = theDBAC.aConnection
                 theRS.UpdateBatch()
                 theRS.Close()
