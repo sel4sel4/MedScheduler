@@ -330,75 +330,113 @@
 
     Private Sub statsMensuellesUpdate()
         'pour chaque medecin compter chaque type de shift
-        Dim theDocCollection As Collection = ScheduleDoc.LoadAllDocsPerMonth(controlledMonth.Year, controlledMonth.Month)
-        Dim aScheduleDoc As ScheduleDoc
-        Dim ashift As ScheduleShift
-        Dim aDay As ScheduleDay
-        Dim aDOcAvail As scheduleDocAvailable
-        Dim theScheduleDocStats As ScheduleDocStats
-        If ScheduleDocStatsCollection Is Nothing Then
-            ScheduleDocStatsCollection = New Collection
-            For Each aScheduleDoc In theDocCollection
-                theScheduleDocStats = New ScheduleDocStats(aScheduleDoc.Initials, _
-                                                           aScheduleDoc.Shift1, _
-                                                          aScheduleDoc.Shift2, _
-                                                          aScheduleDoc.Shift3, _
-                                                          aScheduleDoc.Shift4, _
-                                                          aScheduleDoc.Shift5)
-                ScheduleDocStatsCollection.Add(theScheduleDocStats, aScheduleDoc.Initials)
 
-            Next
-        Else
-            For Each theScheduleDocStats In ScheduleDocStatsCollection
-                theScheduleDocStats.shift1 = theScheduleDocStats.shift1E
-                theScheduleDocStats.shift2 = theScheduleDocStats.shift2E
-                theScheduleDocStats.shift3 = theScheduleDocStats.shift3E
-                theScheduleDocStats.shift4 = theScheduleDocStats.shift4E
-                theScheduleDocStats.shift5 = theScheduleDocStats.shift5E
-            Next
-
-        End If
-
-        Dim docCount As Integer = 0
-        Dim shiftCount As Integer = 0
-        For Each theScheduleDocStats In ScheduleDocStatsCollection
-            For Each aDay In controlledMonth.Days
-                shiftCount = 0
-                For Each ashift In aDay.Shifts
-                    If ashift.ShiftType > 5 Then Exit For
-                    aDOcAvail = ashift.DocAvailabilities(theScheduleDocStats.Initials)
-                    If aDOcAvail.Availability = PublicEnums.Availability.Assigne Then
-                        Select Case ashift.ShiftType
-                            Case 1
-                                theScheduleDocStats.shift1 = theScheduleDocStats.shift1 - 1
-                            Case 2
-                                theScheduleDocStats.shift2 = theScheduleDocStats.shift2 - 1
-                            Case 3
-                                theScheduleDocStats.shift3 = theScheduleDocStats.shift3 - 1
-                            Case 4
-                                theScheduleDocStats.shift4 = theScheduleDocStats.shift4 - 1
-                            Case 5
-                                theScheduleDocStats.shift5 = theScheduleDocStats.shift5 - 1
-                        End Select
-                    End If
-                    shiftCount = shiftCount + 1
-                Next
-            Next
-            docCount = docCount + 1
-        Next
-
-        'Dim bCollection As System.Windows.Forms.Control.ControlCollection = theMonthlyStatsForm.Controls
-        'Dim aElementHost As System.Windows.Forms.Integration.ElementHost = bCollection(0)
-        'monthlystats = aElementHost.Child
-        'monthlystats.loadarray(ScheduleDocStatsCollection)
         If Not theCustomTaskPane Is Nothing Then
             If theCustomTaskPane.Visible = True Then
+
+                Dim theDocCollection As Collection = ScheduleDoc.LoadAllDocsPerMonth(controlledMonth.Year, controlledMonth.Month)
+                Dim aScheduleDoc As ScheduleDoc
+                Dim ashift As ScheduleShift
+                Dim aDay As ScheduleDay
+                Dim aDOcAvail As scheduleDocAvailable
+                Dim theScheduleDocStats As ScheduleDocStats
+                If ScheduleDocStatsCollection Is Nothing Then
+                    ScheduleDocStatsCollection = New Collection
+                    For Each aScheduleDoc In theDocCollection
+                        theScheduleDocStats = New ScheduleDocStats(aScheduleDoc.Initials, _
+                                                                   aScheduleDoc.Shift1, _
+                                                                  aScheduleDoc.Shift2, _
+                                                                  aScheduleDoc.Shift3, _
+                                                                  aScheduleDoc.Shift4, _
+                                                                  aScheduleDoc.Shift5)
+                        ScheduleDocStatsCollection.Add(theScheduleDocStats, aScheduleDoc.Initials)
+
+                    Next
+                Else
+                    For Each theScheduleDocStats In ScheduleDocStatsCollection
+                        theScheduleDocStats.shift1 = theScheduleDocStats.shift1E
+                        theScheduleDocStats.shift2 = theScheduleDocStats.shift2E
+                        theScheduleDocStats.shift3 = theScheduleDocStats.shift3E
+                        theScheduleDocStats.shift4 = theScheduleDocStats.shift4E
+                        theScheduleDocStats.shift5 = theScheduleDocStats.shift5E
+                    Next
+
+                End If
+
+                Dim docCount As Integer = 0
+                Dim shiftCount As Integer = 0
+                For Each theScheduleDocStats In ScheduleDocStatsCollection
+                    For Each aDay In controlledMonth.Days
+                        shiftCount = 0
+                        For Each ashift In aDay.Shifts
+                            If ashift.ShiftType > 5 Then Exit For
+                            aDOcAvail = ashift.DocAvailabilities(theScheduleDocStats.Initials)
+                            If aDOcAvail.Availability = PublicEnums.Availability.Assigne Then
+                                Select Case ashift.ShiftType
+                                    Case 1
+                                        theScheduleDocStats.shift1 = theScheduleDocStats.shift1 - 1
+                                    Case 2
+                                        theScheduleDocStats.shift2 = theScheduleDocStats.shift2 - 1
+                                    Case 3
+                                        theScheduleDocStats.shift3 = theScheduleDocStats.shift3 - 1
+                                    Case 4
+                                        theScheduleDocStats.shift4 = theScheduleDocStats.shift4 - 1
+                                    Case 5
+                                        theScheduleDocStats.shift5 = theScheduleDocStats.shift5 - 1
+                                End Select
+                            End If
+                            shiftCount = shiftCount + 1
+                        Next
+                    Next
+                    docCount = docCount + 1
+                Next
+
+                'Dim bCollection As System.Windows.Forms.Control.ControlCollection = theMonthlyStatsForm.Controls
+                'Dim aElementHost As System.Windows.Forms.Integration.ElementHost = bCollection(0)
+                'monthlystats = aElementHost.Child
+                'monthlystats.loadarray(ScheduleDocStatsCollection)
+                Dim theArray As Integer()
+                If theHighlightedDoc <> "" Then
+
+                    ReDim Preserve theArray(3)
+                    Dim weekCount As Integer = 0
+                    Dim firstday As Boolean = True
+
+                    'go through each day of month
+                    For Each aDay In controlledMonth.Days
+
+                        'update counter on week change
+
+
+                        If aDay.theDate.DayOfWeek = 1 And firstday = False Then
+                            weekCount = weekCount + 1
+                            If weekCount > 3 Then ReDim Preserve theArray(weekCount)
+                        End If
+
+                        firstday = False
+
+                        For Each ashift In aDay.Shifts
+                            If ashift.ShiftType > 5 Then Exit For
+                            aDOcAvail = ashift.DocAvailabilities(theHighlightedDoc)
+                            If aDOcAvail.Availability = PublicEnums.Availability.Assigne Then
+                                'populate simple array of week counts
+                                theArray(weekCount) = theArray(weekCount) + 1
+                            End If
+                        Next
+                    Next
+                Else : theArray = Nothing
+                End If
+
+
+
                 Dim aCollection As System.Windows.Forms.Control.ControlCollection = theCustomTaskPane.Control.Controls
                 Dim bElementHost As System.Windows.Forms.Integration.ElementHost = aCollection(0)
                 Dim theMonthlyDocStatsTP As MonthlyDocStatsTP = bElementHost.Child
-                theMonthlyDocStatsTP.loadarray(ScheduleDocStatsCollection)
+                theMonthlyDocStatsTP.loadarray(ScheduleDocStatsCollection, theArray)
             End If
         End If
+
+
 
     End Sub
 

@@ -4,9 +4,11 @@ Imports System.Windows.Media
 
 Public Class MonthlyDocStatsTP
     Private aCollection As Collection
+    Private aArray As Integer()
 
-    Public Sub loadarray(theCollection As Collection)
+    Public Sub loadarray(theCollection As Collection, theArray As Integer())
         aCollection = theCollection
+        aArray = theArray
         DrawGrid()
     End Sub
 
@@ -91,5 +93,22 @@ Public Class MonthlyDocStatsTP
                 aHorizStackPanel.Children.Add(aLabel)
             Next
         Next
+
+        'clear everything
+        MyPanel2.Children.Clear()
+        aLabel = New Label
+        aLabel.Content = Globals.ThisAddIn.theCurrentController.pHighlightedDoc
+        MyPanel2.Children.Add(aLabel)
+
+        Dim y As Integer
+        If Not aArray Is Nothing Then
+            For y = 0 To UBound(aArray, 1)
+                aLabel = New Label
+                aLabel.Content = CStr(aArray(y))
+                MyPanel2.Children.Add(aLabel)
+
+            Next
+        End If
+
     End Sub
 End Class

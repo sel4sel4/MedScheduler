@@ -6,7 +6,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-    	<StackPanel x:Name="MyPanel" Margin="0"/>
+    	<StackPanel Orientation="Vertical">
+    		<StackPanel x:Name="MyPanel" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+    		<StackPanel x:Name="MyPanel2" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+    	</StackPanel>
             
     </Grid>
 </UserControl>
