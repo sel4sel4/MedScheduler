@@ -47,6 +47,7 @@ Public Class MonthlyDocStatsTP
             aLabel.Content = aShift.Description
             aLabel.Width = 70
             aLabel.Height = 25
+            aLabel.VerticalContentAlignment = Windows.VerticalAlignment.Center
             Dim aRotateTransform As New RotateTransform()
             aRotateTransform.Angle = 270
             aLabel.LayoutTransform = aRotateTransform
@@ -54,7 +55,7 @@ Public Class MonthlyDocStatsTP
         Next
         Me.MyPanel.Children.Add(aHorizStackPanel)
         aHorizStackPanel.Name = "Header"
-
+        Dim theLoopCounter As Integer = 1
         'create doc list with shifts counts
         For Each theStats In aCollection
             aHorizStackPanel = New StackPanel
@@ -87,12 +88,27 @@ Public Class MonthlyDocStatsTP
                 If theStats.Initials = Globals.ThisAddIn.theCurrentController.pHighlightedDoc Then
                     aLabel.Background = New SolidColorBrush(Color.FromRgb(150, 100, 150))
                 End If
-                aLabel.Padding = New Windows.Thickness(4)
+                aLabel.Padding = New Windows.Thickness(3)
+                aLabel.HorizontalContentAlignment = Windows.HorizontalAlignment.Center
+                aLabel.BorderBrush = System.Windows.Media.Brushes.Black
+                If theLoopCounter = aCollection.Count Then
+                    aLabel.BorderThickness = New Windows.Thickness(1, 1, 0, 1)
+                Else
+                    aLabel.BorderThickness = New Windows.Thickness(1, 1, 0, 0)
+                End If
+
                 aLabel.Width = 25
                 aLabel.Height = 18.5
                 aHorizStackPanel.Children.Add(aLabel)
             Next
+            If theLoopCounter = aCollection.Count Then
+                aLabel.BorderThickness = New Windows.Thickness(1, 1, 1, 1)
+            Else
+                aLabel.BorderThickness = New Windows.Thickness(1, 1, 1, 0)
+            End If
+            theLoopCounter = theLoopCounter + 1
         Next
+
 
         'clear everything
         MyPanel2.Children.Clear()

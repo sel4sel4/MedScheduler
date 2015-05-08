@@ -12,7 +12,7 @@ Imports Microsoft.Office.Interop
     Public Shared xlsSheet As Excel.Worksheet
     Public Shared aController As Controller
 
-    <ClassInitialize()> Public Shared Sub MySetup(sTestContext As TestContext)
+    <TestMethod()> Public Sub MySetup()
 
         MySettingsGlobal = New Settings1
         testMonth = New ScheduleMonth(4, 2018)
@@ -48,38 +48,38 @@ Imports Microsoft.Office.Interop
         Assert.IsTrue(theshift.DocAvailabilities.Count > 0)
     End Sub
 
-    <TestMethod()> Public Sub CreateExcelCalendar()
-        aController = New Controller(xlsSheet, 2017, 3, "Mars")
-        Assert.IsTrue(xlsSheet.Range("g4").Value = "8-16 Urg.")
-    End Sub
+    '<TestMethod()> Public Sub CreateExcelCalendar()
+    '    aController = New Controller(xlsSheet, 2017, 3, "Mars")
+    '    Assert.IsTrue(xlsSheet.Range("g4").Value = "8-16 Urg.")
+    'End Sub
 
-    <TestMethod()> Public Sub HighlightingWorks()
-        xlsSheet.Range("h4").Value = ""
-        aController.HighLightDocAvailablilities("MM")
-        Assert.IsTrue(xlsSheet.Range("h4").Interior.Color = RGB(0, 233, 118))
-    End Sub
+    '<TestMethod()> Public Sub HighlightingWorks()
+    '    xlsSheet.Range("h4").Value = ""
+    '    aController.HighLightDocAvailablilities("MM")
+    '    Assert.IsTrue(xlsSheet.Range("h4").Interior.Color = RGB(0, 233, 118))
+    'End Sub
 
-    <TestMethod()> Public Sub AddDoc()
-        xlsSheet.Range("h4").Value = "MM"
-        Dim aDay As ScheduleDay = aController.aControlledMonth.Days(2)
-        Dim aShift As ScheduleShift = aDay.Shifts(1)
-        Dim acollection As Collection = aShift.DocAvailabilities
-        Dim aDocAvail As scheduleDocAvailable = acollection.Item("MM")
-        Assert.IsTrue(aDocAvail.Availability = PublicEnums.Availability.Assigne)
-        xlsSheet.Range("h4").Value = ""
-    End Sub
+    '<TestMethod()> Public Sub AddDoc()
+    '    xlsSheet.Range("h4").Value = "MM"
+    '    Dim aDay As ScheduleDay = aController.aControlledMonth.Days(2)
+    '    Dim aShift As ScheduleShift = aDay.Shifts(1)
+    '    Dim acollection As Collection = aShift.DocAvailabilities
+    '    Dim aDocAvail As scheduleDocAvailable = acollection.Item("MM")
+    '    Assert.IsTrue(aDocAvail.Availability = PublicEnums.Availability.Assigne)
+    '    xlsSheet.Range("h4").Value = ""
+    'End Sub
 
-    <TestMethod()> Public Sub HighlightingRepeated()
-        xlsSheet.Range("h4").Value = "MM"
-        'aController.HighLightDocAvailablilities("MM")
-        Assert.IsTrue(xlsSheet.Range("h4").Interior.Color = RGB(0, 255, 255))
-        xlsSheet.Range("h4").Value = ""
-    End Sub
+    '<TestMethod()> Public Sub HighlightingRepeated()
+    '    xlsSheet.Range("h4").Value = "MM"
+    '    'aController.HighLightDocAvailablilities("MM")
+    '    Assert.IsTrue(xlsSheet.Range("h4").Interior.Color = RGB(0, 255, 255))
+    '    xlsSheet.Range("h4").Value = ""
+    'End Sub
 
-    <TestMethod()> Public Sub HighlightingTempNonDispos()
-        xlsSheet.Range("h4").Value = "MM"
-        'aController.HighLightDocAvailablilities("MM")
-        Assert.IsTrue(xlsSheet.Range("h5").Interior.Color = RGB(219, 112, 147))
-        xlsSheet.Range("h4").Value = ""
-    End Sub
+    '<TestMethod()> Public Sub HighlightingTempNonDispos()
+    '    xlsSheet.Range("h4").Value = "MM"
+    '    'aController.HighLightDocAvailablilities("MM")
+    '    Assert.IsTrue(xlsSheet.Range("h5").Interior.Color = RGB(219, 112, 147))
+    '    xlsSheet.Range("h4").Value = ""
+    'End Sub
 End Class

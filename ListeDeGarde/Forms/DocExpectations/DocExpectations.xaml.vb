@@ -138,6 +138,23 @@ Public Class DocExpectations
             MyPanel.RegisterName(aTextBox.Name, aTextBox)
 
         Next
+
+        aHorizStackPanel = New StackPanel
+        aLabel = New Label
+        aLabel.Content = "Expected:"
+        aLabel.Width = 120
+        aHorizStackPanel.Height = 21
+        aHorizStackPanel.Orientation = Orientation.Horizontal
+        Me.MyPanel.Children.Add(aHorizStackPanel)
+        aHorizStackPanel.Children.Add(aLabel)
+        Dim theArray As Integer()
+        theArray = CountExpectedShiftsPerMonth()
+        For x = 0 To 4
+            aLabel = New Label
+            aLabel.Content = theArray(x)
+            aLabel.Width = 30
+            aHorizStackPanel.Children.Add(aLabel)
+        Next
         CalculateTotals()
 
     End Sub
@@ -251,4 +268,20 @@ Public Class DocExpectations
         MyPanel.FindName("Total_4").text = CStr(vert4Total)
         MyPanel.FindName("Total_5").text = CStr(vert5Total)
     End Sub
+
+    Private Function CountExpectedShiftsPerMonth() As Integer()
+        Dim theArray As Integer()
+        ReDim theArray(4)
+
+        Dim theControlledMonth As ScheduleMonth
+        theControlledMonth = Globals.ThisAddIn.theCurrentController.aControlledMonth
+        Dim aDay As ScheduleDay
+        Dim ashift As ScheduleShift
+        For Each aDay In theControlledMonth.Days
+            For Each ashift In aDay.Shifts
+                If ashift.ShiftType <= 5 Then theArray(ashift.ShiftType - 1) = theArray(ashift.ShiftType - 1) + 1
+            Next
+        Next
+        Return theArray
+    End Function
 End Class
