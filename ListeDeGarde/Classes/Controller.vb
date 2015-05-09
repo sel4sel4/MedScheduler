@@ -1,15 +1,15 @@
 ﻿Public Class Controller
     Private WithEvents controlledExcelSheet As Excel.Worksheet
-    Private controlledMonth As ScheduleMonth
+    Private controlledMonth As SMonth
     Private monthloaded As Boolean = False
     Private monthlystats As UserControl4
     Private WithEvents theMonthlyStatsForm As Form2
-    Private ScheduleDocStatsCollection As Collection
+    Private SDocStatsCollection As Collection
     Private Const theRestTime As Long = 432000000000
     Private theHighlightedDoc As String
     Private theCustomTaskPane As Microsoft.Office.Tools.CustomTaskPane
 
-    Public ReadOnly Property aControlledMonth() As ScheduleMonth
+    Public ReadOnly Property aControlledMonth() As SMonth
         Get
             Return controlledMonth
         End Get
@@ -27,14 +27,14 @@
         controlledExcelSheet = aSheet
 
         'create a month
-        controlledMonth = New ScheduleMonth(aMonth, aYear)
+        controlledMonth = New SMonth(aMonth, aYear)
 
         'Load shift types collection into global
         'controlledShiftTypes = controlledMonth.ShiftTypes
         theHighlightedDoc = ""
         Globals.ThisAddIn.theCurrentController = Me
         resetSheet()
-       
+
 
     End Sub
 
@@ -43,9 +43,9 @@
         If monthloaded = False Then Exit Sub
         controlledExcelSheet.Unprotect()
         'System.Diagnostics.Debug.WriteLine("WithEvents: You Changed Cells " + Target.Address + " " + controlledExcelSheet.Name)
-        Dim aday As ScheduleDay
-        Dim aShift As ScheduleShift
-        Dim adocAvail As scheduleDocAvailable
+        Dim aday As SDay
+        Dim aShift As SShift
+        Dim adocAvail As SDocAvailable
         Dim anExitNotice As Boolean = False
         Dim firstDoc As String = ""
 
@@ -95,9 +95,9 @@
 
     Public Sub HighLightDocAvailablilities(Initials As String)
         'cycle through the month and highlight everywhere theDoc is available.
-        Dim aday As ScheduleDay
-        Dim aShift As ScheduleShift
-        Dim adocAvail As scheduleDocAvailable
+        Dim aday As SDay
+        Dim aShift As SShift
+        Dim adocAvail As SDocAvailable
         'Globals.ThisAddIn.Application.ScreenUpdating = False
         controlledExcelSheet.Unprotect()
         For Each aday In controlledMonth.Days
@@ -129,10 +129,10 @@
         controlledExcelSheet.Protect()
     End Sub
 
-    Public Sub HighLightDocAvailSingleCell(theShift As ScheduleShift, Initials As String)
+    Public Sub HighLightDocAvailSingleCell(theShift As SShift, Initials As String)
         'cycle through the month and highlight everywhere theDoc is available.
 
-        Dim adocAvail As scheduleDocAvailable
+        Dim adocAvail As SDocAvailable
         For Each adocAvail In theShift.DocAvailabilities
             If adocAvail.DocInitial = Initials Then
                 Select Case adocAvail.Availability
@@ -153,32 +153,32 @@
     End Sub
 
 
-    Private Sub fixAvailability(aDoc As String, aMonth As ScheduleMonth, ashift As ScheduleShift, Optional firstDoc As String = "")
+    Private Sub fixAvailability(aDoc As String, aMonth As SMonth, ashift As SShift, Optional firstDoc As String = "")
         Dim theDate As Date = ashift.aDate
         Dim theShift As Integer = ashift.ShiftType
         Dim theshiftStart As Integer = ashift.ShiftStart
         Dim theshiftStop As Integer = ashift.ShiftStop
         Dim theStartDay As Integer = theDate.Day - 1
         Dim theStopDay As Integer = theDate.Day + 1
-        Dim myShift As ScheduleShift
-        Dim aDay As ScheduleDay = aMonth.Days(ashift.aDate.Day)
+        Dim myShift As SShift
+        Dim aDay As SDay = aMonth.Days(ashift.aDate.Day)
         Dim nonDispoStart As Long
         Dim nonDispoStop As Long
         Dim shftStop As Long
         Dim shftStart As Long
         Dim RecheckCollection As New Collection
-        Dim RecheckShift As ScheduleShift
+        Dim RecheckShift As SShift
 
         For x As Integer = ashift.aDate.Day - 1 To ashift.aDate.Day + 1
             If aMonth.Days.Contains(x.ToString()) Then
                 aDay = aMonth.Days.Item(x.ToString())
                 For Each myShift In aDay.Shifts
-   
+
                     nonDispoStart = ashift.aDate.Ticks + CLng(ashift.ShiftStart) * 600000000 - theRestTime
                     nonDispoStop = ashift.aDate.Ticks + CLng(ashift.ShiftStop) * 600000000 + theRestTime
                     shftStop = myShift.aDate.Ticks + CLng(myShift.ShiftStop) * 600000000
                     shftStart = myShift.aDate.Ticks + CLng(myShift.ShiftStart) * 600000000
-                    Dim thedocAvail As scheduleDocAvailable
+                    Dim thedocAvail As SDocAvailable
 
                     If firstDoc <> "" Then 'do opposite of the top one
                         'then check if this doc is assigned in prevous or next day
@@ -217,7 +217,7 @@
                             End If
                         End If
 
-                        
+
                     End If
                     If theHighlightedDoc <> "" Then
                         HighLightDocAvailSingleCell(myShift, theHighlightedDoc)
@@ -234,9 +234,9 @@
 
     End Sub
 
-    Public Sub fixlist(theShift As ScheduleShift)
+    Public Sub fixlist(theShift As SShift)
         Dim theSetValue As String = ""
-        Dim theDocAvailable As scheduleDocAvailable
+        Dim theDocAvailable As SDocAvailable
         Dim thelist As String = ""
         For Each theDocAvailable In theShift.DocAvailabilities
             Select Case theDocAvailable.Availability
@@ -304,7 +304,7 @@
     End Sub
 
     Private Sub theMonthlyStatsForm_close() Handles theMonthlyStatsForm.FormClosing
-        ScheduleDocStatsCollection = Nothing
+        SDocStatsCollection = Nothing
     End Sub
 
     Public Sub statsMensuelles()
@@ -334,55 +334,55 @@
         If Not theCustomTaskPane Is Nothing Then
             If theCustomTaskPane.Visible = True Then
 
-                Dim theDocCollection As Collection = ScheduleDoc.LoadAllDocsPerMonth(controlledMonth.Year, controlledMonth.Month)
-                Dim aScheduleDoc As ScheduleDoc
-                Dim ashift As ScheduleShift
-                Dim aDay As ScheduleDay
-                Dim aDOcAvail As scheduleDocAvailable
-                Dim theScheduleDocStats As ScheduleDocStats
-                If ScheduleDocStatsCollection Is Nothing Then
-                    ScheduleDocStatsCollection = New Collection
-                    For Each aScheduleDoc In theDocCollection
-                        theScheduleDocStats = New ScheduleDocStats(aScheduleDoc.Initials, _
-                                                                   aScheduleDoc.Shift1, _
-                                                                  aScheduleDoc.Shift2, _
-                                                                  aScheduleDoc.Shift3, _
-                                                                  aScheduleDoc.Shift4, _
-                                                                  aScheduleDoc.Shift5)
-                        ScheduleDocStatsCollection.Add(theScheduleDocStats, aScheduleDoc.Initials)
+                Dim theDocCollection As Collection = SDoc.LoadAllDocsPerMonth(controlledMonth.Year, controlledMonth.Month)
+                Dim aSDoc As SDoc
+                Dim ashift As SShift
+                Dim aDay As SDay
+                Dim aDOcAvail As SDocAvailable
+                Dim theSDocStats As SDocStats
+                If SDocStatsCollection Is Nothing Then
+                    SDocStatsCollection = New Collection
+                    For Each aSDoc In theDocCollection
+                        theSDocStats = New SDocStats(aSDoc.Initials, _
+                                                                   aSDoc.Shift1, _
+                                                                  aSDoc.Shift2, _
+                                                                  aSDoc.Shift3, _
+                                                                  aSDoc.Shift4, _
+                                                                  aSDoc.Shift5)
+                        SDocStatsCollection.Add(theSDocStats, aSDoc.Initials)
 
                     Next
                 Else
-                    For Each theScheduleDocStats In ScheduleDocStatsCollection
-                        theScheduleDocStats.shift1 = theScheduleDocStats.shift1E
-                        theScheduleDocStats.shift2 = theScheduleDocStats.shift2E
-                        theScheduleDocStats.shift3 = theScheduleDocStats.shift3E
-                        theScheduleDocStats.shift4 = theScheduleDocStats.shift4E
-                        theScheduleDocStats.shift5 = theScheduleDocStats.shift5E
+                    For Each theSDocStats In SDocStatsCollection
+                        theSDocStats.shift1 = theSDocStats.shift1E
+                        theSDocStats.shift2 = theSDocStats.shift2E
+                        theSDocStats.shift3 = theSDocStats.shift3E
+                        theSDocStats.shift4 = theSDocStats.shift4E
+                        theSDocStats.shift5 = theSDocStats.shift5E
                     Next
 
                 End If
 
                 Dim docCount As Integer = 0
                 Dim shiftCount As Integer = 0
-                For Each theScheduleDocStats In ScheduleDocStatsCollection
+                For Each theSDocStats In SDocStatsCollection
                     For Each aDay In controlledMonth.Days
                         shiftCount = 0
                         For Each ashift In aDay.Shifts
                             If ashift.ShiftType > 5 Then Exit For
-                            aDOcAvail = ashift.DocAvailabilities(theScheduleDocStats.Initials)
+                            aDOcAvail = ashift.DocAvailabilities(theSDocStats.Initials)
                             If aDOcAvail.Availability = PublicEnums.Availability.Assigne Then
                                 Select Case ashift.ShiftType
                                     Case 1
-                                        theScheduleDocStats.shift1 = theScheduleDocStats.shift1 - 1
+                                        theSDocStats.shift1 = theSDocStats.shift1 - 1
                                     Case 2
-                                        theScheduleDocStats.shift2 = theScheduleDocStats.shift2 - 1
+                                        theSDocStats.shift2 = theSDocStats.shift2 - 1
                                     Case 3
-                                        theScheduleDocStats.shift3 = theScheduleDocStats.shift3 - 1
+                                        theSDocStats.shift3 = theSDocStats.shift3 - 1
                                     Case 4
-                                        theScheduleDocStats.shift4 = theScheduleDocStats.shift4 - 1
+                                        theSDocStats.shift4 = theSDocStats.shift4 - 1
                                     Case 5
-                                        theScheduleDocStats.shift5 = theScheduleDocStats.shift5 - 1
+                                        theSDocStats.shift5 = theSDocStats.shift5 - 1
                                 End Select
                             End If
                             shiftCount = shiftCount + 1
@@ -394,7 +394,7 @@
                 'Dim bCollection As System.Windows.Forms.Control.ControlCollection = theMonthlyStatsForm.Controls
                 'Dim aElementHost As System.Windows.Forms.Integration.ElementHost = bCollection(0)
                 'monthlystats = aElementHost.Child
-                'monthlystats.loadarray(ScheduleDocStatsCollection)
+                'monthlystats.loadarray(SDocStatsCollection)
                 Dim theArray As Integer()
                 If theHighlightedDoc <> "" Then
 
@@ -432,7 +432,7 @@
                 Dim aCollection As System.Windows.Forms.Control.ControlCollection = theCustomTaskPane.Control.Controls
                 Dim bElementHost As System.Windows.Forms.Integration.ElementHost = aCollection(0)
                 Dim theMonthlyDocStatsTP As MonthlyDocStatsTP = bElementHost.Child
-                theMonthlyDocStatsTP.loadarray(ScheduleDocStatsCollection, theArray)
+                theMonthlyDocStatsTP.loadarray(SDocStatsCollection, theArray)
             End If
         End If
 
@@ -441,38 +441,38 @@
     End Sub
 
     Private Sub SetUpPermNonDispos()
-        Dim theSchedulenondispo As New ScheduleNonDispo
-        Dim aSchedulenondispo As ScheduleNonDispo
+        Dim theSNonDispo As New SNonDispo
+        Dim aSNonDispo As SNonDispo
         Dim aCollection As Collection
-        Dim aDay As ScheduleDay
-        Dim ashift As ScheduleShift
-        Dim theScheduledoc As New ScheduleDoc(controlledMonth.Year, controlledMonth.Month)
+        Dim aDay As SDay
+        Dim ashift As SShift
+        Dim theSDoc As New SDoc(controlledMonth.Year, controlledMonth.Month)
         Dim docCollection As Collection = controlledMonth.DocList
-        Dim ascheduleDoc As ScheduleDoc
+        Dim aSDoc As SDoc
         Dim nonDispoStart As Long
         Dim nonDispoStop As Long
         Dim shftStop As Long
         Dim shftStart As Long
 
         'For Each doc in the total collection of doctors
-        For Each ascheduleDoc In docCollection
+        For Each aSDoc In docCollection
 
             'get the unavailability list for one doctor
-            aCollection = theSchedulenondispo.GetNonDispoListForDoc(ascheduleDoc.Initials, controlledMonth.Year, controlledMonth.Month)
+            aCollection = theSNonDispo.GetNonDispoListForDoc(aSDoc.Initials, controlledMonth.Year, controlledMonth.Month)
             If Not IsNothing(aCollection) Then
                 'iterate through the doctors list of unavailabilities
-                For Each aSchedulenondispo In aCollection
+                For Each aSNonDispo In aCollection
                     Dim stopDay As Integer
                     Dim startday As Integer
-                    Select Case aSchedulenondispo.DateStart.Month
+                    Select Case aSNonDispo.DateStart.Month
                         Case controlledMonth.Month
-                            startday = aSchedulenondispo.DateStart.Day
+                            startday = aSNonDispo.DateStart.Day
                         Case Is < controlledMonth.Month
                             startday = 1
                     End Select
-                    Select Case aSchedulenondispo.DateStop.Month
+                    Select Case aSNonDispo.DateStop.Month
                         Case controlledMonth.Month
-                            stopDay = aSchedulenondispo.DateStop.Day
+                            stopDay = aSNonDispo.DateStop.Day
                         Case Is > controlledMonth.Month
                             stopDay = System.DateTime.DaysInMonth(controlledMonth.Year, controlledMonth.Month)
                     End Select
@@ -481,8 +481,8 @@
                         If controlledMonth.Days.Contains(y) Then
                             aDay = controlledMonth.Days.Item(y)
                             For Each ashift In aDay.Shifts
-                                nonDispoStart = aSchedulenondispo.DateStart.Ticks + CLng(aSchedulenondispo.TimeStart) * 600000000
-                                nonDispoStop = aSchedulenondispo.DateStop.Ticks + CLng(aSchedulenondispo.TimeStop) * 600000000
+                                nonDispoStart = aSNonDispo.DateStart.Ticks + CLng(aSNonDispo.TimeStart) * 600000000
+                                nonDispoStop = aSNonDispo.DateStop.Ticks + CLng(aSNonDispo.TimeStop) * 600000000
                                 shftStop = ashift.aDate.Ticks + CLng(ashift.ShiftStop) * 600000000
                                 shftStart = ashift.aDate.Ticks + CLng(ashift.ShiftStart) * 600000000
 
@@ -490,8 +490,8 @@
                                     (shftStop > nonDispoStart And shftStop < nonDispoStop) Or _
                                     (shftStart > nonDispoStart And shftStop < nonDispoStop) Then
 
-                                    Dim thedocAvail As scheduleDocAvailable
-                                    thedocAvail = ashift.DocAvailabilities.Item(ascheduleDoc.Initials)
+                                    Dim thedocAvail As SDocAvailable
+                                    thedocAvail = ashift.DocAvailabilities.Item(aSDoc.Initials)
                                     'check if doc is assigned and ask to clear (provide some info.. make surutlisé
                                     If thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
                                         thedocAvail.Availability = PublicEnums.Availability.NonDispoPermanente
@@ -512,12 +512,12 @@
         Dim amonthstring As String = monthstrings(aControlledMonth.Month - 1)
         ' Globals.ThisAddIn.Application.ScreenUpdating = False
         controlledExcelSheet.Cells.Clear() 'clear the worksheet
-        Dim theDay As ScheduleDay
+        Dim theDay As SDay
         Dim row As Integer
         Dim col As Integer = 0
 
         'get number of shifts
-        Dim rowheight1 As Integer = ScheduleShiftType.ActiveShiftTypesCountPerMonth(aControlledMonth.Month, aControlledMonth.Year) + 1
+        Dim rowheight1 As Integer = SShiftType.ActiveShiftTypesCountPerMonth(aControlledMonth.Month, aControlledMonth.Year) + 1
         'assign colwidth as 2
         Dim colwidth1 As Integer = 2
 
@@ -542,7 +542,7 @@
 
             Dim theRangeForShiftType As Excel.Range
             Dim TheRAngeForDocLists As Excel.Range
-            Dim theShift As ScheduleShift
+            Dim theShift As SShift
 
             For Each theShift In theDay.Shifts
                 theRangeForShiftType = theRange.Offset(theShift.ShiftType, 0)
@@ -581,7 +581,7 @@
         controlledExcelSheet.Unprotect()
         controlledExcelSheet.Cells.Clear()
         'create a month
-        controlledMonth = New ScheduleMonth(controlledMonth.Month, controlledMonth.Year)
+        controlledMonth = New SMonth(controlledMonth.Month, controlledMonth.Year)
         theHighlightedDoc = ""
         Globals.ThisAddIn.theCurrentController = Me
         'Load shift types collection into global
@@ -590,14 +590,14 @@
     End Sub
 
     Private Sub SetupAssignedDocs()
-        Dim aTest As New scheduleDocAvailable(DateSerial(aControlledMonth.Year, aControlledMonth.Month, 1))
+        Dim aTest As New SDocAvailable(DateSerial(aControlledMonth.Year, aControlledMonth.Month, 1))
         Dim aCollection As Collection
-        Dim theDay2 As ScheduleDay
-        Dim theShift2 As ScheduleShift
-        Dim theDocAvailble As scheduleDocAvailable
+        Dim theDay2 As SDay
+        Dim theShift2 As SShift
+        Dim theDocAvailble As SDocAvailable
         aCollection = aTest.doesDataExistForThisMonth()
         If Not IsNothing(aCollection) Then
-            Dim theAssignedDocs As scheduleDocAvailable
+            Dim theAssignedDocs As SDocAvailable
             For Each theAssignedDocs In aCollection
                 theDay2 = controlledMonth.Days.Item(theAssignedDocs.Date_.Day)
                 If theDay2.Shifts.Contains(theAssignedDocs.ShiftType.ToString()) Then
@@ -613,8 +613,8 @@
                                                 + theAssignedDocs.DocInitial + " Etait assigné au quart de travail " _
                                                 + theShift2.Description.ToString() + " le " + theDay2.theDate.Day.ToString() _
                                                 + ", mais le medecin a été retiré de la liste des médecins. Son assignation au quart de travail a été retiré.")
-                        Dim aScheduleDocAvailable As New scheduleDocAvailable(" ", PublicEnums.Availability.Assigne, theDay2.theDate, theShift2.ShiftType)
-                        aScheduleDocAvailable.DeleteScheduleDataEntry()
+                        Dim aSDocAvailable As New SDocAvailable(" ", PublicEnums.Availability.Assigne, theDay2.theDate, theShift2.ShiftType)
+                        aSDocAvailable.DeleteScheduleDataEntry()
                     End If
                 End If
             Next
@@ -622,9 +622,9 @@
     End Sub
 
     Private Sub ClearAvailability()
-        Dim aDay As ScheduleDay
-        Dim ashift As ScheduleShift
-        Dim aDocAvail As scheduleDocAvailable
+        Dim aDay As SDay
+        Dim ashift As SShift
+        Dim aDocAvail As SDocAvailable
 
         For Each aDay In aControlledMonth.Days
             For Each ashift In aDay.Shifts

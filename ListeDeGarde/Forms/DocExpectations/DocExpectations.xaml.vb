@@ -19,11 +19,11 @@ Public Class DocExpectations
         Dim aHorizStackPanel As StackPanel
         Dim aLabel As Label
         Dim aTextBox As TextBox
-        Dim aShift As ScheduleShiftType
+        Dim aShift As SShiftType
         ' Add any initialization after the InitializeComponent() call.
         If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
         Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
-        Dim aScheduleDoc As ScheduleDoc
+        Dim aSDoc As SDoc
 
         MyPanel.Children.Clear()
 
@@ -66,18 +66,18 @@ Public Class DocExpectations
         If Me.Edit_Template.IsChecked = False Then
             theDocCollection = aController.aControlledMonth.DocList
         Else
-            theDocCollection = ScheduleDoc.LoadTempateDocsFromDB()
+            theDocCollection = SDoc.LoadTempateDocsFromDB()
         End If
 
-        For Each aScheduleDoc In theDocCollection
+        For Each aSDoc In theDocCollection
             aHorizStackPanel = New StackPanel
             aLabel = New Label
-            aLabel.Content = aScheduleDoc.FistAndLastName
+            aLabel.Content = aSDoc.FistAndLastName
             aLabel.Width = 120
             aHorizStackPanel.Height = 21
             aHorizStackPanel.Orientation = Orientation.Horizontal
             Me.MyPanel.Children.Add(aHorizStackPanel)
-            aHorizStackPanel.Name = aScheduleDoc.Initials
+            aHorizStackPanel.Name = aSDoc.Initials
             If Not MyPanel.FindName(aHorizStackPanel.Name) Is Nothing Then MyPanel.UnregisterName(aHorizStackPanel.Name)
             MyPanel.RegisterName(aHorizStackPanel.Name, aHorizStackPanel)
             aHorizStackPanel.Children.Add(aLabel)
@@ -87,18 +87,18 @@ Public Class DocExpectations
                 aTextBox = New TextBox
                 Select Case aShift.ShiftType
                     Case 1
-                        aTextBox.Text = CStr(aScheduleDoc.Shift1)
+                        aTextBox.Text = CStr(aSDoc.Shift1)
                     Case 2
-                        aTextBox.Text = CStr(aScheduleDoc.Shift2)
+                        aTextBox.Text = CStr(aSDoc.Shift2)
                     Case 3
-                        aTextBox.Text = CStr(aScheduleDoc.Shift3)
+                        aTextBox.Text = CStr(aSDoc.Shift3)
                     Case 4
-                        aTextBox.Text = CStr(aScheduleDoc.Shift4)
+                        aTextBox.Text = CStr(aSDoc.Shift4)
                     Case 5
-                        aTextBox.Text = CStr(aScheduleDoc.Shift5)
+                        aTextBox.Text = CStr(aSDoc.Shift5)
                 End Select
                 aTextBox.Width = 30
-                aTextBox.Name = aScheduleDoc.Initials + "_" + CStr(aShift.ShiftType)
+                aTextBox.Name = aSDoc.Initials + "_" + CStr(aShift.ShiftType)
                 AddHandler aTextBox.TextChanged, AddressOf TextHasChanged
                 aHorizStackPanel.Children.Add(aTextBox)
                 If Not MyPanel.FindName(aTextBox.Name) Is Nothing Then MyPanel.UnregisterName(aTextBox.Name)
@@ -109,7 +109,7 @@ Public Class DocExpectations
             aTextBox.Text = "0"
             aTextBox.Width = 30
             aTextBox.IsEnabled = False
-            aTextBox.Name = "Total_" + aScheduleDoc.Initials
+            aTextBox.Name = "Total_" + aSDoc.Initials
             aHorizStackPanel.Children.Add(aTextBox)
             If Not MyPanel.FindName(aTextBox.Name) Is Nothing Then MyPanel.UnregisterName(aTextBox.Name)
             MyPanel.RegisterName(aTextBox.Name, aTextBox)
@@ -184,10 +184,10 @@ Public Class DocExpectations
         'aTextBox = CType(aObject, TextBox)
         'aTextBox.Text = CStr(aTotal)
 
-        'Dim aScheduleDoc As ScheduleDoc
+        'Dim aSDoc As SDoc
         'aTotal = 0
-        'For Each aScheduleDoc In theDocCollection
-        '    aObject = MyPanel.FindName(aScheduleDoc.Initials + "_" + mySplit(1))
+        'For Each aSDoc In theDocCollection
+        '    aObject = MyPanel.FindName(aSDoc.Initials + "_" + mySplit(1))
         '    aTextBox = CType(aObject, TextBox)
         '    aTotal = aTotal + CInt(aTextBox.Text)
         'Next
@@ -208,15 +208,15 @@ Public Class DocExpectations
         'cycle through all doctors, load the shift numbers from the grid
         'apply them to each doc and save them either to the template or to the specific month.
 
-        Dim aScheduleDoc As ScheduleDoc
+        Dim aSDoc As SDoc
 
-        For Each aScheduleDoc In theDocCollection
-            aScheduleDoc.Shift1 = CInt(MyPanel.FindName(aScheduleDoc.Initials + "_1").text)
-            aScheduleDoc.Shift2 = CInt(MyPanel.FindName(aScheduleDoc.Initials + "_2").text)
-            aScheduleDoc.Shift3 = CInt(MyPanel.FindName(aScheduleDoc.Initials + "_3").text)
-            aScheduleDoc.Shift4 = CInt(MyPanel.FindName(aScheduleDoc.Initials + "_4").text)
-            aScheduleDoc.Shift5 = CInt(MyPanel.FindName(aScheduleDoc.Initials + "_5").text)
-            aScheduleDoc.save()
+        For Each aSDoc In theDocCollection
+            aSDoc.Shift1 = CInt(MyPanel.FindName(aSDoc.Initials + "_1").text)
+            aSDoc.Shift2 = CInt(MyPanel.FindName(aSDoc.Initials + "_2").text)
+            aSDoc.Shift3 = CInt(MyPanel.FindName(aSDoc.Initials + "_3").text)
+            aSDoc.Shift4 = CInt(MyPanel.FindName(aSDoc.Initials + "_4").text)
+            aSDoc.Shift5 = CInt(MyPanel.FindName(aSDoc.Initials + "_5").text)
+            aSDoc.save()
         Next
         Globals.ThisAddIn.theCurrentController.resetSheetExt()
 
@@ -227,7 +227,7 @@ Public Class DocExpectations
         Dim x As Integer
         Dim aObject As Object
         Dim aTextBox As TextBox
-        Dim aScheduleDoc As ScheduleDoc
+        Dim aSDoc As SDoc
         Dim horizTotal As Integer = 0
         Dim vert1Total As Integer = 0
         Dim vert2Total As Integer = 0
@@ -236,9 +236,9 @@ Public Class DocExpectations
         Dim vert5Total As Integer = 0
 
 
-        For Each aScheduleDoc In theDocCollection
+        For Each aSDoc In theDocCollection
             For x = 1 To 5
-                aObject = MyPanel.FindName(aScheduleDoc.Initials + "_" + x.ToString())
+                aObject = MyPanel.FindName(aSDoc.Initials + "_" + x.ToString())
                 aTextBox = CType(aObject, TextBox)
                 horizTotal = horizTotal + CInt(aTextBox.Text)
                 Select Case x
@@ -257,7 +257,7 @@ Public Class DocExpectations
 
 
             Next
-            aObject = MyPanel.FindName("Total_" + aScheduleDoc.Initials)
+            aObject = MyPanel.FindName("Total_" + aSDoc.Initials)
             aTextBox = CType(aObject, TextBox)
             aTextBox.Text = CStr(horizTotal)
             horizTotal = 0
@@ -273,10 +273,10 @@ Public Class DocExpectations
         Dim theArray As Integer()
         ReDim theArray(4)
 
-        Dim theControlledMonth As ScheduleMonth
+        Dim theControlledMonth As SMonth
         theControlledMonth = Globals.ThisAddIn.theCurrentController.aControlledMonth
-        Dim aDay As ScheduleDay
-        Dim ashift As ScheduleShift
+        Dim aDay As SDay
+        Dim ashift As SShift
         For Each aDay In theControlledMonth.Days
             For Each ashift In aDay.Shifts
                 If ashift.ShiftType <= 5 Then theArray(ashift.ShiftType - 1) = theArray(ashift.ShiftType - 1) + 1

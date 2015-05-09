@@ -26,7 +26,7 @@ Public Class MonthlyDocStatsTP
 
         'clear everything
         MyPanel.Children.Clear()
-        Dim theStats As ScheduleDocStats
+        Dim theStats As SDocStats
         Dim aHorizStackPanel As StackPanel
         Dim aLabel As Label
 

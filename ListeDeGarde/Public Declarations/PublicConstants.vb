@@ -7,7 +7,7 @@ Public Module PublicConstants
     Public CONSTFILEADDRESS As String
     '----------------------Table Name Mapping
 
-    'DB Access constants for Table ScheduleShiftType
+    'DB Access constants for Table SShiftType
     Public Const TABLE_shiftType = "TABLE_shiftType"
     Public Const SQLShiftStart = "ShiftStart"
     Public Const SQLShiftStop = "ShiftStop"
@@ -29,7 +29,7 @@ Public Module PublicConstants
     'Public Const SQLEffectiveStart = "EffectiveStart"
     'Public Const SQLEffectiveEnd = "EffectiveEnd"
 
-    'DB Access constants for Table ScheduleDoc
+    'DB Access constants for Table SDoc
     Public Const TABLE_Doc = "TABLE_Doc"
     Public Const SQLFirstName = "FirstName"
     Public Const SQLLastName = "LastName"
@@ -134,7 +134,7 @@ End Module
 
 Public Module MyGlobals
 
-    Public globalShiftTypes As ScheduleShiftType
+    Public globalShiftTypes As SShiftType
     'Public theNonDispoList As Collection
     Public theList As String
     Public theRangeCollection As Collection

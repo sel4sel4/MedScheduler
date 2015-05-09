@@ -1,6 +1,6 @@
 ﻿Imports System.Windows.Controls
 Public Class DrInterface
-    Private waitingForNewSave As ScheduleDoc
+    Private waitingForNewSave As SDoc
     Private myDocCollection As Collection
     Private changesongoing As Boolean = False
     Private aYearP As Integer
@@ -38,39 +38,39 @@ Public Class DrInterface
     End Sub
     Private Sub DocListView_selectionChanged(sender As Object, e As System.Windows.RoutedEventArgs) Handles DocListView.SelectionChanged
         If changesongoing = True Then Exit Sub
-        Dim ascheduleDoc As ScheduleDoc
-        ascheduleDoc = DocListView.SelectedItem
-        Me.initials1.Text = ascheduleDoc.Initials
+        Dim aSDoc As SDoc
+        aSDoc = DocListView.SelectedItem
+        Me.initials1.Text = aSDoc.Initials
         Me.initials1.IsReadOnly = True
-        Me.firstName1.Text = ascheduleDoc.FirstName
-        Me.lastName1.Text = ascheduleDoc.LastName
-        Me.version1.Text = ascheduleDoc.Version
-        Me.Soins.IsChecked = ascheduleDoc.SoinsTog
-        Me.Active.IsChecked = ascheduleDoc.Active
-        Me.Hospit.IsChecked = ascheduleDoc.HospitTog
-        Me.Nuits.IsChecked = ascheduleDoc.NuitsTog
-        Me.Urgence.IsChecked = ascheduleDoc.UrgenceTog
+        Me.firstName1.Text = aSDoc.FirstName
+        Me.lastName1.Text = aSDoc.LastName
+        Me.version1.Text = aSDoc.Version
+        Me.Soins.IsChecked = aSDoc.SoinsTog
+        Me.Active.IsChecked = aSDoc.Active
+        Me.Hospit.IsChecked = aSDoc.HospitTog
+        Me.Nuits.IsChecked = aSDoc.NuitsTog
+        Me.Urgence.IsChecked = aSDoc.UrgenceTog
         Lock(True)
         waitingForNewSave = Nothing
     End Sub
     Private Sub MenuItem1Clicked(sender As Object, e As System.Windows.RoutedEventArgs)
-        Dim ascheduleDoc As ScheduleDoc
-        ascheduleDoc = DocListView.SelectedItem
-        ascheduleDoc.Delete()
+        Dim aSDoc As SDoc
+        aSDoc = DocListView.SelectedItem
+        aSDoc.Delete()
         changesongoing = True
         initializeDocList(Edit_Template.IsChecked)
         changesongoing = False
     End Sub
     Private Sub EraseBtn_Click(sender As Object, e As Windows.RoutedEventArgs) 'erase doc button
-        Dim ascheduleDoc As ScheduleDoc
-        ascheduleDoc = DocListView.SelectedItem
-        ascheduleDoc.Delete()
+        Dim aSDoc As SDoc
+        aSDoc = DocListView.SelectedItem
+        aSDoc.Delete()
         changesongoing = True
         initializeDocList(Edit_Template.IsChecked)
         changesongoing = False
     End Sub
     Private Sub NewBtn_Click(sender As Object, e As Windows.RoutedEventArgs) ' new doc button
-        waitingForNewSave = New ScheduleDoc()
+        waitingForNewSave = New SDoc()
         Me.initials1.IsReadOnly = False
         Dim theVersion As Integer
         If Edit_Template.IsChecked Then
@@ -93,22 +93,22 @@ Public Class DrInterface
         Lock(Not Me.firstName1.IsReadOnly)
     End Sub
     Private Sub SaveBtn_Click(sender As Object, e As Windows.RoutedEventArgs) 'save doc button
-        Dim ascheduleDoc As ScheduleDoc
+        Dim aSDoc As SDoc
         If Not IsNothing(waitingForNewSave) Then
-            ascheduleDoc = waitingForNewSave
+            aSDoc = waitingForNewSave
         Else
-            ascheduleDoc = DocListView.SelectedItem
+            aSDoc = DocListView.SelectedItem
         End If
-        ascheduleDoc.Initials = Me.initials1.Text
-        ascheduleDoc.FirstName = Me.firstName1.Text
-        ascheduleDoc.LastName = Me.lastName1.Text
-        ascheduleDoc.Version = Me.version1.Text
-        ascheduleDoc.SoinsTog = Me.Soins.IsChecked
-        ascheduleDoc.Active = Me.Active.IsChecked
-        ascheduleDoc.HospitTog = Me.Hospit.IsChecked
-        ascheduleDoc.NuitsTog = Me.Nuits.IsChecked
-        ascheduleDoc.UrgenceTog = Me.Urgence.IsChecked
-        ascheduleDoc.save()
+        aSDoc.Initials = Me.initials1.Text
+        aSDoc.FirstName = Me.firstName1.Text
+        aSDoc.LastName = Me.lastName1.Text
+        aSDoc.Version = Me.version1.Text
+        aSDoc.SoinsTog = Me.Soins.IsChecked
+        aSDoc.Active = Me.Active.IsChecked
+        aSDoc.HospitTog = Me.Hospit.IsChecked
+        aSDoc.NuitsTog = Me.Nuits.IsChecked
+        aSDoc.UrgenceTog = Me.Urgence.IsChecked
+        aSDoc.save()
         changesongoing = True
         Dim isTemplate As Boolean
         If Me.version1.Text = 0 Then isTemplate = True Else isTemplate = False
@@ -118,9 +118,9 @@ Public Class DrInterface
     End Sub
     Private Sub initializeDocList(Optional getTemplate As Boolean = False)
         If getTemplate = True Then
-            myDocCollection = ScheduleDoc.LoadTempateDocsFromDB()
+            myDocCollection = SDoc.LoadTempateDocsFromDB()
         Else
-            myDocCollection = ScheduleDoc.LoadAllDocsPerMonth(aYearP, aMonthP)
+            myDocCollection = SDoc.LoadAllDocsPerMonth(aYearP, aMonthP)
         End If
         changesongoing = True
         Me.DocListView.ItemsSource = myDocCollection

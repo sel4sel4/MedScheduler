@@ -2,7 +2,7 @@
 Imports System.Windows.Forms
 Imports System.Configuration
 
-Public Class ScheduleYear
+Public Class SYear
     Private pYear As Integer
     Private pMonths As Collection
 
@@ -22,15 +22,15 @@ Public Class ScheduleYear
         pYear = aYear
         pMonths = New Collection
         For x = 1 To 12
-            Dim theMonth As ScheduleMonth
-            theMonth = New ScheduleMonth(x, aYear)
+            Dim theMonth As SMonth
+            theMonth = New SMonth(x, aYear)
             pMonths.Add(theMonth, x.ToString())
         Next
     End Sub
 
 End Class
 
-Public Class ScheduleMonth
+Public Class SMonth
     Private pYear As Integer
     Private pMonth As Integer
     Private pDays As Collection
@@ -63,25 +63,25 @@ Public Class ScheduleMonth
         End Get
     End Property
     Public Sub New(aMonth As Integer, aYear As Integer)
-        pShiftypes = ScheduleShiftType.loadShiftTypesFromDBPerMonth(aMonth, aYear)
-        pDocList = ScheduleDoc.LoadAllDocsPerMonth(aYear, aMonth)
+        pShiftypes = SShiftType.loadShiftTypesFromDBPerMonth(aMonth, aYear)
+        pDocList = SDoc.LoadAllDocsPerMonth(aYear, aMonth)
         Dim theDaysInMonth As Integer = DateTime.DaysInMonth(aYear, aMonth)
         pYear = aYear
         pMonth = aMonth
         pDays = New Collection
         For x = 1 To theDaysInMonth
-            Dim theDay As ScheduleDay
-            theDay = New ScheduleDay(x, aMonth, aYear, Me)
+            Dim theDay As SDay
+            theDay = New SDay(x, aMonth, aYear, Me)
             pDays.Add(theDay, x.ToString())
         Next
     End Sub
 
 End Class
 
-Public Class ScheduleDay
+Public Class SDay
     Private pDate As DateTime 'uniqueID
     Private pShifts As Collection
-    Private pMonth As ScheduleMonth
+    Private pMonth As SMonth
 
     ReadOnly Property Shifts() As Collection
         Get
@@ -93,20 +93,20 @@ Public Class ScheduleDay
             Return pDate
         End Get
     End Property
-    ReadOnly Property Month() As ScheduleMonth
+    ReadOnly Property Month() As SMonth
         Get
             Return pMonth
         End Get
     End Property
 
-    Public Sub New(aDay As Integer, aMonth As Integer, aYear As Integer, ByRef CMonth As ScheduleMonth)
+    Public Sub New(aDay As Integer, aMonth As Integer, aYear As Integer, ByRef CMonth As SMonth)
         pDate = New DateTime(aYear, aMonth, aDay)
         pMonth = CMonth
         pShifts = New Collection
         Dim addShift As Boolean = False
         'populate the shift collection by cycling through 
-        'the active ScheduleShiftTypes collection
-        Dim aShiftType As ScheduleShiftType
+        'the active SShiftTypes collection
+        Dim aShiftType As SShiftType
         Dim theCounter As Integer = 1
         For Each aShiftType In pMonth.ShiftTypes
             If aShiftType.Active Then
@@ -127,7 +127,7 @@ Public Class ScheduleDay
                         If aShiftType.Dimanche = True Then addShift = True Else addShift = False
                 End Select
                 If addShift = True Then
-                    Dim theShift As New ScheduleShift(aShiftType.ShiftType, _
+                    Dim theShift As New SShift(aShiftType.ShiftType, _
                                                       pDate, _
                                                       aShiftType.ShiftStart, _
                                                       aShiftType.ShiftStop, _
@@ -143,7 +143,7 @@ Public Class ScheduleDay
 
 End Class
 
-Public Class ScheduleShift
+Public Class SShift
     Private pShiftStart As Integer
     Private pShiftStop As Integer
     Private pShiftType As Integer
@@ -153,7 +153,7 @@ Public Class ScheduleShift
     Private pDate As DateTime
     Private pStatus As Integer
     Private pRange As Excel.Range
-    Private pDay As ScheduleDay
+    Private pDay As SDay
 
     Public Property Doc() As String
         Get
@@ -218,7 +218,7 @@ Public Class ScheduleShift
                    aShiftStart As Integer, _
                    aShiftStop As Integer, _
                    aDescription As String, _
-                   ByRef aDay As ScheduleDay)
+                   ByRef aDay As SDay)
         pDate = aDate
         pShiftType = aShiftType
         pShiftStart = aShiftStart
@@ -228,40 +228,40 @@ Public Class ScheduleShift
         pDay = aDay
 
         pDocAvailabilities = New Collection
-        Dim theScheduleDocAvailable As scheduleDocAvailable
-        Dim aScheduleDoc As ScheduleDoc
+        Dim theSDocAvailable As SDocAvailable
+        Dim aSDoc As SDoc
         Dim theDispo As PublicEnums.Availability
-        For Each aScheduleDoc In pDay.Month.DocList
+        For Each aSDoc In pDay.Month.DocList
             'conditional code to make doc unavailable if shift is not active for the doc
             Select Case (aShiftType)
                 Case 1, 2, 3, 4 'urgence
-                    If aScheduleDoc.UrgenceTog = False Then theDispo = Availability.NonDispoPermanente _
+                    If aSDoc.UrgenceTog = False Then theDispo = Availability.NonDispoPermanente _
                         Else theDispo = Availability.Dispo
                 Case 5 'urgence nuit
-                    If aScheduleDoc.UrgenceTog = False Or aScheduleDoc.NuitsTog = False Then _
+                    If aSDoc.UrgenceTog = False Or aSDoc.NuitsTog = False Then _
                         theDispo = Availability.NonDispoPermanente Else theDispo = Availability.Dispo
 
                 Case 6 'hospit
-                    If aScheduleDoc.HospitTog = False Then theDispo = Availability.NonDispoPermanente _
+                    If aSDoc.HospitTog = False Then theDispo = Availability.NonDispoPermanente _
                         Else theDispo = Availability.Dispo
                 Case 7 'soins
-                    If aScheduleDoc.SoinsTog = False Then theDispo = Availability.NonDispoPermanente _
+                    If aSDoc.SoinsTog = False Then theDispo = Availability.NonDispoPermanente _
                         Else theDispo = Availability.Dispo
                 Case Else
                     theDispo = Availability.Dispo
             End Select
-            theScheduleDocAvailable = New scheduleDocAvailable(aScheduleDoc.Initials, _
+            theSDocAvailable = New SDocAvailable(aSDoc.Initials, _
                                                                theDispo, _
                                                                pDate, _
                                                                pShiftType)
-            pDocAvailabilities.Add(theScheduleDocAvailable, aScheduleDoc.Initials)
+            pDocAvailabilities.Add(theSDocAvailable, aSDoc.Initials)
         Next
 
     End Sub
 
 End Class
 
-Public Class ScheduleShiftType
+Public Class SShiftType
     Private pShiftStart As T_DBRefTypeI
     Private pShiftStop As T_DBRefTypeI
     Private pShiftType As T_DBRefTypeI
@@ -415,7 +415,7 @@ Public Class ScheduleShiftType
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
         Dim theDBAC As New DBAC
-        Dim aShifttype As ScheduleShiftType
+        Dim aShifttype As SShiftType
         Dim theShiftTypeCollection As Collection
         theShiftTypeCollection = New Collection
         Dim theVersion As Integer : theVersion = ((aYear - 2000) * 100) + aMonth
@@ -433,7 +433,7 @@ Public Class ScheduleShiftType
         If theRS.RecordCount > 0 Then 'if a version exists load it
             theRS.MoveFirst()
             For x As Integer = 1 To theRS.RecordCount
-                aShifttype = New ScheduleShiftType()
+                aShifttype = New SShiftType()
                 If Not IsDBNull(theRS.Fields(SQLShiftStart).Value) Then _
                     aShifttype.ShiftStart = theRS.Fields(SQLShiftStart).Value
                 If Not IsDBNull(theRS.Fields(SQLShiftStop).Value) Then _
@@ -481,7 +481,7 @@ Public Class ScheduleShiftType
 
                 theRS.MoveFirst()
                 For x As Integer = 1 To theRS.RecordCount
-                    aShifttype = New ScheduleShiftType()
+                    aShifttype = New SShiftType()
                     If Not IsDBNull(theRS.Fields(SQLShiftStart).Value) Then _
                         aShifttype.ShiftStart = theRS.Fields(SQLShiftStart).Value
                     If Not IsDBNull(theRS.Fields(SQLShiftStop).Value) Then _
@@ -522,7 +522,7 @@ Public Class ScheduleShiftType
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
         Dim theDBAC As New DBAC
-        Dim aShifttype As ScheduleShiftType
+        Dim aShifttype As SShiftType
         Dim theShiftTypeCollection As Collection
         theShiftTypeCollection = New Collection
         With theBuiltSql
@@ -537,7 +537,7 @@ Public Class ScheduleShiftType
 
             theRS.MoveFirst()
             For x As Integer = 1 To theRS.RecordCount
-                aShifttype = New ScheduleShiftType()
+                aShifttype = New SShiftType()
                 If Not IsDBNull(theRS.Fields(SQLShiftStart).Value) Then _
                     aShifttype.ShiftStart = theRS.Fields(SQLShiftStart).Value
                 If Not IsDBNull(theRS.Fields(SQLShiftStop).Value) Then _
@@ -588,9 +588,9 @@ Public Class ScheduleShiftType
             theDBAC.COpenDB(.SQLStringSelect, theRS)
         End With
 
-        return theRS.RecordCount 
+        Return theRS.RecordCount
     End Function
-    Public Sub Copy(TheInstanceToBeCopied As ScheduleShiftType)
+    Public Sub Copy(TheInstanceToBeCopied As SShiftType)
 
         With TheInstanceToBeCopied
 
@@ -698,7 +698,7 @@ Public Class ScheduleShiftType
 
 End Class
 
-Public Class ScheduleDoc
+Public Class SDoc
     Private pFirstName As T_DBRefTypeS
     Private pLastName As T_DBRefTypeS
     Private pInitials As T_DBRefTypeS
@@ -1063,38 +1063,38 @@ Public Class ScheduleDoc
         If theRS.RecordCount > 0 Then 'if a version exists load it
             theRS.MoveFirst()
             For x As Integer = 1 To theRS.RecordCount
-                Dim aScheduleDoc As New ScheduleDoc()
+                Dim aSDoc As New SDoc()
                 If Not IsDBNull(theRS.Fields(SQLFirstName).Value) Then _
-                aScheduleDoc.FirstName = theRS.Fields(SQLFirstName).Value
+                aSDoc.FirstName = theRS.Fields(SQLFirstName).Value
                 If Not IsDBNull(theRS.Fields(SQLLastName).Value) Then _
-                aScheduleDoc.LastName = theRS.Fields(SQLLastName).Value
+                aSDoc.LastName = theRS.Fields(SQLLastName).Value
                 If Not IsDBNull(theRS.Fields(SQLInitials).Value) Then _
-                aScheduleDoc.Initials = theRS.Fields(SQLInitials).Value
+                aSDoc.Initials = theRS.Fields(SQLInitials).Value
                 If Not IsDBNull(theRS.Fields(SQLActive).Value) Then _
-                aScheduleDoc.Active = theRS.Fields(SQLActive).Value
+                aSDoc.Active = theRS.Fields(SQLActive).Value
                 If Not IsDBNull(theRS.Fields(SQLVersion).Value) Then _
-                aScheduleDoc.Version = theRS.Fields(SQLVersion).Value
+                aSDoc.Version = theRS.Fields(SQLVersion).Value
                 If Not IsDBNull(theRS.Fields(SQLShift1).Value) Then _
-                aScheduleDoc.Shift1 = theRS.Fields(SQLShift1).Value
+                aSDoc.Shift1 = theRS.Fields(SQLShift1).Value
                 If Not IsDBNull(theRS.Fields(SQLShift2).Value) Then _
-                aScheduleDoc.Shift2 = theRS.Fields(SQLShift2).Value
+                aSDoc.Shift2 = theRS.Fields(SQLShift2).Value
                 If Not IsDBNull(theRS.Fields(SQLShift3).Value) Then _
-                aScheduleDoc.Shift3 = theRS.Fields(SQLShift3).Value
+                aSDoc.Shift3 = theRS.Fields(SQLShift3).Value
                 If Not IsDBNull(theRS.Fields(SQLShift4).Value) Then _
-                aScheduleDoc.Shift4 = theRS.Fields(SQLShift4).Value
+                aSDoc.Shift4 = theRS.Fields(SQLShift4).Value
                 If Not IsDBNull(theRS.Fields(SQLShift5).Value) Then _
-                aScheduleDoc.Shift5 = theRS.Fields(SQLShift5).Value
+                aSDoc.Shift5 = theRS.Fields(SQLShift5).Value
 
                 If Not IsDBNull(theRS.Fields(SQLUrgenceTog).Value) Then _
-                    aScheduleDoc.UrgenceTog = theRS.Fields(SQLUrgenceTog).Value
+                    aSDoc.UrgenceTog = theRS.Fields(SQLUrgenceTog).Value
                 If Not IsDBNull(theRS.Fields(SQLHospitTog).Value) Then _
-                    aScheduleDoc.HospitTog = theRS.Fields(SQLHospitTog).Value
+                    aSDoc.HospitTog = theRS.Fields(SQLHospitTog).Value
                 If Not IsDBNull(theRS.Fields(SQLSoinsTog).Value) Then _
-                    aScheduleDoc.SoinsTog = theRS.Fields(SQLSoinsTog).Value
+                    aSDoc.SoinsTog = theRS.Fields(SQLSoinsTog).Value
                 If Not IsDBNull(theRS.Fields(SQLNuitsTog).Value) Then _
-                    aScheduleDoc.NuitsTog = theRS.Fields(SQLNuitsTog).Value
+                    aSDoc.NuitsTog = theRS.Fields(SQLNuitsTog).Value
 
-                aCollection.Add(aScheduleDoc, aScheduleDoc.Initials)
+                aCollection.Add(aSDoc, aSDoc.Initials)
                 theRS.MoveNext()
             Next
         Else 'if no version exists, load the template version (0)
@@ -1110,36 +1110,36 @@ Public Class ScheduleDoc
             If theRS.RecordCount > 0 Then 'if at least one template shifttype exists load it as a collection
                 theRS.MoveFirst()
                 For x As Integer = 1 To theRS.RecordCount
-                    Dim aScheduleDoc As New ScheduleDoc()
+                    Dim aSDoc As New SDoc()
                     If Not IsDBNull(theRS.Fields(SQLFirstName).Value) Then _
-                    aScheduleDoc.FirstName = theRS.Fields(SQLFirstName).Value
+                    aSDoc.FirstName = theRS.Fields(SQLFirstName).Value
                     If Not IsDBNull(theRS.Fields(SQLLastName).Value) Then _
-                    aScheduleDoc.LastName = theRS.Fields(SQLLastName).Value
+                    aSDoc.LastName = theRS.Fields(SQLLastName).Value
                     If Not IsDBNull(theRS.Fields(SQLInitials).Value) Then _
-                    aScheduleDoc.Initials = theRS.Fields(SQLInitials).Value
+                    aSDoc.Initials = theRS.Fields(SQLInitials).Value
                     If Not IsDBNull(theRS.Fields(SQLActive).Value) Then _
-                    aScheduleDoc.Active = theRS.Fields(SQLActive).Value
-                    aScheduleDoc.Version = theVersion 'change version to YYYYMM integer
+                    aSDoc.Active = theRS.Fields(SQLActive).Value
+                    aSDoc.Version = theVersion 'change version to YYYYMM integer
                     If Not IsDBNull(theRS.Fields(SQLShift1).Value) Then _
-                    aScheduleDoc.Shift1 = theRS.Fields(SQLShift1).Value
+                    aSDoc.Shift1 = theRS.Fields(SQLShift1).Value
                     If Not IsDBNull(theRS.Fields(SQLShift2).Value) Then _
-                    aScheduleDoc.Shift2 = theRS.Fields(SQLShift2).Value
+                    aSDoc.Shift2 = theRS.Fields(SQLShift2).Value
                     If Not IsDBNull(theRS.Fields(SQLShift3).Value) Then _
-                    aScheduleDoc.Shift3 = theRS.Fields(SQLShift3).Value
+                    aSDoc.Shift3 = theRS.Fields(SQLShift3).Value
                     If Not IsDBNull(theRS.Fields(SQLShift4).Value) Then _
-                    aScheduleDoc.Shift4 = theRS.Fields(SQLShift4).Value
+                    aSDoc.Shift4 = theRS.Fields(SQLShift4).Value
                     If Not IsDBNull(theRS.Fields(SQLShift5).Value) Then _
-                    aScheduleDoc.Shift5 = theRS.Fields(SQLShift5).Value
+                    aSDoc.Shift5 = theRS.Fields(SQLShift5).Value
                     If Not IsDBNull(theRS.Fields(SQLUrgenceTog).Value) Then _
-                        aScheduleDoc.UrgenceTog = theRS.Fields(SQLUrgenceTog).Value
+                        aSDoc.UrgenceTog = theRS.Fields(SQLUrgenceTog).Value
                     If Not IsDBNull(theRS.Fields(SQLHospitTog).Value) Then _
-                        aScheduleDoc.HospitTog = theRS.Fields(SQLHospitTog).Value
+                        aSDoc.HospitTog = theRS.Fields(SQLHospitTog).Value
                     If Not IsDBNull(theRS.Fields(SQLSoinsTog).Value) Then _
-                        aScheduleDoc.SoinsTog = theRS.Fields(SQLSoinsTog).Value
+                        aSDoc.SoinsTog = theRS.Fields(SQLSoinsTog).Value
                     If Not IsDBNull(theRS.Fields(SQLNuitsTog).Value) Then _
-                        aScheduleDoc.NuitsTog = theRS.Fields(SQLNuitsTog).Value
-                    aScheduleDoc.save()
-                    aCollection.Add(aScheduleDoc, aScheduleDoc.Initials)
+                        aSDoc.NuitsTog = theRS.Fields(SQLNuitsTog).Value
+                    aSDoc.save()
+                    aCollection.Add(aSDoc, aSDoc.Initials)
                     theRS.MoveNext()
                 Next
             End If
@@ -1166,37 +1166,37 @@ Public Class ScheduleDoc
         If theRS.RecordCount > 0 Then 'if a version exists load it
             theRS.MoveFirst()
             For x As Integer = 1 To theRS.RecordCount
-                Dim aScheduleDoc As New ScheduleDoc()
+                Dim aSDoc As New SDoc()
                 If Not IsDBNull(theRS.Fields(SQLFirstName).Value) Then _
-                aScheduleDoc.FirstName = theRS.Fields(SQLFirstName).Value
+                aSDoc.FirstName = theRS.Fields(SQLFirstName).Value
                 If Not IsDBNull(theRS.Fields(SQLLastName).Value) Then _
-                aScheduleDoc.LastName = theRS.Fields(SQLLastName).Value
+                aSDoc.LastName = theRS.Fields(SQLLastName).Value
                 If Not IsDBNull(theRS.Fields(SQLInitials).Value) Then _
-                aScheduleDoc.Initials = theRS.Fields(SQLInitials).Value
+                aSDoc.Initials = theRS.Fields(SQLInitials).Value
                 If Not IsDBNull(theRS.Fields(SQLActive).Value) Then _
-                aScheduleDoc.Active = theRS.Fields(SQLActive).Value
+                aSDoc.Active = theRS.Fields(SQLActive).Value
                 If Not IsDBNull(theRS.Fields(SQLVersion).Value) Then _
-                aScheduleDoc.Version = theRS.Fields(SQLVersion).Value
+                aSDoc.Version = theRS.Fields(SQLVersion).Value
                 If Not IsDBNull(theRS.Fields(SQLShift1).Value) Then _
-                aScheduleDoc.Shift1 = theRS.Fields(SQLShift1).Value
+                aSDoc.Shift1 = theRS.Fields(SQLShift1).Value
                 If Not IsDBNull(theRS.Fields(SQLShift2).Value) Then _
-                aScheduleDoc.Shift2 = theRS.Fields(SQLShift2).Value
+                aSDoc.Shift2 = theRS.Fields(SQLShift2).Value
                 If Not IsDBNull(theRS.Fields(SQLShift3).Value) Then _
-                aScheduleDoc.Shift3 = theRS.Fields(SQLShift3).Value
+                aSDoc.Shift3 = theRS.Fields(SQLShift3).Value
                 If Not IsDBNull(theRS.Fields(SQLShift4).Value) Then _
-                aScheduleDoc.Shift4 = theRS.Fields(SQLShift4).Value
+                aSDoc.Shift4 = theRS.Fields(SQLShift4).Value
                 If Not IsDBNull(theRS.Fields(SQLShift5).Value) Then _
-                aScheduleDoc.Shift5 = theRS.Fields(SQLShift5).Value
+                aSDoc.Shift5 = theRS.Fields(SQLShift5).Value
                 If Not IsDBNull(theRS.Fields(SQLUrgenceTog).Value) Then _
-                    aScheduleDoc.UrgenceTog = theRS.Fields(SQLUrgenceTog).Value
+                    aSDoc.UrgenceTog = theRS.Fields(SQLUrgenceTog).Value
                 If Not IsDBNull(theRS.Fields(SQLHospitTog).Value) Then _
-                    aScheduleDoc.HospitTog = theRS.Fields(SQLHospitTog).Value
+                    aSDoc.HospitTog = theRS.Fields(SQLHospitTog).Value
                 If Not IsDBNull(theRS.Fields(SQLSoinsTog).Value) Then _
-                    aScheduleDoc.SoinsTog = theRS.Fields(SQLSoinsTog).Value
+                    aSDoc.SoinsTog = theRS.Fields(SQLSoinsTog).Value
                 If Not IsDBNull(theRS.Fields(SQLNuitsTog).Value) Then _
-                    aScheduleDoc.NuitsTog = theRS.Fields(SQLNuitsTog).Value
+                    aSDoc.NuitsTog = theRS.Fields(SQLNuitsTog).Value
 
-                aCollection.Add(aScheduleDoc, aScheduleDoc.Initials)
+                aCollection.Add(aSDoc, aSDoc.Initials)
                 theRS.MoveNext()
             Next
         End If
@@ -1205,7 +1205,7 @@ Public Class ScheduleDoc
 
 End Class
 
-Public Class ScheduleDocStats
+Public Class SDocStats
     Private pInitials As String
     Private pShift1 As Integer
     Private pShift2 As Integer
@@ -1329,7 +1329,7 @@ Public Class ScheduleDocStats
 
 End Class
 
-Public Class scheduleDocAvailable
+Public Class SDocAvailable
     Private pDocInitial As T_DBRefTypeS
     Private pAvailability As PublicEnums.Availability
     Private pDate As T_DBRefTypeD
@@ -1478,15 +1478,15 @@ Public Class scheduleDocAvailable
         End With
 
         If theRS.RecordCount > 0 Then
-            Dim aScheduleDocAvailable As scheduleDocAvailable
+            Dim aSDocAvailable As SDocAvailable
             Dim aCollection As New Collection
             theRS.MoveFirst()
             For x As Integer = 1 To theRS.RecordCount
-                aScheduleDocAvailable = New scheduleDocAvailable
-                aScheduleDocAvailable.DocInitial = theRS.Fields(Me.pDocInitial.theSQLName).Value
-                aScheduleDocAvailable.Date_ = theRS.Fields(Me.pDate.theSQLName).Value
-                aScheduleDocAvailable.ShiftType = theRS.Fields(Me.pShiftType.theSQLName).Value
-                aCollection.Add(aScheduleDocAvailable)
+                aSDocAvailable = New SDocAvailable
+                aSDocAvailable.DocInitial = theRS.Fields(Me.pDocInitial.theSQLName).Value
+                aSDocAvailable.Date_ = theRS.Fields(Me.pDate.theSQLName).Value
+                aSDocAvailable.ShiftType = theRS.Fields(Me.pShiftType.theSQLName).Value
+                aCollection.Add(aSDocAvailable)
                 theRS.MoveNext()
             Next
             Return aCollection
@@ -1496,7 +1496,7 @@ Public Class scheduleDocAvailable
 
 End Class
 
-Public Class ScheduleNonDispo
+Public Class SNonDispo
     Private pDocInitial As T_DBRefTypeS
     Private pDateStart As T_DBRefTypeD
     Private pDateStop As T_DBRefTypeD
@@ -1649,19 +1649,19 @@ Public Class ScheduleNonDispo
             .SQL_Order_By(pTimeStart.theSQLName)
             theDBAC.COpenDB(.SQLStringSelect, theRS)
         End With
-        Dim ascheduleNonDispo As ScheduleNonDispo
+        Dim aSNonDispo As SNonDispo
         Dim theCount As Integer = theRS.RecordCount
         If theCount > 0 Then
             Dim aCollection As New Collection
             theRS.MoveFirst()
             For x As Integer = 1 To theCount
-                ascheduleNonDispo = New ScheduleNonDispo
-                If Not IsDBNull(theRS.Fields(pDocInitial.theSQLName).Value) Then ascheduleNonDispo.DocInitial = theRS.Fields(pDocInitial.theSQLName).Value
-                If Not IsDBNull(theRS.Fields(pDateStart.theSQLName).Value) Then ascheduleNonDispo.DateStart = theRS.Fields(pDateStart.theSQLName).Value
-                If Not IsDBNull(theRS.Fields(pTimeStart.theSQLName).Value) Then ascheduleNonDispo.TimeStart = theRS.Fields(pTimeStart.theSQLName).Value
-                If Not IsDBNull(theRS.Fields(pDateStop.theSQLName).Value) Then ascheduleNonDispo.DateStop = theRS.Fields(pDateStop.theSQLName).Value
-                If Not IsDBNull(theRS.Fields(pTimeStop.theSQLName).Value) Then ascheduleNonDispo.TimeStop = theRS.Fields(pTimeStop.theSQLName).Value
-                aCollection.Add(ascheduleNonDispo, x.ToString())
+                aSNonDispo = New SNonDispo
+                If Not IsDBNull(theRS.Fields(pDocInitial.theSQLName).Value) Then aSNonDispo.DocInitial = theRS.Fields(pDocInitial.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pDateStart.theSQLName).Value) Then aSNonDispo.DateStart = theRS.Fields(pDateStart.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pTimeStart.theSQLName).Value) Then aSNonDispo.TimeStart = theRS.Fields(pTimeStart.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pDateStop.theSQLName).Value) Then aSNonDispo.DateStop = theRS.Fields(pDateStop.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pTimeStop.theSQLName).Value) Then aSNonDispo.TimeStop = theRS.Fields(pTimeStop.theSQLName).Value
+                aCollection.Add(aSNonDispo, x.ToString())
                 theRS.MoveNext()
             Next
             Return aCollection

@@ -318,7 +318,7 @@
     </EmbeddedResource>
     <None Include="Varia\app.config" />
     <None Include="Varia\ListeDeGarde_TemporaryKey.pfx" />
-    <None Include="My Project\DataSources\ScheduleDoc.datasource" />
+    <None Include="My Project\DataSources\SDoc.datasource" />
     <None Include="Varia\Settings1.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings1.Designer.vb</LastGenOutput>

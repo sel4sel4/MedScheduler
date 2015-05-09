@@ -26,7 +26,7 @@ Public Class UserControl1
             Me.StopDate.Text = "" Or _
             Me.StartDate.Text = "" Then Exit Sub
 
-        Dim aScheduleNonDispo As New ScheduleNonDispo(Me.DocList.SelectedValue, _
+        Dim aSNonDispo As New SNonDispo(Me.DocList.SelectedValue, _
                                                        StartDate.SelectedDate.Value, _
                                                       StopDate.SelectedDate.Value, _
                                                         Me.StartTime.SelectedIndex * 60, _
@@ -106,10 +106,10 @@ Public Class UserControl1
 
         NonDispoList.ItemsSource = Nothing
         'get nondispolist
-        Dim theSchedulenondispo As New ScheduleNonDispo
+        Dim theSNonDispo As New SNonDispo
         Dim x As Integer = 0
         If DocList.SelectedIndex <> -1 Then
-            theNonDispoCollection = theSchedulenondispo.GetNonDispoListForDoc(DocList.SelectedValue, aYearP, aMonthP)
+            theNonDispoCollection = theSNonDispo.GetNonDispoListForDoc(DocList.SelectedValue, aYearP, aMonthP)
             If Not IsNothing(theNonDispoCollection) Then
 
                 Dim theContextMenu As New ContextMenu()
@@ -127,7 +127,7 @@ Public Class UserControl1
     End Sub
 
     Private Sub MenuItem1Clicked(sender As Object, e As System.Windows.RoutedEventArgs)
-        Dim theNonDispo As ScheduleNonDispo
+        Dim theNonDispo As SNonDispo
         If NonDispoList.SelectedIndex >= 0 Then
             theNonDispo = NonDispoList.SelectedItem
             theNonDispo.Delete()
@@ -156,11 +156,11 @@ Public Class UserControl1
     End Sub
 
     Private Sub LoadDocList()
-        Dim theScheduleDocCollection As New Collection
-        theScheduleDocCollection = ScheduleDoc.LoadAllDocsPerMonth(aYearP, aMonthP)
+        Dim theSDocCollection As New Collection
+        theSDocCollection = SDoc.LoadAllDocsPerMonth(aYearP, aMonthP)
         changesOngoing = True
-        If theScheduleDocCollection.Count > 0 Then
-            Me.DocList.ItemsSource = theScheduleDocCollection
+        If theSDocCollection.Count > 0 Then
+            Me.DocList.ItemsSource = theSDocCollection
             Me.DocList.DisplayMemberPath = "FistAndLastName"
             Me.DocList.SelectedValuePath = "Initials"
             Me.DocList.SelectedIndex = 0

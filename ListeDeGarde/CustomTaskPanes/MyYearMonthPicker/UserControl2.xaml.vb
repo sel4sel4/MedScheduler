@@ -29,17 +29,17 @@ Public Class UserControl2
 
 
         'Get list of doc names and create a button for each. Assign initals as button name
-        'Dim theScheduleDoc As New ScheduleDoc(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
-        'Dim aScheduleDoc As ScheduleDoc
+        'Dim theSDoc As New SDoc(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
+        'Dim aSDoc As SDoc
         'RemoveDocButtons()
-        'For Each aScheduleDoc In theScheduleDoc.DocList
-        '    Me.addDocButton(aScheduleDoc.FirstName + " " + aScheduleDoc.LastName, aScheduleDoc.Initials)
+        'For Each aSDoc In theSDoc.DocList
+        '    Me.addDocButton(aSDoc.FirstName + " " + aSDoc.LastName, aSDoc.Initials)
         'Next
-        Dim theDocCollection As Collection = ScheduleDoc.LoadAllDocsPerMonth(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
+        Dim theDocCollection As Collection = SDoc.LoadAllDocsPerMonth(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
         RemoveDocButtons()
-        Dim aScheduleDoc As ScheduleDoc
-        For Each aScheduleDoc In theDocCollection
-            Me.addDocButton(aScheduleDoc.FirstName + " " + aScheduleDoc.LastName, aScheduleDoc.Initials)
+        Dim aSDoc As SDoc
+        For Each aSDoc In theDocCollection
+            Me.addDocButton(aSDoc.FirstName + " " + aSDoc.LastName, aSDoc.Initials)
         Next
 
         Me.MoisAnnee.Content = Me.combo1.Text + "-" + Me.combo2.Text
@@ -94,11 +94,11 @@ Public Class UserControl2
     End Sub
 
     Public Sub redraw()
-        'Dim theScheduleDoc As New ScheduleDoc(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
+        'Dim theSDoc As New SDoc(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
 
         'RemoveDocButtons()
-        'For Each aScheduleDoc In theScheduleDoc.DocList
-        '    Me.addDocButton(aScheduleDoc.FirstName + " " + aScheduleDoc.LastName, aScheduleDoc.Initials)
+        'For Each aSDoc In theSDoc.DocList
+        '    Me.addDocButton(aSDoc.FirstName + " " + aSDoc.LastName, aSDoc.Initials)
         'Next
         If Globals.ThisAddIn.theControllerCollection.Count < 1 Then Exit Sub
         If Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then
@@ -106,11 +106,11 @@ Public Class UserControl2
 
             If Not IsNothing(theController) Then
                 Me.MoisAnnee.Content = theController.aControlledMonth.Year.ToString + "-" + monthstrings(theController.aControlledMonth.Month - 1)
-                Dim theDocCollection As Collection = ScheduleDoc.LoadAllDocsPerMonth(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
+                Dim theDocCollection As Collection = SDoc.LoadAllDocsPerMonth(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
                 RemoveDocButtons()
-                Dim aScheduleDoc As ScheduleDoc
-                For Each aScheduleDoc In theDocCollection
-                    Me.addDocButton(aScheduleDoc.FirstName + " " + aScheduleDoc.LastName, aScheduleDoc.Initials)
+                Dim aSDoc As SDoc
+                For Each aSDoc In theDocCollection
+                    Me.addDocButton(aSDoc.FirstName + " " + aSDoc.LastName, aSDoc.Initials)
                 Next
             Else : Me.MoisAnnee.Content = ""
             End If
@@ -135,7 +135,7 @@ Public Class UserControl2
         theController = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
         theController.statsMensuelles()
 
-       
+
 
     End Sub
 
@@ -143,9 +143,9 @@ Public Class UserControl2
         If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
         theController = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
         Dim myRange As Excel.Range = Globals.ThisAddIn.Application.Selection
-        Dim aDAy As ScheduleDay
-        Dim aShift As ScheduleShift
-        Dim aDocAvail As scheduleDocAvailable
+        Dim aDAy As SDay
+        Dim aShift As SShift
+        Dim aDocAvail As SDocAvailable
         If myRange.Count = 1 Then
             For Each aDAy In theController.aControlledMonth.Days
                 For Each aShift In aDAy.Shifts
@@ -161,7 +161,7 @@ Public Class UserControl2
     End Sub
 
     Private Sub Initialles_Load()
-        Dim aCollection As Collection = ScheduleDoc.LoadAllDocsPerMonth(theController.aControlledMonth.Year, theController.aControlledMonth.Month)
+        Dim aCollection As Collection = SDoc.LoadAllDocsPerMonth(theController.aControlledMonth.Year, theController.aControlledMonth.Month)
         Me.Initialles.ItemsSource = aCollection
         Me.Initialles.DisplayMemberPath = "Initials"
         Me.Initialles.SelectedValuePath = "Initials"

@@ -19,7 +19,7 @@ Public Class UserControl4
 
     Private Sub DrawGrid()
 
-        Dim theStats As ScheduleDocStats
+        Dim theStats As SDocStats
 
         Dim aHorizStackPanel As StackPanel
         Dim aLabel As Label

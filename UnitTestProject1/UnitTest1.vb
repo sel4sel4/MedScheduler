@@ -5,8 +5,8 @@ Imports System.Diagnostics
 Imports Microsoft.Office.Interop
 
 <TestClass()> Public Class classes
-    Public Shared testMonth As ScheduleMonth
-    Public Shared theDay As ScheduleDay
+    Public Shared testMonth As SMonth
+    Public Shared theDay As SDay
     Public Shared xlsApp As Excel.Application
     Public Shared xlsWB As Excel.Workbook
     Public Shared xlsSheet As Excel.Worksheet
@@ -15,7 +15,7 @@ Imports Microsoft.Office.Interop
     <TestMethod()> Public Sub MySetup()
 
         MySettingsGlobal = New Settings1
-        testMonth = New ScheduleMonth(4, 2018)
+        testMonth = New SMonth(4, 2018)
 
         xlsApp = New Excel.Application
         xlsApp.Visible = True
@@ -42,7 +42,7 @@ Imports Microsoft.Office.Interop
     <TestMethod()> Public Sub DocAvailCreated()
         'arrange
         'act
-        Dim theshift As ScheduleShift
+        Dim theshift As SShift
         theshift = theDay.Shifts(1)
         'assert
         Assert.IsTrue(theshift.DocAvailabilities.Count > 0)
@@ -61,10 +61,10 @@ Imports Microsoft.Office.Interop
 
     '<TestMethod()> Public Sub AddDoc()
     '    xlsSheet.Range("h4").Value = "MM"
-    '    Dim aDay As ScheduleDay = aController.aControlledMonth.Days(2)
-    '    Dim aShift As ScheduleShift = aDay.Shifts(1)
+    '    Dim aDay As SDay = aController.aControlledMonth.Days(2)
+    '    Dim aShift As SShift = aDay.Shifts(1)
     '    Dim acollection As Collection = aShift.DocAvailabilities
-    '    Dim aDocAvail As scheduleDocAvailable = acollection.Item("MM")
+    '    Dim aDocAvail As SDocAvailable = acollection.Item("MM")
     '    Assert.IsTrue(aDocAvail.Availability = PublicEnums.Availability.Assigne)
     '    xlsSheet.Range("h4").Value = ""
     'End Sub
