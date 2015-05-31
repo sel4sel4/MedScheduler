@@ -21,7 +21,7 @@ Public Class MonthlyDocStatsTP
     Private Sub DrawGrid()
 
         If Globals.ThisAddIn.theControllerCollection.Count < 1 Then Exit Sub
-        If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
+        If Not Globals.ThisAddIn.theControllerCollection.Contains(CStr(Globals.ThisAddIn.Application.ActiveSheet.name)) Then Exit Sub
         Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
 
         'clear everything

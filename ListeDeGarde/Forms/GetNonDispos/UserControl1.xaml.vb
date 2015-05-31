@@ -26,7 +26,7 @@ Public Class UserControl1
             Me.StopDate.Text = "" Or _
             Me.StartDate.Text = "" Then Exit Sub
 
-        Dim aSNonDispo As New SNonDispo(Me.DocList.SelectedValue, _
+        Dim aSNonDispo As New SNonDispo(CStr(Me.DocList.SelectedValue), _
                                                        StartDate.SelectedDate.Value, _
                                                       StopDate.SelectedDate.Value, _
                                                         Me.StartTime.SelectedIndex * 60, _
@@ -109,7 +109,7 @@ Public Class UserControl1
         Dim theSNonDispo As New SNonDispo
         Dim x As Integer = 0
         If DocList.SelectedIndex <> -1 Then
-            theNonDispoCollection = theSNonDispo.GetNonDispoListForDoc(DocList.SelectedValue, aYearP, aMonthP)
+            theNonDispoCollection = theSNonDispo.GetNonDispoListForDoc(CStr(DocList.SelectedValue), aYearP, aMonthP)
             If Not IsNothing(theNonDispoCollection) Then
 
                 Dim theContextMenu As New ContextMenu()
@@ -129,7 +129,7 @@ Public Class UserControl1
     Private Sub MenuItem1Clicked(sender As Object, e As System.Windows.RoutedEventArgs)
         Dim theNonDispo As SNonDispo
         If NonDispoList.SelectedIndex >= 0 Then
-            theNonDispo = NonDispoList.SelectedItem
+            theNonDispo = CType(NonDispoList.SelectedItem, SNonDispo)
             theNonDispo.Delete()
             updateListview()
         End If

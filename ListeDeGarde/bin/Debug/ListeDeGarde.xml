@@ -6,7 +6,47 @@ ListeDeGarde
 </name>
 </assembly>
 <members>
-<member name="M:ListeDeGarde.UserControl4.InitializeComponent">
+<member name="M:ListeDeGarde.UserControl3.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:ListeDeGarde.UserControl3">
+	<summary>
+UserControl3
+</summary>
+</member><member name="M:ListeDeGarde.DocExpectations.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:ListeDeGarde.DocExpectations">
+	<summary>
+DocExpectations
+</summary>
+</member><member name="M:ListeDeGarde.DrInterface.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:ListeDeGarde.DrInterface">
+	<summary>
+DrInterface
+</summary>
+</member><member name="M:ListeDeGarde.UserControl1.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:ListeDeGarde.UserControl1">
+	<summary>
+UserControl1
+</summary>
+</member><member name="M:ListeDeGarde.UserControl2.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:ListeDeGarde.UserControl2">
+	<summary>
+UserControl2
+</summary>
+</member><member name="M:ListeDeGarde.UserControl4.InitializeComponent">
 	<summary>
 InitializeComponent
 </summary>
@@ -22,45 +62,18 @@ InitializeComponent
 	<summary>
 MonthlyDocStatsTP
 </summary>
-</member><member name="M:ListeDeGarde.UserControl2.InitializeComponent">
+</member><member name="P:ListeDeGarde.My.Resources.Resources.ResourceManager">
 	<summary>
-InitializeComponent
+  Returns the cached ResourceManager instance used by this class.
 </summary>
-</member><member name="T:ListeDeGarde.UserControl2">
+</member><member name="P:ListeDeGarde.My.Resources.Resources.Culture">
 	<summary>
-UserControl2
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
 </summary>
-</member><member name="M:ListeDeGarde.UserControl3.InitializeComponent">
+</member><member name="T:ListeDeGarde.My.Resources.Resources">
 	<summary>
-InitializeComponent
-</summary>
-</member><member name="T:ListeDeGarde.UserControl3">
-	<summary>
-UserControl3
-</summary>
-</member><member name="M:ListeDeGarde.DrInterface.InitializeComponent">
-	<summary>
-InitializeComponent
-</summary>
-</member><member name="T:ListeDeGarde.DrInterface">
-	<summary>
-DrInterface
-</summary>
-</member><member name="M:ListeDeGarde.DocExpectations.InitializeComponent">
-	<summary>
-InitializeComponent
-</summary>
-</member><member name="T:ListeDeGarde.DocExpectations">
-	<summary>
-DocExpectations
-</summary>
-</member><member name="M:ListeDeGarde.UserControl1.InitializeComponent">
-	<summary>
-InitializeComponent
-</summary>
-</member><member name="T:ListeDeGarde.UserControl1">
-	<summary>
-UserControl1
+  A strongly-typed resource class, for looking up localized strings, etc.
 </summary>
 </member><member name="M:ListeDeGarde.ThisAddIn.#ctor(Microsoft.Office.Tools.Excel.ApplicationFactory,System.IServiceProvider)">
 </member><member name="M:ListeDeGarde.ThisAddIn.Initialize">
@@ -83,19 +96,6 @@ UserControl1
 </member><member name="T:ListeDeGarde.Globals">
 </member><member name="M:ListeDeGarde.ThisRibbonCollection.#ctor(Microsoft.Office.Tools.Ribbon.RibbonFactory)">
 </member><member name="T:ListeDeGarde.ThisRibbonCollection">
-</member><member name="P:ListeDeGarde.My.Resources.Resources.ResourceManager">
-	<summary>
-  Returns the cached ResourceManager instance used by this class.
-</summary>
-</member><member name="P:ListeDeGarde.My.Resources.Resources.Culture">
-	<summary>
-  Overrides the current thread's CurrentUICulture property for all
-  resource lookups using this strongly typed resource class.
-</summary>
-</member><member name="T:ListeDeGarde.My.Resources.Resources">
-	<summary>
-  A strongly-typed resource class, for looking up localized strings, etc.
-</summary>
 </member>
 </members>
 </doc>

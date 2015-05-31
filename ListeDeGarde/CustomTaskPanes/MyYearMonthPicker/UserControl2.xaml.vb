@@ -71,7 +71,7 @@ Public Class UserControl2
     Private Sub RemoveDocButtons()
         Dim aButton As Button
         For x As Integer = 0 To SplMain.Children.Count - 1
-            aButton = SplMain.Children.Item(0)
+            aButton = CType(SplMain.Children.Item(0), Button)
             RemoveHandler aButton.Click, AddressOf onBtnClick
             SplMain.Children.RemoveAt(0)
         Next
@@ -142,7 +142,7 @@ Public Class UserControl2
     Private Sub Button_Click_1(sender As Object, e As Windows.RoutedEventArgs)
         If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
         theController = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
-        Dim myRange As Excel.Range = Globals.ThisAddIn.Application.Selection
+        Dim myRange As Excel.Range = CType(Globals.ThisAddIn.Application.Selection, Global.Microsoft.Office.Interop.Excel.Range)
         Dim aDAy As SDay
         Dim aShift As SShift
         Dim aDocAvail As SDocAvailable
@@ -150,7 +150,7 @@ Public Class UserControl2
             For Each aDAy In theController.aControlledMonth.Days
                 For Each aShift In aDAy.Shifts
                     If myRange.Address = aShift.aRange.Address Then
-                        aDocAvail = aShift.DocAvailabilities.Item(Me.Initialles.SelectedValue)
+                        aDocAvail = CType(aShift.DocAvailabilities.Item(Me.Initialles.SelectedValue), SDocAvailable)
                         aDocAvail.Availability = Availability.Assigne
                         theController.fixlist(aShift)
                         myRange.Value = Me.Initialles.SelectedValue

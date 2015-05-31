@@ -26,7 +26,7 @@ Public Class UserControl3
     End Sub
     Private Sub MenuItem1Clicked(sender As Object, e As System.Windows.RoutedEventArgs)
         Dim aSShift As SShiftType
-        aSShift = ShiftListView.Items(ShiftListView.SelectedIndex)
+        aSShift = CType(ShiftListView.Items(ShiftListView.SelectedIndex), SShiftType)
     End Sub
     Private Sub GetYearMonth()
         If Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then
@@ -71,6 +71,7 @@ Public Class UserControl3
         Me.samedi.IsEnabled = Not locked
         Me.dimache.IsEnabled = Not locked
         Me.férié.IsEnabled = Not locked
+        Me.CompilerCB.IsEnabled = Not locked
 
     End Sub
     Private Sub ShiftListView_selectionChanged(sender As Object, e As System.Windows.RoutedEventArgs) Handles ShiftListView.SelectionChanged
@@ -96,9 +97,9 @@ Public Class UserControl3
     Private Sub UpdateListValues()
         'If IsDBNull(ShiftListView.SelectedItem) Then Exit Sub
         If changesOngoing Then Exit Sub
-        aSShiftType = ShiftListView.SelectedItem
+        aSShiftType = CType(ShiftListView.SelectedItem, SShiftType)
         Me.Description.Text = aSShiftType.Description
-        Me.VersionNo.Text = aSShiftType.Version
+        Me.VersionNo.Text = CStr(aSShiftType.Version)
         Me.StartHour.SelectedIndex = aSShiftType.ShiftStart \ 60
         Me.StartMin.SelectedIndex = (aSShiftType.ShiftStart Mod 60) \ 5
         Dim theStopInMinutes As Integer
@@ -120,6 +121,7 @@ Public Class UserControl3
         Me.dimache.IsChecked = aSShiftType.Dimanche
         Me.férié.IsChecked = aSShiftType.Ferie
 
+        Me.CompilerCB.IsChecked = aSShiftType.Compilation
 
 
         Lock(True)
@@ -168,15 +170,16 @@ Public Class UserControl3
             aSShiftType.ShiftStop = aSShiftType.ShiftStop + 1440
         End If
         aSShiftType.Version = CInt(Me.VersionNo.Text)
-        aSShiftType.Active = Me.ActiveCB.IsChecked
-        aSShiftType.Lundi = Me.lundi.IsChecked
-        aSShiftType.Mardi = Me.mardi.IsChecked
-        aSShiftType.Mercredi = Me.mercredi.IsChecked
-        aSShiftType.Jeudi = Me.jeudi.IsChecked
-        aSShiftType.Vendredi = Me.vendredi.IsChecked
-        aSShiftType.Samedi = Me.samedi.IsChecked
-        aSShiftType.Dimanche = Me.dimache.IsChecked
-        aSShiftType.Ferie = Me.férié.IsChecked
+        aSShiftType.Active = CBool(Me.ActiveCB.IsChecked)
+        aSShiftType.Lundi = CBool(Me.lundi.IsChecked)
+        aSShiftType.Mardi = CBool(Me.mardi.IsChecked)
+        aSShiftType.Mercredi = CBool(Me.mercredi.IsChecked)
+        aSShiftType.Jeudi = CBool(Me.jeudi.IsChecked)
+        aSShiftType.Vendredi = CBool(Me.vendredi.IsChecked)
+        aSShiftType.Samedi = CBool(Me.samedi.IsChecked)
+        aSShiftType.Dimanche = CBool(Me.dimache.IsChecked)
+        aSShiftType.Ferie = CBool(Me.férié.IsChecked)
+        aSShiftType.Compilation = CBool(Me.CompilerCB.IsChecked)
         aSShiftType.Update()
         Windows.MessageBox.Show("Le quart de travail a été mis a jour.")
         Globals.ThisAddIn.theCurrentController.resetSheetExt()

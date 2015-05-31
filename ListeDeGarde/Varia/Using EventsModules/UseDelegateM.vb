@@ -23,7 +23,7 @@ Module UseDelegateSM
         xlBook.Windows(1).Caption = "Uses UseDelegate"
 
         'Get references to the three worksheets.
-        xlSheet1 = Globals.ThisAddIn.Application.ActiveSheet
+        xlSheet1 = CType(Globals.ThisAddIn.Application.ActiveSheet, Global.Microsoft.Office.Interop.Excel.Worksheet)
 
         'Add an event handler for the WorkbookBeforeClose Event of the
         'Application object.

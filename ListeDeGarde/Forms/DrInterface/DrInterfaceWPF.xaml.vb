@@ -39,12 +39,12 @@ Public Class DrInterface
     Private Sub DocListView_selectionChanged(sender As Object, e As System.Windows.RoutedEventArgs) Handles DocListView.SelectionChanged
         If changesongoing = True Then Exit Sub
         Dim aSDoc As SDoc
-        aSDoc = DocListView.SelectedItem
+        aSDoc = CType(DocListView.SelectedItem, SDoc)
         Me.initials1.Text = aSDoc.Initials
         Me.initials1.IsReadOnly = True
         Me.firstName1.Text = aSDoc.FirstName
         Me.lastName1.Text = aSDoc.LastName
-        Me.version1.Text = aSDoc.Version
+        Me.version1.Text = CStr(aSDoc.Version)
         Me.Soins.IsChecked = aSDoc.SoinsTog
         Me.Active.IsChecked = aSDoc.Active
         Me.Hospit.IsChecked = aSDoc.HospitTog
@@ -55,18 +55,18 @@ Public Class DrInterface
     End Sub
     Private Sub MenuItem1Clicked(sender As Object, e As System.Windows.RoutedEventArgs)
         Dim aSDoc As SDoc
-        aSDoc = DocListView.SelectedItem
+        aSDoc = CType(DocListView.SelectedItem, SDoc)
         aSDoc.Delete()
         changesongoing = True
-        initializeDocList(Edit_Template.IsChecked)
+        initializeDocList(CBool(Edit_Template.IsChecked))
         changesongoing = False
     End Sub
     Private Sub EraseBtn_Click(sender As Object, e As Windows.RoutedEventArgs) 'erase doc button
         Dim aSDoc As SDoc
-        aSDoc = DocListView.SelectedItem
+        aSDoc = CType(DocListView.SelectedItem, SDoc)
         aSDoc.Delete()
         changesongoing = True
-        initializeDocList(Edit_Template.IsChecked)
+        initializeDocList(CBool(Edit_Template.IsChecked))
         changesongoing = False
     End Sub
     Private Sub NewBtn_Click(sender As Object, e As Windows.RoutedEventArgs) ' new doc button
@@ -82,7 +82,7 @@ Public Class DrInterface
         Me.initials1.Text = waitingForNewSave.Initials
         Me.firstName1.Text = waitingForNewSave.FirstName
         Me.lastName1.Text = waitingForNewSave.LastName
-        Me.version1.Text = theVersion
+        Me.version1.Text = CStr(theVersion)
         Me.Soins.IsChecked = waitingForNewSave.SoinsTog
         Me.Active.IsChecked = waitingForNewSave.Active
         Me.Hospit.IsChecked = waitingForNewSave.HospitTog
@@ -97,21 +97,21 @@ Public Class DrInterface
         If Not IsNothing(waitingForNewSave) Then
             aSDoc = waitingForNewSave
         Else
-            aSDoc = DocListView.SelectedItem
+            aSDoc = CType(DocListView.SelectedItem, SDoc)
         End If
         aSDoc.Initials = Me.initials1.Text
         aSDoc.FirstName = Me.firstName1.Text
         aSDoc.LastName = Me.lastName1.Text
-        aSDoc.Version = Me.version1.Text
-        aSDoc.SoinsTog = Me.Soins.IsChecked
-        aSDoc.Active = Me.Active.IsChecked
-        aSDoc.HospitTog = Me.Hospit.IsChecked
-        aSDoc.NuitsTog = Me.Nuits.IsChecked
-        aSDoc.UrgenceTog = Me.Urgence.IsChecked
+        aSDoc.Version = CInt(Me.version1.Text)
+        aSDoc.SoinsTog = CBool(Me.Soins.IsChecked)
+        aSDoc.Active = CBool(Me.Active.IsChecked)
+        aSDoc.HospitTog = CBool(Me.Hospit.IsChecked)
+        aSDoc.NuitsTog = CBool(Me.Nuits.IsChecked)
+        aSDoc.UrgenceTog = CBool(Me.Urgence.IsChecked)
         aSDoc.save()
         changesongoing = True
         Dim isTemplate As Boolean
-        If Me.version1.Text = 0 Then isTemplate = True Else isTemplate = False
+        If Me.version1.Text = CStr(0) Then isTemplate = True Else isTemplate = False
         initializeDocList(isTemplate)
         changesongoing = False
         Me.initials1.IsReadOnly = True

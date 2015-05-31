@@ -266,6 +266,7 @@ Public Class SShiftType
     Private pShiftStop As T_DBRefTypeI
     Private pShiftType As T_DBRefTypeI
     Private pActive As T_DBRefTypeB
+    Private pCompilation As T_DBRefTypeB
     Private pDescription As T_DBRefTypeS
     Private pVersion As T_DBRefTypeI
     Private pLundi As T_DBRefTypeB
@@ -276,6 +277,8 @@ Public Class SShiftType
     Private pSamedi As T_DBRefTypeB
     Private pDimanche As T_DBRefTypeB
     Private pFerie As T_DBRefTypeB
+    Private pOrder As T_DBRefTypeI
+
 
 
 
@@ -319,6 +322,14 @@ Public Class SShiftType
             pActive.theValue = value
         End Set
     End Property
+    Public Property Compilation() As Boolean
+        Get
+            Return pCompilation.theValue
+        End Get
+        Set(ByVal value As Boolean)
+            pCompilation.theValue = value
+        End Set
+    End Property
     Public Property Description() As String
         Get
             Return pDescription.theValue
@@ -327,7 +338,6 @@ Public Class SShiftType
             pDescription.theValue = value
         End Set
     End Property
-
     Public Property Lundi() As Boolean
         Get
             Return pLundi.theValue
@@ -392,6 +402,14 @@ Public Class SShiftType
             pFerie.theValue = value
         End Set
     End Property
+    Public Property Order() As Integer
+        Get
+            Return pOrder.theValue
+        End Get
+        Set(ByVal value As Integer)
+            pOrder.theValue = value
+        End Set
+    End Property
 
 
     Public Sub New()
@@ -409,8 +427,9 @@ Public Class SShiftType
         pSamedi.theSQLName = SQLSamedi
         pDimanche.theSQLName = SQLDimanche
         pFerie.theSQLName = SQLFerie
+        pCompilation.theSQLName = SQLCompilation
+        pOrder.theSQLName = SQLOrder
     End Sub
-
     Public Shared Function loadShiftTypesFromDBPerMonth(aMonth As Integer, aYear As Integer) As Collection
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
@@ -426,7 +445,7 @@ Public Class SShiftType
             .SQL_Select("*")
             .SQL_From(TABLE_shiftType)
             .SQL_Where(SQLVersion, "=", theVersion)
-            .SQL_Order_By(SQLShiftType)
+            .SQL_Order_By(SQLOrder)
             theDBAC.COpenDB(.SQLStringSelect, theRS)
         End With
 
@@ -435,33 +454,37 @@ Public Class SShiftType
             For x As Integer = 1 To theRS.RecordCount
                 aShifttype = New SShiftType()
                 If Not IsDBNull(theRS.Fields(SQLShiftStart).Value) Then _
-                    aShifttype.ShiftStart = theRS.Fields(SQLShiftStart).Value
+                    aShifttype.ShiftStart = CInt(theRS.Fields(SQLShiftStart).Value)
                 If Not IsDBNull(theRS.Fields(SQLShiftStop).Value) Then _
-                    aShifttype.ShiftStop = theRS.Fields(SQLShiftStop).Value
+                    aShifttype.ShiftStop = CInt(theRS.Fields(SQLShiftStop).Value)
                 If Not IsDBNull(theRS.Fields(SQLShiftType).Value) Then _
-                    aShifttype.ShiftType = theRS.Fields(SQLShiftType).Value
+                    aShifttype.ShiftType = CInt(theRS.Fields(SQLShiftType).Value)
                 If Not IsDBNull(theRS.Fields(SQLActive).Value) Then _
-                    aShifttype.Active = theRS.Fields(SQLActive).Value
+                    aShifttype.Active = CBool(theRS.Fields(SQLActive).Value)
                 If Not IsDBNull(theRS.Fields(SQLVersion).Value) Then _
-                    aShifttype.Version = theRS.Fields(SQLVersion).Value
+                    aShifttype.Version = CInt(theRS.Fields(SQLVersion).Value)
                 If Not IsDBNull(theRS.Fields(SQLDescription).Value) Then _
-                    aShifttype.Description = theRS.Fields(SQLDescription).Value
+                    aShifttype.Description = CStr(theRS.Fields(SQLDescription).Value)
                 If Not IsDBNull(theRS.Fields(SQLLundi).Value) Then _
-                    aShifttype.Lundi = theRS.Fields(SQLLundi).Value
+                    aShifttype.Lundi = CBool(theRS.Fields(SQLLundi).Value)
                 If Not IsDBNull(theRS.Fields(SQLMardi).Value) Then _
-                    aShifttype.Mardi = theRS.Fields(SQLMardi).Value
+                    aShifttype.Mardi = CBool(theRS.Fields(SQLMardi).Value)
                 If Not IsDBNull(theRS.Fields(SQLMercredi).Value) Then _
-                    aShifttype.Mercredi = theRS.Fields(SQLMercredi).Value
+                    aShifttype.Mercredi = CBool(theRS.Fields(SQLMercredi).Value)
                 If Not IsDBNull(theRS.Fields(SQLJeudi).Value) Then _
-                    aShifttype.Jeudi = theRS.Fields(SQLJeudi).Value
+                    aShifttype.Jeudi = CBool(theRS.Fields(SQLJeudi).Value)
                 If Not IsDBNull(theRS.Fields(SQLVendredi).Value) Then _
-                    aShifttype.Vendredi = theRS.Fields(SQLVendredi).Value
+                    aShifttype.Vendredi = CBool(theRS.Fields(SQLVendredi).Value)
                 If Not IsDBNull(theRS.Fields(SQLSamedi).Value) Then _
-                    aShifttype.Samedi = theRS.Fields(SQLSamedi).Value
+                    aShifttype.Samedi = CBool(theRS.Fields(SQLSamedi).Value)
                 If Not IsDBNull(theRS.Fields(SQLDimanche).Value) Then _
-                    aShifttype.Dimanche = theRS.Fields(SQLDimanche).Value
+                    aShifttype.Dimanche = CBool(theRS.Fields(SQLDimanche).Value)
                 If Not IsDBNull(theRS.Fields(SQLFerie).Value) Then _
-                    aShifttype.Ferie = theRS.Fields(SQLFerie).Value
+                    aShifttype.Ferie = CBool(theRS.Fields(SQLFerie).Value)
+                If Not IsDBNull(theRS.Fields(SQLCompilation).Value) Then _
+                    aShifttype.Compilation = CBool(theRS.Fields(SQLCompilation).Value)
+                If Not IsDBNull(theRS.Fields(SQLOrder).Value) Then _
+                    aShifttype.Order = CInt(theRS.Fields(SQLOrder).Value)
 
 
                 theShiftTypeCollection.Add(aShifttype)
@@ -473,7 +496,7 @@ Public Class SShiftType
                 .SQL_Select("*")
                 .SQL_From(TABLE_shiftType)
                 .SQL_Where(SQLVersion, "=", 0)
-                .SQL_Order_By(SQLShiftType)
+                .SQL_Order_By(SQLOrder)
                 theDBAC.COpenDB(.SQLStringSelect, theRS)
             End With
 
@@ -483,32 +506,36 @@ Public Class SShiftType
                 For x As Integer = 1 To theRS.RecordCount
                     aShifttype = New SShiftType()
                     If Not IsDBNull(theRS.Fields(SQLShiftStart).Value) Then _
-                        aShifttype.ShiftStart = theRS.Fields(SQLShiftStart).Value
+                        aShifttype.ShiftStart = CInt(theRS.Fields(SQLShiftStart).Value)
                     If Not IsDBNull(theRS.Fields(SQLShiftStop).Value) Then _
-                        aShifttype.ShiftStop = theRS.Fields(SQLShiftStop).Value
+                        aShifttype.ShiftStop = CInt(theRS.Fields(SQLShiftStop).Value)
                     If Not IsDBNull(theRS.Fields(SQLShiftType).Value) Then _
-                        aShifttype.ShiftType = theRS.Fields(SQLShiftType).Value
+                        aShifttype.ShiftType = CInt(theRS.Fields(SQLShiftType).Value)
                     If Not IsDBNull(theRS.Fields(SQLActive).Value) Then _
-                        aShifttype.Active = theRS.Fields(SQLActive).Value
+                        aShifttype.Active = CBool(theRS.Fields(SQLActive).Value)
                     aShifttype.Version = theVersion 'change version to YYYYMM integer
                     If Not IsDBNull(theRS.Fields(SQLDescription).Value) Then _
-                        aShifttype.Description = theRS.Fields(SQLDescription).Value
+                        aShifttype.Description = CStr(theRS.Fields(SQLDescription).Value)
                     If Not IsDBNull(theRS.Fields(SQLLundi).Value) Then _
-                        aShifttype.Lundi = theRS.Fields(SQLLundi).Value
+                        aShifttype.Lundi = CBool(theRS.Fields(SQLLundi).Value)
                     If Not IsDBNull(theRS.Fields(SQLMardi).Value) Then _
-                        aShifttype.Mardi = theRS.Fields(SQLMardi).Value
+                        aShifttype.Mardi = CBool(theRS.Fields(SQLMardi).Value)
                     If Not IsDBNull(theRS.Fields(SQLMercredi).Value) Then _
-                        aShifttype.Mercredi = theRS.Fields(SQLMercredi).Value
+                        aShifttype.Mercredi = CBool(theRS.Fields(SQLMercredi).Value)
                     If Not IsDBNull(theRS.Fields(SQLJeudi).Value) Then _
-                        aShifttype.Jeudi = theRS.Fields(SQLJeudi).Value
+                        aShifttype.Jeudi = CBool(theRS.Fields(SQLJeudi).Value)
                     If Not IsDBNull(theRS.Fields(SQLVendredi).Value) Then _
-                        aShifttype.Vendredi = theRS.Fields(SQLVendredi).Value
+                        aShifttype.Vendredi = CBool(theRS.Fields(SQLVendredi).Value)
                     If Not IsDBNull(theRS.Fields(SQLSamedi).Value) Then _
-                        aShifttype.Samedi = theRS.Fields(SQLSamedi).Value
+                        aShifttype.Samedi = CBool(theRS.Fields(SQLSamedi).Value)
                     If Not IsDBNull(theRS.Fields(SQLDimanche).Value) Then _
-                        aShifttype.Dimanche = theRS.Fields(SQLDimanche).Value
+                        aShifttype.Dimanche = CBool(theRS.Fields(SQLDimanche).Value)
                     If Not IsDBNull(theRS.Fields(SQLFerie).Value) Then _
-                        aShifttype.Ferie = theRS.Fields(SQLFerie).Value
+                        aShifttype.Ferie = CBool(theRS.Fields(SQLFerie).Value)
+                    If Not IsDBNull(theRS.Fields(SQLCompilation).Value) Then _
+                        aShifttype.Compilation = CBool(theRS.Fields(SQLCompilation).Value)
+                    If Not IsDBNull(theRS.Fields(SQLOrder).Value) Then _
+                        aShifttype.Order = CInt(theRS.Fields(SQLOrder).Value)
                     aShifttype.Save() 'save the shifttype version to DB
                     theShiftTypeCollection.Add(aShifttype)
                     theRS.MoveNext()
@@ -529,7 +556,7 @@ Public Class SShiftType
             .SQL_Select("*")
             .SQL_From(TABLE_shiftType)
             .SQL_Where(SQLVersion, "=", 0)
-            .SQL_Order_By(SQLShiftType)
+            .SQL_Order_By(SQLOrder)
             theDBAC.COpenDB(.SQLStringSelect, theRS)
         End With
 
@@ -539,31 +566,35 @@ Public Class SShiftType
             For x As Integer = 1 To theRS.RecordCount
                 aShifttype = New SShiftType()
                 If Not IsDBNull(theRS.Fields(SQLShiftStart).Value) Then _
-                    aShifttype.ShiftStart = theRS.Fields(SQLShiftStart).Value
+                    aShifttype.ShiftStart = CInt(theRS.Fields(SQLShiftStart).Value)
                 If Not IsDBNull(theRS.Fields(SQLShiftStop).Value) Then _
-                    aShifttype.ShiftStop = theRS.Fields(SQLShiftStop).Value
+                    aShifttype.ShiftStop = CInt(theRS.Fields(SQLShiftStop).Value)
                 If Not IsDBNull(theRS.Fields(SQLShiftType).Value) Then _
-                    aShifttype.ShiftType = theRS.Fields(SQLShiftType).Value
+                    aShifttype.ShiftType = CInt(theRS.Fields(SQLShiftType).Value)
                 If Not IsDBNull(theRS.Fields(SQLActive).Value) Then _
-                    aShifttype.Active = theRS.Fields(SQLActive).Value
+                    aShifttype.Active = CBool(theRS.Fields(SQLActive).Value)
                 If Not IsDBNull(theRS.Fields(SQLDescription).Value) Then _
-                    aShifttype.Description = theRS.Fields(SQLDescription).Value
+                    aShifttype.Description = CStr(theRS.Fields(SQLDescription).Value)
                 If Not IsDBNull(theRS.Fields(SQLLundi).Value) Then _
-                    aShifttype.Lundi = theRS.Fields(SQLLundi).Value
+                    aShifttype.Lundi = CBool(theRS.Fields(SQLLundi).Value)
                 If Not IsDBNull(theRS.Fields(SQLMardi).Value) Then _
-                    aShifttype.Mardi = theRS.Fields(SQLMardi).Value
+                    aShifttype.Mardi = CBool(theRS.Fields(SQLMardi).Value)
                 If Not IsDBNull(theRS.Fields(SQLMercredi).Value) Then _
-                    aShifttype.Mercredi = theRS.Fields(SQLMercredi).Value
+                    aShifttype.Mercredi = CBool(theRS.Fields(SQLMercredi).Value)
                 If Not IsDBNull(theRS.Fields(SQLJeudi).Value) Then _
-                    aShifttype.Jeudi = theRS.Fields(SQLJeudi).Value
+                    aShifttype.Jeudi = CBool(theRS.Fields(SQLJeudi).Value)
                 If Not IsDBNull(theRS.Fields(SQLVendredi).Value) Then _
-                    aShifttype.Vendredi = theRS.Fields(SQLVendredi).Value
+                    aShifttype.Vendredi = CBool(theRS.Fields(SQLVendredi).Value)
                 If Not IsDBNull(theRS.Fields(SQLSamedi).Value) Then _
-                    aShifttype.Samedi = theRS.Fields(SQLSamedi).Value
+                    aShifttype.Samedi = CBool(theRS.Fields(SQLSamedi).Value)
                 If Not IsDBNull(theRS.Fields(SQLDimanche).Value) Then _
-                    aShifttype.Dimanche = theRS.Fields(SQLDimanche).Value
+                    aShifttype.Dimanche = CBool(theRS.Fields(SQLDimanche).Value)
                 If Not IsDBNull(theRS.Fields(SQLFerie).Value) Then _
-                    aShifttype.Ferie = theRS.Fields(SQLFerie).Value
+                    aShifttype.Ferie = CBool(theRS.Fields(SQLFerie).Value)
+                If Not IsDBNull(theRS.Fields(SQLCompilation).Value) Then _
+                    aShifttype.Compilation = CBool(theRS.Fields(SQLCompilation).Value)
+                If Not IsDBNull(theRS.Fields(SQLOrder).Value) Then _
+                    aShifttype.Order = CInt(theRS.Fields(SQLOrder).Value)
 
                 theShiftTypeCollection.Add(aShifttype)
                 theRS.MoveNext()
@@ -571,7 +602,6 @@ Public Class SShiftType
         End If
         Return theShiftTypeCollection
     End Function
-
     Public Shared Function ActiveShiftTypesCountPerMonth(aMonth As Integer, aYear As Integer) As Integer
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
@@ -609,6 +639,8 @@ Public Class SShiftType
             Me.Samedi = .Samedi
             Me.Dimanche = .Dimanche
             Me.Ferie = .Ferie
+            Me.Compilation = .Compilation
+            Me.Order = .Order
 
         End With
     End Sub
@@ -646,6 +678,8 @@ Public Class SShiftType
                     .SQL_Values(pSamedi.theSQLName, Samedi)
                     .SQL_Values(pDimanche.theSQLName, Dimanche)
                     .SQL_Values(pFerie.theSQLName, Ferie)
+                    .SQL_Values(pCompilation.theSQLName, Compilation)
+                    .SQL_Values(pOrder.theSQLName, Order)
 
                     Dim numaffected As Integer
                     theDBAC.CExecuteDB(.SQLStringInsert, numaffected)
@@ -688,6 +722,8 @@ Public Class SShiftType
                 theRS.Fields(pSamedi.theSQLName).Value = Samedi
                 theRS.Fields(pDimanche.theSQLName).Value = Dimanche
                 theRS.Fields(pFerie.theSQLName).Value = Ferie
+                theRS.Fields(pCompilation.theSQLName).Value = Compilation
+                theRS.Fields(pOrder.theSQLName).Value = Order
                 theRS.ActiveConnection = theDBAC.aConnection
                 theRS.UpdateBatch()
                 theRS.Close()
@@ -1065,34 +1101,34 @@ Public Class SDoc
             For x As Integer = 1 To theRS.RecordCount
                 Dim aSDoc As New SDoc()
                 If Not IsDBNull(theRS.Fields(SQLFirstName).Value) Then _
-                aSDoc.FirstName = theRS.Fields(SQLFirstName).Value
+                aSDoc.FirstName = CStr(theRS.Fields(SQLFirstName).Value)
                 If Not IsDBNull(theRS.Fields(SQLLastName).Value) Then _
-                aSDoc.LastName = theRS.Fields(SQLLastName).Value
+                aSDoc.LastName = CStr(theRS.Fields(SQLLastName).Value)
                 If Not IsDBNull(theRS.Fields(SQLInitials).Value) Then _
-                aSDoc.Initials = theRS.Fields(SQLInitials).Value
+                aSDoc.Initials = CStr(theRS.Fields(SQLInitials).Value)
                 If Not IsDBNull(theRS.Fields(SQLActive).Value) Then _
-                aSDoc.Active = theRS.Fields(SQLActive).Value
+                aSDoc.Active = CBool(theRS.Fields(SQLActive).Value)
                 If Not IsDBNull(theRS.Fields(SQLVersion).Value) Then _
-                aSDoc.Version = theRS.Fields(SQLVersion).Value
+                aSDoc.Version = CInt(theRS.Fields(SQLVersion).Value)
                 If Not IsDBNull(theRS.Fields(SQLShift1).Value) Then _
-                aSDoc.Shift1 = theRS.Fields(SQLShift1).Value
+                aSDoc.Shift1 = CInt(theRS.Fields(SQLShift1).Value)
                 If Not IsDBNull(theRS.Fields(SQLShift2).Value) Then _
-                aSDoc.Shift2 = theRS.Fields(SQLShift2).Value
+                aSDoc.Shift2 = CInt(theRS.Fields(SQLShift2).Value)
                 If Not IsDBNull(theRS.Fields(SQLShift3).Value) Then _
-                aSDoc.Shift3 = theRS.Fields(SQLShift3).Value
+                aSDoc.Shift3 = CInt(theRS.Fields(SQLShift3).Value)
                 If Not IsDBNull(theRS.Fields(SQLShift4).Value) Then _
-                aSDoc.Shift4 = theRS.Fields(SQLShift4).Value
+                aSDoc.Shift4 = CInt(theRS.Fields(SQLShift4).Value)
                 If Not IsDBNull(theRS.Fields(SQLShift5).Value) Then _
-                aSDoc.Shift5 = theRS.Fields(SQLShift5).Value
+                aSDoc.Shift5 = CInt(theRS.Fields(SQLShift5).Value)
 
                 If Not IsDBNull(theRS.Fields(SQLUrgenceTog).Value) Then _
-                    aSDoc.UrgenceTog = theRS.Fields(SQLUrgenceTog).Value
+                    aSDoc.UrgenceTog = CBool(theRS.Fields(SQLUrgenceTog).Value)
                 If Not IsDBNull(theRS.Fields(SQLHospitTog).Value) Then _
-                    aSDoc.HospitTog = theRS.Fields(SQLHospitTog).Value
+                    aSDoc.HospitTog = CBool(theRS.Fields(SQLHospitTog).Value)
                 If Not IsDBNull(theRS.Fields(SQLSoinsTog).Value) Then _
-                    aSDoc.SoinsTog = theRS.Fields(SQLSoinsTog).Value
+                    aSDoc.SoinsTog = CBool(theRS.Fields(SQLSoinsTog).Value)
                 If Not IsDBNull(theRS.Fields(SQLNuitsTog).Value) Then _
-                    aSDoc.NuitsTog = theRS.Fields(SQLNuitsTog).Value
+                    aSDoc.NuitsTog = CBool(theRS.Fields(SQLNuitsTog).Value)
 
                 aCollection.Add(aSDoc, aSDoc.Initials)
                 theRS.MoveNext()
@@ -1112,32 +1148,32 @@ Public Class SDoc
                 For x As Integer = 1 To theRS.RecordCount
                     Dim aSDoc As New SDoc()
                     If Not IsDBNull(theRS.Fields(SQLFirstName).Value) Then _
-                    aSDoc.FirstName = theRS.Fields(SQLFirstName).Value
+                    aSDoc.FirstName = CStr(theRS.Fields(SQLFirstName).Value)
                     If Not IsDBNull(theRS.Fields(SQLLastName).Value) Then _
-                    aSDoc.LastName = theRS.Fields(SQLLastName).Value
+                    aSDoc.LastName = CStr(theRS.Fields(SQLLastName).Value)
                     If Not IsDBNull(theRS.Fields(SQLInitials).Value) Then _
-                    aSDoc.Initials = theRS.Fields(SQLInitials).Value
+                    aSDoc.Initials = CStr(theRS.Fields(SQLInitials).Value)
                     If Not IsDBNull(theRS.Fields(SQLActive).Value) Then _
-                    aSDoc.Active = theRS.Fields(SQLActive).Value
+                    aSDoc.Active = CBool(theRS.Fields(SQLActive).Value)
                     aSDoc.Version = theVersion 'change version to YYYYMM integer
                     If Not IsDBNull(theRS.Fields(SQLShift1).Value) Then _
-                    aSDoc.Shift1 = theRS.Fields(SQLShift1).Value
+                    aSDoc.Shift1 = CInt(theRS.Fields(SQLShift1).Value)
                     If Not IsDBNull(theRS.Fields(SQLShift2).Value) Then _
-                    aSDoc.Shift2 = theRS.Fields(SQLShift2).Value
+                    aSDoc.Shift2 = CInt(theRS.Fields(SQLShift2).Value)
                     If Not IsDBNull(theRS.Fields(SQLShift3).Value) Then _
-                    aSDoc.Shift3 = theRS.Fields(SQLShift3).Value
+                    aSDoc.Shift3 = CInt(theRS.Fields(SQLShift3).Value)
                     If Not IsDBNull(theRS.Fields(SQLShift4).Value) Then _
-                    aSDoc.Shift4 = theRS.Fields(SQLShift4).Value
+                    aSDoc.Shift4 = CInt(theRS.Fields(SQLShift4).Value)
                     If Not IsDBNull(theRS.Fields(SQLShift5).Value) Then _
-                    aSDoc.Shift5 = theRS.Fields(SQLShift5).Value
+                    aSDoc.Shift5 = CInt(theRS.Fields(SQLShift5).Value)
                     If Not IsDBNull(theRS.Fields(SQLUrgenceTog).Value) Then _
-                        aSDoc.UrgenceTog = theRS.Fields(SQLUrgenceTog).Value
+                        aSDoc.UrgenceTog = CBool(theRS.Fields(SQLUrgenceTog).Value)
                     If Not IsDBNull(theRS.Fields(SQLHospitTog).Value) Then _
-                        aSDoc.HospitTog = theRS.Fields(SQLHospitTog).Value
+                        aSDoc.HospitTog = CBool(theRS.Fields(SQLHospitTog).Value)
                     If Not IsDBNull(theRS.Fields(SQLSoinsTog).Value) Then _
-                        aSDoc.SoinsTog = theRS.Fields(SQLSoinsTog).Value
+                        aSDoc.SoinsTog = CBool(theRS.Fields(SQLSoinsTog).Value)
                     If Not IsDBNull(theRS.Fields(SQLNuitsTog).Value) Then _
-                        aSDoc.NuitsTog = theRS.Fields(SQLNuitsTog).Value
+                        aSDoc.NuitsTog = CBool(theRS.Fields(SQLNuitsTog).Value)
                     aSDoc.save()
                     aCollection.Add(aSDoc, aSDoc.Initials)
                     theRS.MoveNext()
@@ -1168,33 +1204,33 @@ Public Class SDoc
             For x As Integer = 1 To theRS.RecordCount
                 Dim aSDoc As New SDoc()
                 If Not IsDBNull(theRS.Fields(SQLFirstName).Value) Then _
-                aSDoc.FirstName = theRS.Fields(SQLFirstName).Value
+                aSDoc.FirstName = CStr(theRS.Fields(SQLFirstName).Value)
                 If Not IsDBNull(theRS.Fields(SQLLastName).Value) Then _
-                aSDoc.LastName = theRS.Fields(SQLLastName).Value
+                aSDoc.LastName = CStr(theRS.Fields(SQLLastName).Value)
                 If Not IsDBNull(theRS.Fields(SQLInitials).Value) Then _
-                aSDoc.Initials = theRS.Fields(SQLInitials).Value
+                aSDoc.Initials = CStr(theRS.Fields(SQLInitials).Value)
                 If Not IsDBNull(theRS.Fields(SQLActive).Value) Then _
-                aSDoc.Active = theRS.Fields(SQLActive).Value
+                aSDoc.Active = CBool(theRS.Fields(SQLActive).Value)
                 If Not IsDBNull(theRS.Fields(SQLVersion).Value) Then _
-                aSDoc.Version = theRS.Fields(SQLVersion).Value
+                aSDoc.Version = CInt(theRS.Fields(SQLVersion).Value)
                 If Not IsDBNull(theRS.Fields(SQLShift1).Value) Then _
-                aSDoc.Shift1 = theRS.Fields(SQLShift1).Value
+                aSDoc.Shift1 = CInt(theRS.Fields(SQLShift1).Value)
                 If Not IsDBNull(theRS.Fields(SQLShift2).Value) Then _
-                aSDoc.Shift2 = theRS.Fields(SQLShift2).Value
+                aSDoc.Shift2 = CInt(theRS.Fields(SQLShift2).Value)
                 If Not IsDBNull(theRS.Fields(SQLShift3).Value) Then _
-                aSDoc.Shift3 = theRS.Fields(SQLShift3).Value
+                aSDoc.Shift3 = CInt(theRS.Fields(SQLShift3).Value)
                 If Not IsDBNull(theRS.Fields(SQLShift4).Value) Then _
-                aSDoc.Shift4 = theRS.Fields(SQLShift4).Value
+                aSDoc.Shift4 = CInt(theRS.Fields(SQLShift4).Value)
                 If Not IsDBNull(theRS.Fields(SQLShift5).Value) Then _
-                aSDoc.Shift5 = theRS.Fields(SQLShift5).Value
+                aSDoc.Shift5 = CInt(theRS.Fields(SQLShift5).Value)
                 If Not IsDBNull(theRS.Fields(SQLUrgenceTog).Value) Then _
-                    aSDoc.UrgenceTog = theRS.Fields(SQLUrgenceTog).Value
+                    aSDoc.UrgenceTog = CBool(theRS.Fields(SQLUrgenceTog).Value)
                 If Not IsDBNull(theRS.Fields(SQLHospitTog).Value) Then _
-                    aSDoc.HospitTog = theRS.Fields(SQLHospitTog).Value
+                    aSDoc.HospitTog = CBool(theRS.Fields(SQLHospitTog).Value)
                 If Not IsDBNull(theRS.Fields(SQLSoinsTog).Value) Then _
-                    aSDoc.SoinsTog = theRS.Fields(SQLSoinsTog).Value
+                    aSDoc.SoinsTog = CBool(theRS.Fields(SQLSoinsTog).Value)
                 If Not IsDBNull(theRS.Fields(SQLNuitsTog).Value) Then _
-                    aSDoc.NuitsTog = theRS.Fields(SQLNuitsTog).Value
+                    aSDoc.NuitsTog = CBool(theRS.Fields(SQLNuitsTog).Value)
 
                 aCollection.Add(aSDoc, aSDoc.Initials)
                 theRS.MoveNext()
@@ -1389,7 +1425,7 @@ Public Class SDocAvailable
         pShiftType.theSQLName = SQLShiftType
 
         DocInitial = aDocInitial
-        Availability = aAvailability
+        Availability = CType(aAvailability, PublicEnums.Availability)
         Date_ = aDate
         ShiftType = aShiftType
     End Sub
@@ -1483,9 +1519,9 @@ Public Class SDocAvailable
             theRS.MoveFirst()
             For x As Integer = 1 To theRS.RecordCount
                 aSDocAvailable = New SDocAvailable
-                aSDocAvailable.DocInitial = theRS.Fields(Me.pDocInitial.theSQLName).Value
-                aSDocAvailable.Date_ = theRS.Fields(Me.pDate.theSQLName).Value
-                aSDocAvailable.ShiftType = theRS.Fields(Me.pShiftType.theSQLName).Value
+                aSDocAvailable.DocInitial = CStr(theRS.Fields(Me.pDocInitial.theSQLName).Value)
+                aSDocAvailable.Date_ = CDate(theRS.Fields(Me.pDate.theSQLName).Value)
+                aSDocAvailable.ShiftType = CInt(theRS.Fields(Me.pShiftType.theSQLName).Value)
                 aCollection.Add(aSDocAvailable)
                 theRS.MoveNext()
             Next
@@ -1507,7 +1543,7 @@ Public Class SNonDispo
 
     Public ReadOnly Property du() As String
         Get
-            Dim myhours As Integer = pTimeStart.theValue / 60
+            Dim myhours As Integer = CInt(pTimeStart.theValue / 60)
             Dim myminutes As Integer = pTimeStart.theValue - (myhours * 60)
             Dim atime As New DateTime(1, 1, 1, myhours, myminutes, 0)
             Dim astr As String = daystrings(pDateStart.theValue.DayOfWeek) + " le " + pDateStart.theValue.Day.ToString() _
@@ -1521,7 +1557,7 @@ Public Class SNonDispo
     End Property
     Public ReadOnly Property au() As String
         Get
-            Dim myhours As Integer = pTimeStop.theValue / 60
+            Dim myhours As Integer = CInt(pTimeStop.theValue / 60)
             Dim myminutes As Integer = pTimeStop.theValue - (myhours * 60)
             Dim atime As New DateTime(1, 1, 1, myhours, myminutes, 0)
             Dim astr As String = daystrings(pDateStop.theValue.DayOfWeek) + " le " + pDateStop.theValue.Day.ToString() _
@@ -1656,11 +1692,11 @@ Public Class SNonDispo
             theRS.MoveFirst()
             For x As Integer = 1 To theCount
                 aSNonDispo = New SNonDispo
-                If Not IsDBNull(theRS.Fields(pDocInitial.theSQLName).Value) Then aSNonDispo.DocInitial = theRS.Fields(pDocInitial.theSQLName).Value
-                If Not IsDBNull(theRS.Fields(pDateStart.theSQLName).Value) Then aSNonDispo.DateStart = theRS.Fields(pDateStart.theSQLName).Value
-                If Not IsDBNull(theRS.Fields(pTimeStart.theSQLName).Value) Then aSNonDispo.TimeStart = theRS.Fields(pTimeStart.theSQLName).Value
-                If Not IsDBNull(theRS.Fields(pDateStop.theSQLName).Value) Then aSNonDispo.DateStop = theRS.Fields(pDateStop.theSQLName).Value
-                If Not IsDBNull(theRS.Fields(pTimeStop.theSQLName).Value) Then aSNonDispo.TimeStop = theRS.Fields(pTimeStop.theSQLName).Value
+                If Not IsDBNull(theRS.Fields(pDocInitial.theSQLName).Value) Then aSNonDispo.DocInitial = CStr(theRS.Fields(pDocInitial.theSQLName).Value)
+                If Not IsDBNull(theRS.Fields(pDateStart.theSQLName).Value) Then aSNonDispo.DateStart = CDate(theRS.Fields(pDateStart.theSQLName).Value)
+                If Not IsDBNull(theRS.Fields(pTimeStart.theSQLName).Value) Then aSNonDispo.TimeStart = CInt(theRS.Fields(pTimeStart.theSQLName).Value)
+                If Not IsDBNull(theRS.Fields(pDateStop.theSQLName).Value) Then aSNonDispo.DateStop = CDate(theRS.Fields(pDateStop.theSQLName).Value)
+                If Not IsDBNull(theRS.Fields(pTimeStop.theSQLName).Value) Then aSNonDispo.TimeStop = CInt(theRS.Fields(pTimeStop.theSQLName).Value)
                 aCollection.Add(aSNonDispo, x.ToString())
                 theRS.MoveNext()
             Next
@@ -1690,8 +1726,8 @@ Public Class DBAC
     'Public cnn As New ADODB.Connection  'Connection object definition
     'Public rs As New ADODB.Recordset    'recordset object definition
 
-    Const Provider = "Provider=Microsoft.ACE.OLEDB.12.0;"
-    Const DBpassword = "Jet OLEDB:Database Password=plasma;"
+    Const Provider As String = "Provider=Microsoft.ACE.OLEDB.12.0;"
+    'Const DBpassword = "Jet OLEDB:Database Password=plasma;"
 
     Private theConnectionState As Long
     Private mConnectionString As String
@@ -1706,11 +1742,16 @@ Public Class DBAC
         On Error GoTo errhandler
         If cnn.State = ADODB.ObjectStateEnum.adStateClosed Then
 
-            If MySettingsGlobal.DataBaseLocation = "" Then LoadDatabaseFileLocation()
-            If CONSTFILEADDRESS = "" Then CONSTFILEADDRESS = MySettingsGlobal.DataBaseLocation
+
+            If CONSTFILEADDRESS = "" Then
+                If MySettingsGlobal.DataBaseLocation = "" Then
+                    LoadDatabaseFileLocation()
+                End If
+                CONSTFILEADDRESS = MySettingsGlobal.DataBaseLocation
+            End If
             mConnectionString = Provider + "Data Source=" _
-            + CONSTFILEADDRESS _
-            + ";" & DBpassword
+            + CONSTFILEADDRESS '_
+            '+ ";" & DBpassword
             cnn.ConnectionString = mConnectionString
             cnn.Open()
         End If
@@ -1721,11 +1762,29 @@ Public Class DBAC
 errhandler:
         MsgBox("An error occurred during initial connection to DB: " + _
                CStr(Err.Number) + "  :  " + _
-               CStr(Err.Description) + _
-               "  Most likely cause is database is not where it is " _
-               + "supposed to be or there are coonnection issues to the N: Drive")
+               CStr(Err.Description))
 
-        'add code to select current location for the database !!FEATURE!!
+        '        'add code to select current location for the database !!FEATURE!!
+
+    End Sub
+    Public Sub New(fileAddress As String)
+        On Error GoTo errhandler
+        If cnn.State = ADODB.ObjectStateEnum.adStateClosed Then
+
+            mConnectionString = Provider + "Data Source=" + fileAddress
+            cnn.ConnectionString = mConnectionString
+            cnn.Open()
+        End If
+
+        mConnection = cnn
+        On Error GoTo 0
+        Exit Sub
+errhandler:
+        MsgBox("An error occurred during initial connection to DB: " + _
+               CStr(Err.Number) + "  :  " + _
+               CStr(Err.Description))
+
+        '        'add code to select current location for the database !!FEATURE!!
 
     End Sub
     Public Sub COpenDB(theSQLstr As String, theRS As ADODB.Recordset)
@@ -1751,7 +1810,7 @@ errhandler:
         Exit Sub 'to not run errhandler for nothing
 errhandler:
 
-        MsgBox("An error occurred during connection to DB: " + _
+        MsgBox("An error occurred during SELECT query execution: " + _
                CStr(Err.Number) & "  :  " + _
                CStr(Err.Description) + _
                "   SQL TEXT:   " + _
@@ -1761,19 +1820,20 @@ errhandler:
     Public Sub CExecuteDB(theSQLstr As String, numAffected As Long)
 
         On Error GoTo errhandler
-        mConnection.Execute(theSQLstr, numAffected)
+        Dim theNumAffectedObj As Object
+        mConnection.Execute(theSQLstr, theNumAffectedObj)
         'StoreToAuditFile theSQLstr
         On Error GoTo 0
-
+        numAffected = CLng(theNumAffectedObj)
         Exit Sub 'to not run errhandler for nothing
 
 
 errhandler:
 
-        'Dim theError As String
-        'theError = CStr(Err.Number) & "  :  " & CStr(Err.Description) & "   SQL TEXT:   " & theSQLstr
-        'theError = Replace(theError, "'", "''")
-        'MsgBox("An error occurred during connection to DB: " & theError)
+        Dim theError As String
+        theError = CStr(Err.Number) & "  :  " & CStr(Err.Description) & "   SQL TEXT:   " & theSQLstr
+        theError = Replace(theError, "'", "''")
+        MsgBox("An error occurred during execution of an INSERT or UPDATE query: " & theError)
 
         ''LogError theError
 
@@ -1947,15 +2007,15 @@ Public Class SQLStrBuilder
         Select Case TypeName(theValue)
             Case "String"
                 If isFieldName = False Then
-                    theValueStr = "'" + theValue + "'"
+                    theValueStr = "'" + CStr(theValue) + "'"
                 Else
-                    theValueStr = theValue
+                    theValueStr = CStr(theValue)
                 End If
 
             Case "Date"
-                theValueStr = cAccessDateStr(theValue)
+                theValueStr = cAccessDateStr(CDate(theValue))
             Case "Boolean"
-                If theValue = True Then
+                If CBool(theValue) = True Then
                     theValueStr = "true"
                 Else
                     theValueStr = "false"
@@ -2029,9 +2089,9 @@ Public Class SQLStrBuilder
         Dim theValueStr As String
         Select Case TypeName(theValue)
             Case "String"
-                theValueStr = "'" & theValue & "'"
+                theValueStr = "'" & CStr(theValue) & "'"
             Case "Date"
-                theValueStr = cAccessDateStr(theValue)
+                theValueStr = cAccessDateStr(CDate(theValue))
             Case Else
                 theValueStr = CStr(theValue)
         End Select
@@ -2062,9 +2122,9 @@ Public Class SQLStrBuilder
         Dim theValueStr As String
         Select Case TypeName(theValue)
             Case "String"
-                theValueStr = "'" & theValue & "'"
+                theValueStr = "'" & CStr(theValue) & "'"
             Case "Date"
-                theValueStr = cAccessDateStr(theValue)
+                theValueStr = cAccessDateStr(CDate(theValue))
             Case Else
                 theValueStr = CStr(theValue)
         End Select

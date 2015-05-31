@@ -6,16 +6,31 @@ Public Class ThisAddIn
     Public WithEvents xlSheet1 As Excel.Worksheet
     Public theControllerCollection As Collection
     Public theCurrentController As Controller
-    Private myCustomTaskPane As Microsoft.Office.Tools.CustomTaskPane
+    Public myCustomTaskPane As Microsoft.Office.Tools.CustomTaskPane
+    Private myThisAddinHelper As ThisAddinHelper
 
-    ReadOnly Property taskpane()
+    ReadOnly Property taskpane() As Microsoft.Office.Tools.CustomTaskPane
         Get
             Return myCustomTaskPane
         End Get
     End Property
 
+    Protected Overrides Function RequestComAddInAutomationService() As Object
+        If myThisAddinHelper Is Nothing Then
+            myThisAddinHelper = New ThisAddinHelper
+        End If
+
+        Return myThisAddinHelper
+
+    End Function
+
+    Public Function getdocumentname() As String
+        Return "Some text here"
+    End Function
+
     Private Sub ThisAddIn_Startup() Handles Me.Startup
         'Create the task pane to create monthly Calendar
+        MyAddin = Me
         Dim MyTaskPaneView As YearMonthPicker
         MyTaskPaneView = New YearMonthPicker
         myCustomTaskPane = Me.CustomTaskPanes.Add(MyTaskPaneView, "Liste de Garde")
@@ -29,6 +44,7 @@ Public Class ThisAddIn
         'Initialize the persistent settings (stores database location) 
         MySettingsGlobal = New Settings1
 
+
     End Sub
 
     Private Sub ThisAddIn_Shutdown() Handles Me.Shutdown
@@ -37,7 +53,7 @@ Public Class ThisAddIn
 
     Private Sub xlApp_Workbookopen(ByVal Wb As Excel.Workbook) Handles xlApp.WorkbookOpen
         xlBook = Globals.ThisAddIn.Application.ActiveWorkbook
-        xlSheet1 = Globals.ThisAddIn.Application.ActiveSheet
+        xlSheet1 = CType(Globals.ThisAddIn.Application.ActiveSheet, Global.Microsoft.Office.Interop.Excel.Worksheet)
 
     End Sub
 
@@ -51,11 +67,58 @@ Public Class ThisAddIn
         'need to rebuild the taskpane on the basis of the currentlyselected month
         'code below retreives the handle to the UserControl to trigger redraw() public function
         Dim aCollection As System.Windows.Forms.Control.ControlCollection = myCustomTaskPane.Control.Controls
-        Dim aElementHost As System.Windows.Forms.Integration.ElementHost = aCollection(0)
-        Dim aUserControl2 As UserControl2 = aElementHost.Child
+        Dim aElementHost As System.Windows.Forms.Integration.ElementHost = CType(aCollection(0), Integration.ElementHost)
+        Dim aUserControl2 As UserControl2 = CType(aElementHost.Child, UserControl2)
         aUserControl2.redraw()
     End Sub
 
 
 
 End Class
+
+<Runtime.InteropServices.ComVisible(True)> _
+<Runtime.InteropServices.InterfaceType(Runtime.InteropServices.ComInterfaceType.InterfaceIsDual)> _
+<Runtime.InteropServices.Guid("de4491a3-4ada-485a-a0cb-bb67f15d6e00")> _
+Interface IThisAddinHelper
+    Function getAddin() As String
+    Sub Launch()
+End Interface
+
+
+<Runtime.InteropServices.ComVisible(True)> _
+<Runtime.InteropServices.ClassInterface(Runtime.InteropServices.ClassInterfaceType.None)> _
+<Runtime.InteropServices.Guid("9ED54F84-A85D-4fcd-A854-44251E925F09")> _
+Public Class ThisAddinHelper
+    Implements IThisAddinHelper
+
+
+    Public Function getAddin() As String Implements IThisAddinHelper.getAddin
+        Return "test string"
+    End Function
+
+    Public Sub Launch() Implements IThisAddinHelper.Launch
+
+        Dim wb As Excel.Workbook = Globals.ThisAddIn.Application.ActiveWorkbook
+        If MySettingsGlobal.DataBaseLocation = "" Then
+            LoadDatabaseFileLocation()
+        Else : CONSTFILEADDRESS = MySettingsGlobal.DataBaseLocation
+        End If
+
+        'if sheet already exists exit
+        If Globals.ThisAddIn.theControllerCollection.Contains("Avril" + "-" + "2010") Then Exit Sub
+
+        'create a new sheet
+        Globals.ThisAddIn.xlSheet1 = _
+            DirectCast(wb.Sheets.Add(After:=wb.Sheets(wb.Sheets.Count), _
+                        Count:=1, Type:=Excel.XlSheetType.xlWorksheet), Excel.Worksheet)
+
+        'rename the new sheet
+        Globals.ThisAddIn.xlSheet1.Name = "Avril" + "-" + "2010"
+
+        Dim theController As Controller = New Controller(Globals.ThisAddIn.xlSheet1, CInt("2010"), 4, "avril")
+
+        Globals.ThisAddIn.theControllerCollection.Add(theController, Globals.ThisAddIn.xlSheet1.Name)
+
+    End Sub
+End Class
+

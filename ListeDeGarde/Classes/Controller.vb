@@ -14,7 +14,6 @@
             Return controlledMonth
         End Get
     End Property
-
     Public ReadOnly Property pHighlightedDoc() As String
         Get
             Return theHighlightedDoc
@@ -37,62 +36,38 @@
 
 
     End Sub
-
-    Private Sub controlledExcelSheet_Change(ByVal Target As Excel.Range) Handles controlledExcelSheet.Change
-
-        If monthloaded = False Then Exit Sub
+    Public Sub resetSheetExt()
+        'clear the sheet
         controlledExcelSheet.Unprotect()
-        'System.Diagnostics.Debug.WriteLine("WithEvents: You Changed Cells " + Target.Address + " " + controlledExcelSheet.Name)
-        Dim aday As SDay
-        Dim aShift As SShift
-        Dim adocAvail As SDocAvailable
-        Dim anExitNotice As Boolean = False
-        Dim firstDoc As String = ""
-
-        For Each aday In controlledMonth.Days
-            For Each aShift In aday.Shifts
-                If aShift.aRange.Address = Target.Address Then
-                    'make current Doc dispo again
-                    If Not IsNothing(aShift.Doc) Then
-                        If aShift.DocAvailabilities.Contains(aShift.Doc) Then
-                            adocAvail = aShift.DocAvailabilities.Item(aShift.Doc)
-                            adocAvail.Availability = PublicEnums.Availability.Dispo
-                            firstDoc = aShift.Doc
-                            anExitNotice = True
-                        End If
-                    End If
-
-                    ''assign new doc
-                    If IsNothing(Target.Value) Then
-                        'adocAvail = aShift.DocAvailabilities.Item(firstDoc)
-                        'adocAvail.Availability = PublicEnums.Availability.Dispo
-                        fixAvailability(firstDoc, controlledMonth, aShift, firstDoc)
-                        aShift.Doc = ""
-                    Else
-                        If aShift.DocAvailabilities.Contains(Target.Value) Then
-                            adocAvail = aShift.DocAvailabilities.Item(Target.Value)
-                            adocAvail.Availability = PublicEnums.Availability.Assigne
-                            fixAvailability(Target.Value, controlledMonth, aShift, firstDoc)
-                            aShift.Doc = Target.Value
-                            anExitNotice = True
-                        End If
-                    End If
-                End If
-                If anExitNotice = True Then Exit For
-            Next
-            If anExitNotice = True Then Exit For
-        Next
-        If anExitNotice = True Then
-            ' resetSheet()
-            If Not theCustomTaskPane Is Nothing Then
-                If theCustomTaskPane.Visible Then
-                    statsMensuellesUpdate()
-                End If
-            End If
-        End If
-        controlledExcelSheet.Protect()
+        controlledExcelSheet.Cells.Clear()
+        'create a month
+        controlledMonth = New SMonth(controlledMonth.Month, controlledMonth.Year)
+        theHighlightedDoc = ""
+        Globals.ThisAddIn.theCurrentController = Me
+        'Load shift types collection into global
+        'controlledShiftTypes = controlledMonth.ShiftTypes
+        resetSheet()
     End Sub
+    Public Sub statsMensuelles()
 
+        'If theMonthlyStatsForm Is Nothing Then
+        '    theMonthlyStatsForm = New Form2
+        'Else
+        '    theMonthlyStatsForm.Dispose()
+        '    theMonthlyStatsForm = New Form2
+        'End If
+        'theMonthlyStatsForm.TopMost = True
+        'theMonthlyStatsForm.Show()
+
+
+        Dim MyTaskPaneView As MonthlyDocStatsTPF
+        MyTaskPaneView = New MonthlyDocStatsTPF
+        theCustomTaskPane = Globals.ThisAddIn.CustomTaskPanes.Add(MyTaskPaneView, "Statistiques")
+        theCustomTaskPane.Visible = True
+        statsMensuellesUpdate()
+
+
+    End Sub
     Public Sub HighLightDocAvailablilities(Initials As String)
         'cycle through the month and highlight everywhere theDoc is available.
         Dim aday As SDay
@@ -128,7 +103,6 @@
         statsMensuellesUpdate()
         controlledExcelSheet.Protect()
     End Sub
-
     Public Sub HighLightDocAvailSingleCell(theShift As SShift, Initials As String)
         'cycle through the month and highlight everywhere theDoc is available.
 
@@ -151,89 +125,6 @@
             End If
         Next
     End Sub
-
-
-    Private Sub fixAvailability(aDoc As String, aMonth As SMonth, ashift As SShift, Optional firstDoc As String = "")
-        Dim theDate As Date = ashift.aDate
-        Dim theShift As Integer = ashift.ShiftType
-        Dim theshiftStart As Integer = ashift.ShiftStart
-        Dim theshiftStop As Integer = ashift.ShiftStop
-        Dim theStartDay As Integer = theDate.Day - 1
-        Dim theStopDay As Integer = theDate.Day + 1
-        Dim myShift As SShift
-        Dim aDay As SDay = aMonth.Days(ashift.aDate.Day)
-        Dim nonDispoStart As Long
-        Dim nonDispoStop As Long
-        Dim shftStop As Long
-        Dim shftStart As Long
-        Dim RecheckCollection As New Collection
-        Dim RecheckShift As SShift
-
-        For x As Integer = ashift.aDate.Day - 1 To ashift.aDate.Day + 1
-            If aMonth.Days.Contains(x.ToString()) Then
-                aDay = aMonth.Days.Item(x.ToString())
-                For Each myShift In aDay.Shifts
-
-                    nonDispoStart = ashift.aDate.Ticks + CLng(ashift.ShiftStart) * 600000000 - theRestTime
-                    nonDispoStop = ashift.aDate.Ticks + CLng(ashift.ShiftStop) * 600000000 + theRestTime
-                    shftStop = myShift.aDate.Ticks + CLng(myShift.ShiftStop) * 600000000
-                    shftStart = myShift.aDate.Ticks + CLng(myShift.ShiftStart) * 600000000
-                    Dim thedocAvail As SDocAvailable
-
-                    If firstDoc <> "" Then 'do opposite of the top one
-                        'then check if this doc is assigned in prevous or next day
-                        'if yes redo fixavailability on either or both of those if not leave as is
-                        If myShift.DocAvailabilities.Contains(firstDoc) Then
-                            thedocAvail = myShift.DocAvailabilities.Item(firstDoc)
-                            If thedocAvail.Availability = PublicEnums.Availability.Assigne Then
-                                RecheckCollection.Add(myShift)
-                            End If
-                        End If
-                    End If
-
-                    If (shftStart > nonDispoStart And shftStart < nonDispoStop) Or _
-                                       (shftStop > nonDispoStart And shftStop < nonDispoStop) Or _
-                                       (shftStart > nonDispoStart And shftStop < nonDispoStop) Then
-
-                        thedocAvail = myShift.DocAvailabilities.Item(aDoc)
-                        If thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
-                                thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
-                            thedocAvail.Availability = PublicEnums.Availability.NonDispoTemporaire
-                            fixlist(myShift)
-                        End If
-
-                        If firstDoc <> "" Then 'do opposite of the top one
-                            'then check if this doc is assigned in prevous or next day
-                            'if yes redo fixavailability on either or both of those if not leave as is
-                            If myShift.DocAvailabilities.Contains(firstDoc) Then
-                                thedocAvail = myShift.DocAvailabilities.Item(firstDoc)
-                                If thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
-                                thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
-                                    thedocAvail.Availability = PublicEnums.Availability.Dispo
-
-                                    fixlist(myShift)
-
-                                End If
-                            End If
-                        End If
-
-
-                    End If
-                    If theHighlightedDoc <> "" Then
-                        HighLightDocAvailSingleCell(myShift, theHighlightedDoc)
-                    End If
-                Next
-            End If
-        Next
-
-        If RecheckCollection.Count > 0 Then
-            For Each RecheckShift In RecheckCollection
-                fixAvailability(firstDoc, aMonth, RecheckShift)
-            Next
-        End If
-
-    End Sub
-
     Public Sub fixlist(theShift As SShift)
         Dim theSetValue As String = ""
         Dim theDocAvailable As SDocAvailable
@@ -272,6 +163,149 @@
 
     End Sub
 
+    Private Sub controlledExcelSheet_Change(ByVal Target As Excel.Range) Handles controlledExcelSheet.Change
+
+        If monthloaded = False Then Exit Sub
+        controlledExcelSheet.Unprotect()
+        'System.Diagnostics.Debug.WriteLine("WithEvents: You Changed Cells " + Target.Address + " " + controlledExcelSheet.Name)
+        Dim aday As SDay
+        Dim aShift As SShift
+        Dim adocAvail As SDocAvailable
+        Dim anExitNotice As Boolean = False
+        Dim firstDoc As String = ""
+
+        For Each aday In controlledMonth.Days
+            For Each aShift In aday.Shifts
+                If aShift.aRange.Address = Target.Address Then
+                    'make current Doc dispo again
+                    If Not IsNothing(aShift.Doc) Then
+                        If aShift.DocAvailabilities.Contains(aShift.Doc) Then
+                            adocAvail = CType(aShift.DocAvailabilities.Item(aShift.Doc), SDocAvailable)
+                            adocAvail.Availability = PublicEnums.Availability.Dispo
+                            firstDoc = aShift.Doc
+                            anExitNotice = True
+                        End If
+                    End If
+
+                    ''assign new doc
+                    If IsNothing(Target.Value) Then
+                        'adocAvail = aShift.DocAvailabilities.Item(firstDoc)
+                        'adocAvail.Availability = PublicEnums.Availability.Dispo
+                        fixAvailability(firstDoc, controlledMonth, aShift, firstDoc)
+                        aShift.Doc = ""
+                    Else
+                        If aShift.DocAvailabilities.Contains(CStr(Target.Value)) Then
+                            adocAvail = CType(aShift.DocAvailabilities.Item(Target.Value), SDocAvailable)
+                            adocAvail.Availability = PublicEnums.Availability.Assigne
+                            fixAvailability(CStr(Target.Value), controlledMonth, aShift, firstDoc)
+                            aShift.Doc = CStr(Target.Value)
+                            anExitNotice = True
+                        End If
+                    End If
+                End If
+                If anExitNotice = True Then Exit For
+            Next
+            If anExitNotice = True Then Exit For
+        Next
+        If anExitNotice = True Then
+            ' resetSheet()
+            If Not theCustomTaskPane Is Nothing Then
+                If theCustomTaskPane.Visible Then
+                    statsMensuellesUpdate()
+                End If
+            End If
+        End If
+        controlledExcelSheet.Protect()
+    End Sub
+    Private Sub controlledExcelSheet_BeforeDelete() Handles controlledExcelSheet.BeforeDelete
+
+        Globals.ThisAddIn.theControllerCollection.Remove(controlledExcelSheet.Name)
+
+    End Sub
+    Private Sub theMonthlyStatsForm_close() Handles theMonthlyStatsForm.FormClosing
+        SDocStatsCollection = Nothing
+    End Sub
+
+    Private Sub fixAvailability(aDoc As String, aMonth As SMonth, ashift As SShift, Optional firstDoc As String = "")
+        Dim theDate As Date = ashift.aDate
+        Dim theShift As Integer = ashift.ShiftType
+        Dim theshiftStart As Integer = ashift.ShiftStart
+        Dim theshiftStop As Integer = ashift.ShiftStop
+        Dim theStartDay As Integer = theDate.Day - 1
+        Dim theStopDay As Integer = theDate.Day + 1
+        Dim myShift As SShift
+        Dim aDay As SDay = CType(aMonth.Days(ashift.aDate.Day), SDay)
+        Dim nonDispoStart As Long
+        Dim nonDispoStop As Long
+        Dim shftStop As Long
+        Dim shftStart As Long
+        Dim RecheckCollection As New Collection
+        Dim RecheckShift As SShift
+
+        For x As Integer = ashift.aDate.Day - 1 To ashift.aDate.Day + 1
+            If aMonth.Days.Contains(x.ToString()) Then
+                aDay = CType(aMonth.Days.Item(x.ToString()), SDay)
+                For Each myShift In aDay.Shifts
+
+                    nonDispoStart = ashift.aDate.Ticks + CLng(ashift.ShiftStart) * 600000000 - theRestTime
+                    nonDispoStop = ashift.aDate.Ticks + CLng(ashift.ShiftStop) * 600000000 + theRestTime
+                    shftStop = myShift.aDate.Ticks + CLng(myShift.ShiftStop) * 600000000
+                    shftStart = myShift.aDate.Ticks + CLng(myShift.ShiftStart) * 600000000
+                    Dim thedocAvail As SDocAvailable
+
+                    If firstDoc <> "" Then 'do opposite of the top one
+                        'then check if this doc is assigned in prevous or next day
+                        'if yes redo fixavailability on either or both of those if not leave as is
+                        If myShift.DocAvailabilities.Contains(firstDoc) Then
+                            thedocAvail = CType(myShift.DocAvailabilities.Item(firstDoc), SDocAvailable)
+                            If thedocAvail.Availability = PublicEnums.Availability.Assigne Then
+                                RecheckCollection.Add(myShift)
+                            End If
+                        End If
+                    End If
+
+                    If (shftStart > nonDispoStart And shftStart < nonDispoStop) Or _
+                                       (shftStop > nonDispoStart And shftStop < nonDispoStop) Or _
+                                       (shftStart > nonDispoStart And shftStop < nonDispoStop) Then
+
+                        thedocAvail = CType(myShift.DocAvailabilities.Item(aDoc), SDocAvailable)
+                        If thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
+                                thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
+                            thedocAvail.Availability = PublicEnums.Availability.NonDispoTemporaire
+                            fixlist(myShift)
+                        End If
+
+                        If firstDoc <> "" Then 'do opposite of the top one
+                            'then check if this doc is assigned in prevous or next day
+                            'if yes redo fixavailability on either or both of those if not leave as is
+                            If myShift.DocAvailabilities.Contains(firstDoc) Then
+                                thedocAvail = CType(myShift.DocAvailabilities.Item(firstDoc), SDocAvailable)
+                                If thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
+                                thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
+                                    thedocAvail.Availability = PublicEnums.Availability.Dispo
+
+                                    fixlist(myShift)
+
+                                End If
+                            End If
+                        End If
+
+
+                    End If
+                    If theHighlightedDoc <> "" Then
+                        HighLightDocAvailSingleCell(myShift, theHighlightedDoc)
+                    End If
+                Next
+            End If
+        Next
+
+        If RecheckCollection.Count > 0 Then
+            For Each RecheckShift In RecheckCollection
+                fixAvailability(firstDoc, aMonth, RecheckShift)
+            Next
+        End If
+
+    End Sub
     Private Sub addBordersAroundRange(aRange As Excel.Range)
 
         With aRange.Borders(Excel.XlBordersIndex.xlEdgeBottom)
@@ -296,38 +330,6 @@
         End With
 
     End Sub
-
-    Private Sub controlledExcelSheet_BeforeDelete() Handles controlledExcelSheet.BeforeDelete
-
-        Globals.ThisAddIn.theControllerCollection.Remove(controlledExcelSheet.Name)
-
-    End Sub
-
-    Private Sub theMonthlyStatsForm_close() Handles theMonthlyStatsForm.FormClosing
-        SDocStatsCollection = Nothing
-    End Sub
-
-    Public Sub statsMensuelles()
-
-        'If theMonthlyStatsForm Is Nothing Then
-        '    theMonthlyStatsForm = New Form2
-        'Else
-        '    theMonthlyStatsForm.Dispose()
-        '    theMonthlyStatsForm = New Form2
-        'End If
-        'theMonthlyStatsForm.TopMost = True
-        'theMonthlyStatsForm.Show()
-
-
-        Dim MyTaskPaneView As MonthlyDocStatsTPF
-        MyTaskPaneView = New MonthlyDocStatsTPF
-        theCustomTaskPane = Globals.ThisAddIn.CustomTaskPanes.Add(MyTaskPaneView, "Statistiques")
-        theCustomTaskPane.Visible = True
-        statsMensuellesUpdate()
-
-
-    End Sub
-
     Private Sub statsMensuellesUpdate()
         'pour chaque medecin compter chaque type de shift
 
@@ -370,7 +372,7 @@
                         shiftCount = 0
                         For Each ashift In aDay.Shifts
                             If ashift.ShiftType > 5 Then Exit For
-                            aDOcAvail = ashift.DocAvailabilities(theSDocStats.Initials)
+                            aDOcAvail = CType(ashift.DocAvailabilities(theSDocStats.Initials), SDocAvailable)
                             If aDOcAvail.Availability = PublicEnums.Availability.Assigne Then
                                 Select Case ashift.ShiftType
                                     Case 1
@@ -417,7 +419,7 @@
 
                         For Each ashift In aDay.Shifts
                             If ashift.ShiftType > 5 Then Exit For
-                            aDOcAvail = ashift.DocAvailabilities(theHighlightedDoc)
+                            aDOcAvail = CType(ashift.DocAvailabilities(theHighlightedDoc), SDocAvailable)
                             If aDOcAvail.Availability = PublicEnums.Availability.Assigne Then
                                 'populate simple array of week counts
                                 theArray(weekCount) = theArray(weekCount) + 1
@@ -430,8 +432,8 @@
 
 
                 Dim aCollection As System.Windows.Forms.Control.ControlCollection = theCustomTaskPane.Control.Controls
-                Dim bElementHost As System.Windows.Forms.Integration.ElementHost = aCollection(0)
-                Dim theMonthlyDocStatsTP As MonthlyDocStatsTP = bElementHost.Child
+                Dim bElementHost As System.Windows.Forms.Integration.ElementHost = CType(aCollection(0), Windows.Forms.Integration.ElementHost)
+                Dim theMonthlyDocStatsTP As MonthlyDocStatsTP = CType(bElementHost.Child, MonthlyDocStatsTP)
                 theMonthlyDocStatsTP.loadarray(SDocStatsCollection, theArray)
             End If
         End If
@@ -439,7 +441,6 @@
 
 
     End Sub
-
     Private Sub SetUpPermNonDispos()
         Dim theSNonDispo As New SNonDispo
         Dim aSNonDispo As SNonDispo
@@ -478,8 +479,8 @@
                     End Select
 
                     For y As Integer = startday - 1 To stopDay
-                        If controlledMonth.Days.Contains(y) Then
-                            aDay = controlledMonth.Days.Item(y)
+                        If controlledMonth.Days.Contains(CStr(y)) Then
+                            aDay = CType(controlledMonth.Days.Item(y), SDay)
                             For Each ashift In aDay.Shifts
                                 nonDispoStart = aSNonDispo.DateStart.Ticks + CLng(aSNonDispo.TimeStart) * 600000000
                                 nonDispoStop = aSNonDispo.DateStop.Ticks + CLng(aSNonDispo.TimeStop) * 600000000
@@ -491,7 +492,7 @@
                                     (shftStart > nonDispoStart And shftStop < nonDispoStop) Then
 
                                     Dim thedocAvail As SDocAvailable
-                                    thedocAvail = ashift.DocAvailabilities.Item(aSDoc.Initials)
+                                    thedocAvail = CType(ashift.DocAvailabilities.Item(aSDoc.Initials), SDocAvailable)
                                     'check if doc is assigned and ask to clear (provide some info.. make surutlisé
                                     If thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
                                         thedocAvail.Availability = PublicEnums.Availability.NonDispoPermanente
@@ -505,7 +506,6 @@
             End If
         Next
     End Sub
-
     Private Sub resetSheet()
         monthloaded = False 'set boolean toggle to false to stop event triggers
         controlledExcelSheet.Unprotect()
@@ -575,20 +575,6 @@
         controlledExcelSheet.EnableSelection = Microsoft.Office.Interop.Excel.XlEnableSelection.xlUnlockedCells
 
     End Sub
-
-    Public Sub resetSheetExt()
-        'clear the sheet
-        controlledExcelSheet.Unprotect()
-        controlledExcelSheet.Cells.Clear()
-        'create a month
-        controlledMonth = New SMonth(controlledMonth.Month, controlledMonth.Year)
-        theHighlightedDoc = ""
-        Globals.ThisAddIn.theCurrentController = Me
-        'Load shift types collection into global
-        'controlledShiftTypes = controlledMonth.ShiftTypes
-        resetSheet()
-    End Sub
-
     Private Sub SetupAssignedDocs()
         Dim aTest As New SDocAvailable(DateSerial(aControlledMonth.Year, aControlledMonth.Month, 1))
         Dim aCollection As Collection
@@ -599,12 +585,12 @@
         If Not IsNothing(aCollection) Then
             Dim theAssignedDocs As SDocAvailable
             For Each theAssignedDocs In aCollection
-                theDay2 = controlledMonth.Days.Item(theAssignedDocs.Date_.Day)
+                theDay2 = CType(controlledMonth.Days.Item(theAssignedDocs.Date_.Day), SDay)
                 If theDay2.Shifts.Contains(theAssignedDocs.ShiftType.ToString()) Then
-                    theShift2 = theDay2.Shifts.Item(theAssignedDocs.ShiftType.ToString())
+                    theShift2 = CType(theDay2.Shifts.Item(theAssignedDocs.ShiftType.ToString()), SShift)
                     theShift2.Doc = theAssignedDocs.DocInitial
                     If theShift2.DocAvailabilities.Contains(theAssignedDocs.DocInitial) Then
-                        theDocAvailble = theShift2.DocAvailabilities(theAssignedDocs.DocInitial)
+                        theDocAvailble = CType(theShift2.DocAvailabilities(theAssignedDocs.DocInitial), SDocAvailable)
                         theDocAvailble.SetAvailabilityfromDB = PublicEnums.Availability.Assigne
                         theShift2.aRange.Value = theAssignedDocs.DocInitial
                         fixAvailability(theShift2.Doc, controlledMonth, theShift2)
@@ -620,7 +606,6 @@
             Next
         End If
     End Sub
-
     Private Sub ClearAvailability()
         Dim aDay As SDay
         Dim ashift As SShift

@@ -3,53 +3,62 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" Height="422" Width="323">
-    <Grid>
-        <Label Content="Fin du quart:" HorizontalAlignment="Left" Margin="11,125.634,0,0" VerticalAlignment="Top" Width="97.92" Height="27"/>
-        <TextBox x:Name="Description" HorizontalAlignment="Left" Height="23" Margin="86,72,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="230"/>
-        <Label Content="Déscription:" HorizontalAlignment="Left" Margin="11,68,0,0" VerticalAlignment="Top" Width="108" Height="27"/>
-        <CheckBox x:Name="ActiveCB" Content="Actif" HorizontalAlignment="Left" Margin="134.667,158,0,0" VerticalAlignment="Top" Width="48.333"/>
-        <Label Content="Version:" HorizontalAlignment="Left" Margin="11,152.634,0,0" VerticalAlignment="Top" Width="53" Height="27"/>
-        <TextBox x:Name="VersionNo" HorizontalAlignment="Left" Height="23" Margin="86,155,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="35"/>
-        <ComboBox x:Name="StopHour" HorizontalAlignment="Left" Margin="119.64,126.96,0,0" VerticalAlignment="Top" Width="46" Loaded="Hours_Loaded"/>
-        <ComboBox x:Name="StopMin" HorizontalAlignment="Left" Margin="183.64,126.96,0,0" VerticalAlignment="Top" Width="46" Loaded="Mins_Loaded"/>
-        <Label Content=":" HorizontalAlignment="Left" Margin="165.64,126.297,0,0" VerticalAlignment="Top" Width="18" Height="21.96" FontSize="13.333" FontFamily="Arial Black"/>
-        <Label Content="Début du quart:" HorizontalAlignment="Left" Margin="11,99.337,0,0" VerticalAlignment="Top" Width="101.64" Height="27"/>
-        <ComboBox x:Name="StartHour" HorizontalAlignment="Left" Margin="119.64,100,0,0" VerticalAlignment="Top" Width="46" Loaded="Hours_Loaded"/>
-        <ComboBox x:Name="StartMin" HorizontalAlignment="Left" Margin="183.64,100,0,0" VerticalAlignment="Top" Width="46" Loaded="Mins_Loaded"/>
-        <Label Content=":" HorizontalAlignment="Left" Margin="165.64,100,0,0" VerticalAlignment="Top" Width="18" Height="21.96" FontSize="13.333" FontFamily="Arial Black"/>
-        <Button x:Name="MoveUpBtn" Content="Move Up" HorizontalAlignment="Left" Margin="207,327.08,0,0" VerticalAlignment="Top" Width="75"/>
-        <ListView x:Name="ShiftListView" HorizontalAlignment="Left" Height="189.04" Margin="16,186.96,0,0" VerticalAlignment="Top" Width="167">
-        	<ListView.View>
-        	   	<GridView>
-    				<GridViewColumn x:Name="ShftDesc"  Header="Shift Description:" Width="219.64" DisplayMemberBinding ="{Binding Description}"  >
-    					<GridViewColumn.HeaderContainerStyle>
-    						<Style TargetType="GridViewColumnHeader">
+             mc:Ignorable="d" Height="574" Width="324">
+    <Grid Margin="0">
+		<Label Content="Fin du quart:" HorizontalAlignment="Left" Margin="11,125.634,0,0" VerticalAlignment="Top" Width="97.92" Height="27"/>
+		<TextBox x:Name="Description" HorizontalAlignment="Left" Height="23" Margin="86,72,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="230"/>
+		<Label Content="Déscription:" HorizontalAlignment="Left" Margin="11,68,0,0" VerticalAlignment="Top" Width="108" Height="27"/>
+		<CheckBox x:Name="ActiveCB" Content="Actif" HorizontalAlignment="Left" Margin="134.667,158,0,0" VerticalAlignment="Top" Width="48.333"/>
+		<Label Content="Version:" HorizontalAlignment="Left" Margin="11,152.634,0,0" VerticalAlignment="Top" Width="53" Height="27"/>
+		<TextBox x:Name="VersionNo" HorizontalAlignment="Left" Height="23" Margin="86,155,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="35"/>
+		<ComboBox x:Name="StopHour" HorizontalAlignment="Left" Margin="119.64,126.96,0,0" VerticalAlignment="Top" Width="46" Loaded="Hours_Loaded"/>
+		<ComboBox x:Name="StopMin" HorizontalAlignment="Left" Margin="183.64,126.96,0,0" VerticalAlignment="Top" Width="46" Loaded="Mins_Loaded"/>
+		<Label Content=":" HorizontalAlignment="Left" Margin="165.64,126.297,0,0" VerticalAlignment="Top" Width="18" Height="21.96" FontSize="13.333" FontFamily="Arial Black"/>
+		<Label Content="Début du quart:" HorizontalAlignment="Left" Margin="11,99.337,0,0" VerticalAlignment="Top" Width="101.64" Height="27"/>
+		<ComboBox x:Name="StartHour" HorizontalAlignment="Left" Margin="119.64,100,0,0" VerticalAlignment="Top" Width="46" Loaded="Hours_Loaded"/>
+		<ComboBox x:Name="StartMin" HorizontalAlignment="Left" Margin="183.64,100,0,0" VerticalAlignment="Top" Width="46" Loaded="Mins_Loaded"/>
+		<Label Content=":" HorizontalAlignment="Left" Margin="165.64,100,0,0" VerticalAlignment="Top" Width="18" Height="21.96" FontSize="13.333" FontFamily="Arial Black"/>
+		<Button x:Name="MoveUpBtn" Content="Déplacer vers le haut" HorizontalAlignment="Left" Margin="188,381.08,0,0" VerticalAlignment="Top" Width="126"/>
+		<ListView x:Name="ShiftListView" HorizontalAlignment="Left" Height="189.04" Margin="16,338.96,0,0" VerticalAlignment="Top" Width="167">
+			<ListView.View>
+				<GridView>
+					<GridViewColumn x:Name="ShftDesc"  Header="Shift Description:" Width="219.64" DisplayMemberBinding ="{Binding Description}"  >
+						<GridViewColumn.HeaderContainerStyle>
+							<Style TargetType="{x:Type GridViewColumnHeader}">
 								<Setter Property="HorizontalContentAlignment"
 									Value="left" />
-								</Style>
+							</Style>
 						</GridViewColumn.HeaderContainerStyle></GridViewColumn>
-        		</GridView>
-        	</ListView.View>
-        </ListView>
-        <Button x:Name="MoveDownBtn" Content="Move Down" HorizontalAlignment="Left" Margin="207,354.04,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="SaveBtn" Content="Save" HorizontalAlignment="Left" Margin="240.64,390.04,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button x:Name="ExitBtn" Content="Cancel" HorizontalAlignment="Left" Margin="160.64,390.04,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.635,4.506"/>
-        <Button x:Name="EditBtn" Content="Edit" HorizontalAlignment="Left" Margin="11,390.04,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.635,4.506"/>
-        <ComboBox x:Name="Year" HorizontalAlignment="Left" Margin="86,18.08,0,0" VerticalAlignment="Top" Width="64" Loaded="aYear_Loaded"/>
-        <ComboBox x:Name="Month" HorizontalAlignment="Left" Margin="86,45.04,0,0" VerticalAlignment="Top" Width="97" Loaded="aMonth_Loaded"/>
-        <Label Content="Année:" HorizontalAlignment="Left" Margin="11,14,0,0" VerticalAlignment="Top" Width="58" Height="27" RenderTransformOrigin="0.485,-2.235"/>
-        <Label Content="Mois:" HorizontalAlignment="Left" Margin="11,41,0,0" VerticalAlignment="Top" Width="68" Height="27" RenderTransformOrigin="0.485,-2.235"/>
-        <CheckBox x:Name="Edit_Template" Content="Modifier Gabarit" HorizontalAlignment="Left" Margin="207,18.08,0,0" VerticalAlignment="Top" Width="109"/>
-        <CheckBox x:Name="lundi" Content="Lundi" HorizontalAlignment="Left" Margin="222.333,178.627,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.136,0.063" Width="75.36"/>
-        <CheckBox x:Name="mardi" Content="Mardi" HorizontalAlignment="Left" Margin="222.333,194.587,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.136,0.063" Width="75.36"/>
-        <CheckBox x:Name="mercredi" Content="Mercredi" HorizontalAlignment="Left" Margin="222.333,210.924,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.136,0.063" Width="75.36"/>
-        <CheckBox x:Name="jeudi" Content="Jeudi" HorizontalAlignment="Left" Margin="222.333,226.884,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.136,0.063" Width="75.36"/>
-        <CheckBox x:Name="vendredi" Content="Vendredi" HorizontalAlignment="Left" Margin="222.333,242.844,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.136,0.063" Width="75.36"/>
-        <CheckBox x:Name="samedi" Content="Samedi" HorizontalAlignment="Left" Margin="222.333,258.804,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.136,0.063" Width="75.36"/>
-        <CheckBox x:Name="dimache" Content="Dimanche" HorizontalAlignment="Left" Margin="222.333,274.764,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.136,0.063" Width="75.36"/>
-        <CheckBox x:Name="férié" Content="Férié" HorizontalAlignment="Left" Margin="222.333,290.724,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.136,0.063" Width="75.36"/>
-        <GroupBox Header="Actif les" HorizontalAlignment="Left" Height="155.113" Margin="207,156.634,0,0" VerticalAlignment="Top" Width="102"/>
+				</GridView>
+			</ListView.View>
+		</ListView>
+		<Button x:Name="MoveDownBtn" Content="Déplacer vers le bas" HorizontalAlignment="Left" Margin="188,408.04,0,0" VerticalAlignment="Top" Width="126"/>
+		<Button x:Name="SaveBtn" Content="Save" HorizontalAlignment="Left" Margin="240.64,542.04,0,0" VerticalAlignment="Top" Width="75"/>
+		<Button x:Name="ExitBtn" Content="Cancel" HorizontalAlignment="Left" Margin="160.64,542.04,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.635,4.506"/>
+		<Button x:Name="EditBtn" Content="Edit" HorizontalAlignment="Left" Margin="11,542.04,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.635,4.506"/>
+		<ComboBox x:Name="Year" HorizontalAlignment="Left" Margin="86,18.08,0,0" VerticalAlignment="Top" Width="64" Loaded="aYear_Loaded"/>
+		<ComboBox x:Name="Month" HorizontalAlignment="Left" Margin="86,45.04,0,0" VerticalAlignment="Top" Width="97" Loaded="aMonth_Loaded"/>
+		<Label Content="Année:" HorizontalAlignment="Left" Margin="11,14,0,0" VerticalAlignment="Top" Width="58" Height="27" RenderTransformOrigin="0.485,-2.235"/>
+		<Label Content="Mois:" HorizontalAlignment="Left" Margin="11,41,0,0" VerticalAlignment="Top" Width="68" Height="27" RenderTransformOrigin="0.485,-2.235"/>
+		<CheckBox x:Name="Edit_Template" Content="Modifier Gabarit" HorizontalAlignment="Left" Margin="207,18.08,0,0" VerticalAlignment="Top" Width="109"/>
+		<CheckBox x:Name="lundi" Content="Lundi" HorizontalAlignment="Left" Margin="154.28,237.55,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.136,0.063" Width="75.36"/>
+		<CheckBox x:Name="mardi" Content="Mardi" HorizontalAlignment="Left" Margin="154.28,253.51,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.136,0.063" Width="75.36"/>
+		<CheckBox x:Name="mercredi" Content="Mercredi" HorizontalAlignment="Left" Margin="154.28,269.847,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.136,0.063" Width="75.36"/>
+		<CheckBox x:Name="jeudi" Content="Jeudi" HorizontalAlignment="Left" Margin="154.28,285.807,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.136,0.063" Width="75.36"/>
+		<CheckBox x:Name="vendredi" Content="Vendredi" HorizontalAlignment="Left" Margin="229.64,237.927,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.136,0.063" Width="75.36"/>
+		<CheckBox x:Name="samedi" Content="Samedi" HorizontalAlignment="Left" Margin="229.64,253.887,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.136,0.063" Width="75.36"/>
+		<CheckBox x:Name="dimache" Content="Dimanche" HorizontalAlignment="Left" Margin="229.64,269.847,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.136,0.063" Width="75.36"/>
+		<CheckBox x:Name="férié" Content="Férié" HorizontalAlignment="Left" Margin="229.64,285.807,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.136,0.063" Width="75.36"/>
+		<GroupBox Header="Actif les" HorizontalAlignment="Left" Height="113.96" Margin="144.64,210.924,0,0" VerticalAlignment="Top" Width="171.36"/>
+		<CheckBox x:Name="CompilerCB" Content="Compiler" HorizontalAlignment="Left" Margin="20.667,184.634,0,0" VerticalAlignment="Top" Width="91.973"/>
+		<Button x:Name="NewShift_btn" Content="Nouveau quart" HorizontalAlignment="Left" Margin="188,468,0,0" VerticalAlignment="Top" Width="126"/>
+		<GroupBox Header="Type de Quart" HorizontalAlignment="Left" Margin="16,210.924,0,0" VerticalAlignment="Top" Height="113.96" Width="123.64"/>
+		<RadioButton x:Name="UrgenceRB" Content="Urgence" HorizontalAlignment="Left" Margin="30.73,232.917,0,0" VerticalAlignment="Top"/>
+		<RadioButton x:Name="HospitRB" Content="Hospit." HorizontalAlignment="Left" Margin="30.73,247.877,0,0" VerticalAlignment="Top"/>
+		<RadioButton x:Name="SoinsRB" Content="Soins" HorizontalAlignment="Left" Margin="30.73,262.837,0,0" VerticalAlignment="Top"/>
+		<RadioButton x:Name="AutreRB" Content="Autre" HorizontalAlignment="Left" Margin="30.73,277.797,0,0" VerticalAlignment="Top"/>
+		<CheckBox x:Name="NuitCB" Content="Nuit" HorizontalAlignment="Left" Margin="30.73,298.757,0,0" VerticalAlignment="Top"/>
+		<Button x:Name="NewShift_btn_Copy" Content="Effacer quart" HorizontalAlignment="Left" Margin="188,494.96,0,0" VerticalAlignment="Top" Width="126"/>
 
-    </Grid>
+	</Grid>
 </UserControl>
