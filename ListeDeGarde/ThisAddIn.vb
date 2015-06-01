@@ -79,9 +79,10 @@ End Class
 <Runtime.InteropServices.ComVisible(True)> _
 <Runtime.InteropServices.InterfaceType(Runtime.InteropServices.ComInterfaceType.InterfaceIsDual)> _
 <Runtime.InteropServices.Guid("de4491a3-4ada-485a-a0cb-bb67f15d6e00")> _
-Interface IThisAddinHelper
+Public Interface IThisAddinHelper
     Function getAddin() As String
     Sub Launch()
+    Sub testclick()
 End Interface
 
 
@@ -89,7 +90,9 @@ End Interface
 <Runtime.InteropServices.ClassInterface(Runtime.InteropServices.ClassInterfaceType.None)> _
 <Runtime.InteropServices.Guid("9ED54F84-A85D-4fcd-A854-44251E925F09")> _
 Public Class ThisAddinHelper
+    Inherits System.Runtime.InteropServices.StandardOleMarshalObject
     Implements IThisAddinHelper
+
 
 
     Public Function getAddin() As String Implements IThisAddinHelper.getAddin
@@ -119,6 +122,13 @@ Public Class ThisAddinHelper
 
         Globals.ThisAddIn.theControllerCollection.Add(theController, Globals.ThisAddIn.xlSheet1.Name)
 
+    End Sub
+
+    Public Sub testclick() Implements IThisAddinHelper.testclick
+        Dim aCollection As System.Windows.Forms.Control.ControlCollection = MyGlobals.MyAddin.myCustomTaskPane.Control.Controls
+        Dim bElementHost As System.Windows.Forms.Integration.ElementHost = CType(aCollection(0), Windows.Forms.Integration.ElementHost)
+        Dim theusercontrol2 As UserControl2 = CType(bElementHost.Child, UserControl2)
+        theusercontrol2.TestClick()
     End Sub
 End Class
 
