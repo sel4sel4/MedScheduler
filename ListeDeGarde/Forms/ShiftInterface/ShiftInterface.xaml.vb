@@ -1,5 +1,5 @@
 ﻿Imports System.Windows.Controls
-Public Class UserControl3
+Public Class ShiftInterfaceC
     Private aYearP As Integer
     Private aMonthP As Integer
     Private changesOngoing As Boolean = False

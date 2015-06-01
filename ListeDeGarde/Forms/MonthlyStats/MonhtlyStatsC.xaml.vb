@@ -2,7 +2,7 @@
 Imports System.Windows.Controls
 Imports System.Windows.Data
 Imports System.Windows.Media
-Public Class UserControl4
+Public Class MonhtlyStatsC
 
     Private aCollection As Collection
 

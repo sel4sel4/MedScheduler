@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class Form2
+Partial Class MontlyStats
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -23,7 +23,7 @@ Partial Class Form2
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.ElementHost1 = New System.Windows.Forms.Integration.ElementHost()
-        Me.UserControl41 = New ListeDeGarde.UserControl4()
+        Me.UserControl41 = New ListeDeGarde.MonhtlyStatsC()
         Me.SuspendLayout()
         '
         'ElementHost1
@@ -48,5 +48,5 @@ Partial Class Form2
 
     End Sub
     Friend WithEvents ElementHost1 As System.Windows.Forms.Integration.ElementHost
-    Friend UserControl41 As ListeDeGarde.UserControl4
+    Friend UserControl41 As ListeDeGarde.MonhtlyStatsC
 End Class

@@ -23,7 +23,7 @@ Partial Class ShiftInterfaceF
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.ElementHost1 = New System.Windows.Forms.Integration.ElementHost()
-        Me.UserControl31 = New ListeDeGarde.UserControl3()
+        Me.UserControl31 = New ListeDeGarde.ShiftInterfaceC()
         Me.SuspendLayout()
         '
         'ElementHost1
@@ -48,5 +48,5 @@ Partial Class ShiftInterfaceF
 
     End Sub
     Friend WithEvents ElementHost1 As System.Windows.Forms.Integration.ElementHost
-    Friend UserControl31 As ListeDeGarde.UserControl3
+    Friend UserControl31 As ListeDeGarde.ShiftInterfaceC
 End Class

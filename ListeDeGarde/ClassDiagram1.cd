@@ -1,98 +1,98 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1">
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="ListeDeGarde.SYear">
-    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Position X="0.5" Y="0.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAABAAAAAAAABAAAAAAAAQAAAAEAAAAAAAAAAA=</HashCode>
       <FileName>Classes\Classes.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.SMonth">
-    <Position X="0.5" Y="3" Width="1.5" />
+    <Position X="0.5" Y="3.25" Width="2" />
     <TypeIdentifier>
       <HashCode>RABAAAAABAAAAAADAAAAAIAAAAQAAAAEQAAAAAAAAAA=</HashCode>
       <FileName>Classes\Classes.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.SDay">
-    <Position X="0.5" Y="6.75" Width="1.5" />
+    <Position X="0.5" Y="7" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAgCAAAgAAAAAAAAAAAEAAAAAAAQAIA=</HashCode>
       <FileName>Classes\Classes.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.SShift">
-    <Position X="2.25" Y="0.5" Width="1.5" />
+    <Position X="2.75" Y="0.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>CAAAACCEgAAgAAAEQGBiAAAECAAQAAAAAAAAAAAAAAE=</HashCode>
       <FileName>Classes\Classes.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.SShiftType">
-    <Position X="9" Y="0.5" Width="2.75" />
+    <Position X="6.25" Y="12.5" Width="3.25" />
     <TypeIdentifier>
       <HashCode>IA0AAIAAoBAoRAEkQGQIAAgGKgoAAQggAAgAABAgABE=</HashCode>
       <FileName>Classes\Classes.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.SDoc">
-    <Position X="6.5" Y="0.5" Width="2.25" />
+    <Position X="8.75" Y="0.75" Width="3" />
     <TypeIdentifier>
       <HashCode>IQAAUkAAAACAQAiCAACAAQAAAA0gAADjQgCAAAAgAgk=</HashCode>
       <FileName>Classes\Classes.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.SDocStats">
-    <Position X="2.25" Y="6" Width="1.5" />
+    <Position X="2.75" Y="6.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAACAAAAAAAAACAAADHBAAAAADjAgAAAAAAAAA=</HashCode>
       <FileName>Classes\Classes.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.SDocAvailable">
-    <Position X="4" Y="0.5" Width="2.25" />
+    <Position X="5.5" Y="0.75" Width="3" />
     <TypeIdentifier>
       <HashCode>AGgAAACAAAAAAAAECIAjQAAEAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Classes\Classes.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.SNonDispo">
-    <Position X="4" Y="4.5" Width="2.25" />
+    <Position X="5.5" Y="4.75" Width="2.75" />
     <TypeIdentifier>
       <HashCode>REAgAACQhAAAAAAAwCACAAAAAIEAAAAAAAQAAAAAAAA=</HashCode>
       <FileName>Classes\Classes.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.DBAC">
-    <Position X="2.25" Y="13" Width="2" />
+    <Position X="3.25" Y="22.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAQAAAAIAAEAAAAASAAAAAAAAAAIAAAAAAAEAAAAAA=</HashCode>
       <FileName>Classes\Classes.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.SQLStrBuilder">
-    <Position X="0.5" Y="13" Width="1.5" />
+    <Position X="0.5" Y="22.25" Width="2.5" />
     <TypeIdentifier>
       <HashCode>gAEAGAMQcAQEAACERGAAiAACBAAIBBBDAAAQAAIAYAU=</HashCode>
       <FileName>Classes\Classes.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.Controller">
-    <Position X="17.25" Y="0.5" Width="2.75" />
+    <Position X="3" Y="12.5" Width="3" />
     <TypeIdentifier>
       <HashCode>CAAEBIAIgARgAgAAQAABQAAYAAAAQAAACAIAgAAAmAw=</HashCode>
       <FileName>Classes\Controller.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.RemotingServer" Collapsed="true">
-    <Position X="13.75" Y="18.25" Width="1.5" />
+    <Position X="16" Y="27.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAEAA=</HashCode>
       <FileName>Classes\RemotingServer.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.MonthlyDocStatsTP" BaseTypeListCollapsed="true">
-    <Position X="24" Y="0.5" Width="1.5" />
+    <Position X="12.5" Y="12.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAAAAAAACAAAAAEAAAAAACAAAAAAA=</HashCode>
       <FileName>CustomTaskPanes\MonthlyDocStatsTP.xaml.vb</FileName>
@@ -100,29 +100,29 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="ListeDeGarde.MonthlyDocStatsTPF" Collapsed="true">
-    <Position X="15.5" Y="14.25" Width="1.5" />
+    <Position X="18.25" Y="23.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAAAGAAEACAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>CustomTaskPanes\MonthlyDocStatsTPF.vb</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ListeDeGarde.UserControl2" BaseTypeListCollapsed="true">
-    <Position X="30.75" Y="0.5" Width="1.75" />
+  <Class Name="ListeDeGarde.YearMonthPickerC" BaseTypeListCollapsed="true">
+    <Position X="19" Y="12.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAQAAAAIAABAAAEEAAAAAMACAAAAEAAQAEACAAAAAE=</HashCode>
-      <FileName>CustomTaskPanes\MyYearMonthPicker\UserControl2.xaml.vb</FileName>
+      <FileName>CustomTaskPanes\MyYearMonthPicker\MyYearMonthPicker.xaml.vb</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="ListeDeGarde.YearMonthPicker" Collapsed="true">
-    <Position X="15.5" Y="16.5" Width="1.5" />
+    <Position X="18.25" Y="26" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ACAAAAAAACgAAAAAAACAAEACAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>CustomTaskPanes\MyYearMonthPicker\YearMonthPicker.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.DocExpectations" BaseTypeListCollapsed="true">
-    <Position X="25.75" Y="0.5" Width="2.25" />
+    <Position X="12.5" Y="15" Width="3.25" />
     <TypeIdentifier>
       <HashCode>AIBAAAAAADAgAAAAAAAAAACAAAAAAAAAAAIAAAgAAAA=</HashCode>
       <FileName>Forms\DocExpectations\DocExpectations.xaml.vb</FileName>
@@ -130,21 +130,21 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="ListeDeGarde.DocExpectationsF" Collapsed="true">
-    <Position X="15.5" Y="15" Width="1.5" />
+    <Position X="18.25" Y="24.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAICAAAAAAAACAAEACAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Forms\DocExpectations\DocExpectationsF.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.DrInterfaceForm" Collapsed="true">
-    <Position X="15.5" Y="15.75" Width="1.5" />
+    <Position X="18.25" Y="25.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAAACAAEACAAAAAAAABAAAAAAAAAA=</HashCode>
       <FileName>Forms\DrInterface\DrInterfaceForm.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.DrInterface" BaseTypeListCollapsed="true">
-    <Position X="21.25" Y="0.5" Width="2.5" />
+    <Position X="9.75" Y="12.5" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AABYIAAABBQAAggAAAAQQAYACgAACAAAAgAQAAgIAAA=</HashCode>
       <FileName>Forms\DrInterface\DrInterfaceWPF.xaml.vb</FileName>
@@ -152,37 +152,37 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="ListeDeGarde.Form1" Collapsed="true">
-    <Position X="15.5" Y="13.5" Width="1.5" />
+    <Position X="18.25" Y="23" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ACAAAAAAACAAAAAAAACAAEACAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Forms\GetNonDispos\Form1.vb</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ListeDeGarde.UserControl1" BaseTypeListCollapsed="true">
-    <Position X="28.25" Y="0.5" Width="2.25" />
+  <Class Name="ListeDeGarde.GetNonDispoC" BaseTypeListCollapsed="true">
+    <Position X="16" Y="12.5" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAgAAhAAAA4ABAAAAAAAAgIgIAAACAAAAACQCAAIAAA=</HashCode>
-      <FileName>Forms\GetNonDispos\UserControl1.xaml.vb</FileName>
+      <FileName>Forms\GetNonDispos\GetNonDispoC.xaml.vb</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="ListeDeGarde.Form2" Collapsed="true">
-    <Position X="15.5" Y="12.75" Width="1.5" />
+  <Class Name="ListeDeGarde.MontlyStats" Collapsed="true">
+    <Position X="18.25" Y="22.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ACAAAAAAACAAAAAAAACAAEACAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Forms\MonthlyStats\Form2.vb</FileName>
+      <FileName>Forms\MonthlyStats\MonthlyStats.vb</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="ListeDeGarde.UserControl4" BaseTypeListCollapsed="true">
-    <Position X="35.5" Y="0.5" Width="1.5" />
+  <Class Name="ListeDeGarde.MonhtlyStatsC" BaseTypeListCollapsed="true">
+    <Position X="16" Y="17.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAAAAAAACAAAAAEAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Forms\MonthlyStats\UserControl4.xaml.vb</FileName>
+      <FileName>Forms\MonthlyStats\MonhtlyStatsC.xaml.vb</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="ListeDeGarde.UserControl3" BaseTypeListCollapsed="true">
-    <Position X="32.75" Y="0.5" Width="2.5" />
+  <Class Name="ListeDeGarde.ShiftInterfaceC" BaseTypeListCollapsed="true">
+    <Position X="19" Y="17" Width="2.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
@@ -193,68 +193,68 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="ListeDeGarde.ShiftInterfaceF" Collapsed="true">
-    <Position X="15.5" Y="18" Width="1.5" />
+    <Position X="18.25" Y="27.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ACAAAAAAACAAAAAAAACAAEACAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Forms\ShiftInterface\ShiftInterfaceF.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.MySettings" Collapsed="true">
-    <Position X="15.5" Y="17.25" Width="1.5" />
+    <Position X="18.25" Y="26.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.ThisAddinHelper">
-    <Position X="12.75" Y="0.5" Width="2.25" />
+    <Position X="0.5" Y="12.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <HashCode>EAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAA=</HashCode>
       <FileName>ThisAddIn.vb</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="ListeDeGarde.Globals" Collapsed="true">
-    <Position X="13.75" Y="14.5" Width="1.5" />
+    <Position X="16" Y="24" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EAgAgAAAAAAAAAAAIAAAAAAAAAAAAAAAAAACAAAAgAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.ThisRibbonCollection" Collapsed="true">
-    <Position X="13.75" Y="13.5" Width="1.5" />
+    <Position X="16" Y="23" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.Ribbon1">
-    <Position X="15.25" Y="0.5" Width="1.75" />
+    <Position X="0.5" Y="14.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>EAAAAEAAECAQAAAAEACQQDgCAAAAcAhAAAQAAgAAAAA=</HashCode>
       <FileName>Varia\Ribbon1.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.Settings1" Collapsed="true">
-    <Position X="13.75" Y="12.75" Width="1.5" />
+    <Position X="16" Y="22.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAIAAAAAAAAAAAAAAAAIAABAAABAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Varia\Settings1.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Module Name="ListeDeGarde.DesignTimeConstants" Collapsed="true">
-    <Position X="13.75" Y="16" Width="1.5" />
+    <Position X="16" Y="25.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAABAAAAAAAAAAAAAAAAAAAABAAAAAEAAAAAAAAAA=</HashCode>
       <FileName>My Project\AssemblyInfo.vb</FileName>
     </TypeIdentifier>
   </Module>
   <Module Name="ListeDeGarde.PublicConstants">
-    <Position X="5.75" Y="12.75" Width="1.5" />
+    <Position X="5.75" Y="22.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>QBgmAIIABIQIADAAAEQBAnEAIACJCAgAwIIBQABIBQA=</HashCode>
       <FileName>Public Declarations\PublicConstants.vb</FileName>
     </TypeIdentifier>
   </Module>
   <Module Name="ListeDeGarde.PublicStructures">
-    <Position X="11.75" Y="12.75" Width="1.75" />
+    <Position X="13.5" Y="22.25" Width="2.25" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
@@ -296,7 +296,7 @@
     </TypeIdentifier>
   </Module>
   <Module Name="ListeDeGarde.PublicEnums">
-    <Position X="7.5" Y="14.25" Width="2" />
+    <Position X="8.25" Y="23.75" Width="2" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
@@ -323,34 +323,34 @@
     </TypeIdentifier>
   </Module>
   <Module Name="ListeDeGarde.MyGlobals">
-    <Position X="9.75" Y="12.75" Width="1.75" />
+    <Position X="10.75" Y="22.25" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAgAAIEAAAAAACAABAQAAACAAAAgCAAJAAAAEAA=</HashCode>
       <FileName>Public Declarations\PublicConstants.vb</FileName>
     </TypeIdentifier>
   </Module>
   <Module Name="ListeDeGarde.GlobalFunctions">
-    <Position X="7.5" Y="12.75" Width="2" />
+    <Position X="8.25" Y="22.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAABAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Public Declarations\PublicConstants.vb</FileName>
     </TypeIdentifier>
   </Module>
   <Module Name="ListeDeGarde.UseDelegateSM" Collapsed="true">
-    <Position X="13.75" Y="15.25" Width="1.5" />
+    <Position X="16" Y="24.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIAAAAAAAAAAAAAAAIUAAUAAAAAAAAAAAAAEAAAAAQA=</HashCode>
       <FileName>Varia\Using EventsModules\UseDelegateM.vb</FileName>
     </TypeIdentifier>
   </Module>
   <Module Name="ListeDeGarde.My.Resources.Resources" Collapsed="true">
-    <Position X="13.75" Y="17.5" Width="1.5" />
+    <Position X="16" Y="27" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
     </TypeIdentifier>
   </Module>
   <Module Name="ListeDeGarde.My.MySettingsProperty" Collapsed="true">
-    <Position X="13.75" Y="16.75" Width="1.5" />
+    <Position X="16" Y="26.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
     </TypeIdentifier>

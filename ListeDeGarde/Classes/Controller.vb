@@ -2,8 +2,8 @@
     Private WithEvents controlledExcelSheet As Excel.Worksheet
     Private controlledMonth As SMonth
     Private monthloaded As Boolean = False
-    Private monthlystats As UserControl4
-    Private WithEvents theMonthlyStatsForm As Form2
+    Private monthlystats As MonhtlyStatsC
+    Private WithEvents theMonthlyStatsForm As MontlyStats
     Private SDocStatsCollection As Collection
     Private Const theRestTime As Long = 432000000000
     Private theHighlightedDoc As String

@@ -2,7 +2,7 @@
 Imports System.Diagnostics
 
 
-Public Class UserControl2
+Public Class YearMonthPickerC
 
     Private WithEvents newBtn As Button
     Private theController As Controller

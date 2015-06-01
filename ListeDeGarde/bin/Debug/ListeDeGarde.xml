@@ -6,13 +6,37 @@ ListeDeGarde
 </name>
 </assembly>
 <members>
-<member name="M:ListeDeGarde.UserControl3.InitializeComponent">
+<member name="M:ListeDeGarde.ShiftInterfaceC.InitializeComponent">
 	<summary>
 InitializeComponent
 </summary>
-</member><member name="T:ListeDeGarde.UserControl3">
+</member><member name="T:ListeDeGarde.ShiftInterfaceC">
 	<summary>
-UserControl3
+ShiftInterfaceC
+</summary>
+</member><member name="M:ListeDeGarde.YearMonthPickerC.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:ListeDeGarde.YearMonthPickerC">
+	<summary>
+YearMonthPickerC
+</summary>
+</member><member name="M:ListeDeGarde.GetNonDispoC.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:ListeDeGarde.GetNonDispoC">
+	<summary>
+GetNonDispoC
+</summary>
+</member><member name="M:ListeDeGarde.MonhtlyStatsC.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:ListeDeGarde.MonhtlyStatsC">
+	<summary>
+MonhtlyStatsC
 </summary>
 </member><member name="M:ListeDeGarde.DocExpectations.InitializeComponent">
 	<summary>
@@ -29,30 +53,6 @@ InitializeComponent
 </member><member name="T:ListeDeGarde.DrInterface">
 	<summary>
 DrInterface
-</summary>
-</member><member name="M:ListeDeGarde.UserControl1.InitializeComponent">
-	<summary>
-InitializeComponent
-</summary>
-</member><member name="T:ListeDeGarde.UserControl1">
-	<summary>
-UserControl1
-</summary>
-</member><member name="M:ListeDeGarde.UserControl2.InitializeComponent">
-	<summary>
-InitializeComponent
-</summary>
-</member><member name="T:ListeDeGarde.UserControl2">
-	<summary>
-UserControl2
-</summary>
-</member><member name="M:ListeDeGarde.UserControl4.InitializeComponent">
-	<summary>
-InitializeComponent
-</summary>
-</member><member name="T:ListeDeGarde.UserControl4">
-	<summary>
-UserControl4
 </summary>
 </member><member name="M:ListeDeGarde.MonthlyDocStatsTP.InitializeComponent">
 	<summary>

@@ -68,8 +68,8 @@ Public Class ThisAddIn
         'code below retreives the handle to the UserControl to trigger redraw() public function
         Dim aCollection As System.Windows.Forms.Control.ControlCollection = myCustomTaskPane.Control.Controls
         Dim aElementHost As System.Windows.Forms.Integration.ElementHost = CType(aCollection(0), Integration.ElementHost)
-        Dim aUserControl2 As UserControl2 = CType(aElementHost.Child, UserControl2)
-        aUserControl2.redraw()
+        Dim theYearMonthPickerC As YearMonthPickerC = CType(aElementHost.Child, YearMonthPickerC)
+        theYearMonthPickerC.redraw()
     End Sub
 
 
@@ -127,8 +127,8 @@ Public Class ThisAddinHelper
     Public Sub testclick() Implements IThisAddinHelper.testclick
         Dim aCollection As System.Windows.Forms.Control.ControlCollection = MyGlobals.MyAddin.myCustomTaskPane.Control.Controls
         Dim bElementHost As System.Windows.Forms.Integration.ElementHost = CType(aCollection(0), Windows.Forms.Integration.ElementHost)
-        Dim theusercontrol2 As UserControl2 = CType(bElementHost.Child, UserControl2)
-        theusercontrol2.TestClick()
+        Dim theYearMonthPickerC As YearMonthPickerC = CType(bElementHost.Child, YearMonthPickerC)
+        theYearMonthPickerC.TestClick()
     End Sub
 End Class
 

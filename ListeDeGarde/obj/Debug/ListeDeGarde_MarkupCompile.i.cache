@@ -10,11 +10,11 @@ none
 false
 VSTO40
 
-7-874033793
+7-1368979863
 
-37-1720379405
+37-1118914927
 311715401248
-Forms\DocExpectations\DocExpectations.xaml;CustomTaskPanes\MyYearMonthPicker\UserControl2.xaml;Forms\GetNonDispos\UserControl1.xaml;Forms\DrInterface\DrInterfaceWPF.xaml;Forms\ShiftInterface\ShiftInterface.xaml;Forms\MonthlyStats\UserControl4.xaml;CustomTaskPanes\MonthlyDocStatsTP.xaml;
+Forms\DocExpectations\DocExpectations.xaml;CustomTaskPanes\MyYearMonthPicker\MyYearMonthPicker.xaml;Forms\GetNonDispos\GetNonDispoC.xaml;Forms\DrInterface\DrInterfaceWPF.xaml;Forms\ShiftInterface\ShiftInterface.xaml;Forms\MonthlyStats\MonhtlyStatsC.xaml;CustomTaskPanes\MonthlyDocStatsTP.xaml;
 
 False
 

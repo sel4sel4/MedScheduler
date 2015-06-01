@@ -23,7 +23,7 @@ Partial Class YearMonthPicker
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.ElementHost1 = New System.Windows.Forms.Integration.ElementHost()
-        Me.UserControl21 = New ListeDeGarde.UserControl2()
+        Me.UserControl21 = New ListeDeGarde.YearMonthPickerC()
         Me.SuspendLayout()
         '
         'ElementHost1
@@ -46,6 +46,6 @@ Partial Class YearMonthPicker
 
     End Sub
     Friend WithEvents ElementHost1 As System.Windows.Forms.Integration.ElementHost
-    Friend UserControl21 As ListeDeGarde.UserControl2
+    Friend UserControl21 As ListeDeGarde.YearMonthPickerC
 
 End Class

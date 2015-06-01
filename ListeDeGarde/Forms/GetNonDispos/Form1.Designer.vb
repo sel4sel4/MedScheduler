@@ -23,7 +23,7 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.ElementHost1 = New System.Windows.Forms.Integration.ElementHost()
-        Me.UserControl11 = New ListeDeGarde.UserControl1()
+        Me.UserControl11 = New ListeDeGarde.GetNonDispoC()
         Me.SuspendLayout()
         '
         'ElementHost1
@@ -48,5 +48,5 @@ Partial Class Form1
 
     End Sub
     Friend WithEvents ElementHost1 As System.Windows.Forms.Integration.ElementHost
-    Friend UserControl11 As ListeDeGarde.UserControl1
+    Friend UserControl11 As ListeDeGarde.GetNonDispoC
 End Class

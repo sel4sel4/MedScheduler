@@ -1,7 +1,7 @@
 ﻿Imports System.Diagnostics
 Imports System.Windows.Controls
 Imports System.Collections.ObjectModel
-Public Class UserControl1
+Public Class GetNonDispoC
     'Private theDocList() As String
     Private theDocList2 As Collection
     'Private theInitialsList() As String
@@ -38,7 +38,7 @@ Public Class UserControl1
 
 
         'aController.resetSheetExt()
-       
+
 
 
     End Sub
