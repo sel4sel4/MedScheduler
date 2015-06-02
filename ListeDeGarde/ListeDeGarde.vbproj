@@ -237,19 +237,19 @@
     <Compile Include="Forms\MonthlyStats\MonthlyStats.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\GetNonDispos\Form1.Designer.vb">
-      <DependentUpon>Form1.vb</DependentUpon>
+    <Compile Include="Forms\GetNonDispos\GetNonDispos.Designer.vb">
+      <DependentUpon>GetNonDispos.vb</DependentUpon>
     </Compile>
-    <Compile Include="Forms\GetNonDispos\Form1.vb">
+    <Compile Include="Forms\GetNonDispos\GetNonDispos.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CustomTaskPanes\MonthlyDocStatsTP.xaml.vb">
+    <Compile Include="CustomTaskPanes\MonthlyDocStats\MonthlyDocStatsTP.xaml.vb">
       <DependentUpon>MonthlyDocStatsTP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CustomTaskPanes\MonthlyDocStatsTPF.Designer.vb">
+    <Compile Include="CustomTaskPanes\MonthlyDocStats\MonthlyDocStatsTPF.Designer.vb">
       <DependentUpon>MonthlyDocStatsTPF.vb</DependentUpon>
     </Compile>
-    <Compile Include="CustomTaskPanes\MonthlyDocStatsTPF.vb">
+    <Compile Include="CustomTaskPanes\MonthlyDocStats\MonthlyDocStatsTPF.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Varia\GlobalSuppressions.vb" />
@@ -281,8 +281,8 @@
     <Compile Include="Forms\ShiftInterface\ShiftInterface.xaml.vb">
       <DependentUpon>ShiftInterface.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MonthlyStats\MonhtlyStatsC.xaml.vb">
-      <DependentUpon>MonhtlyStatsC.xaml</DependentUpon>
+    <Compile Include="Forms\MonthlyStats\MonthlyStatsC.xaml.vb">
+      <DependentUpon>MonthlyStatsC.xaml</DependentUpon>
     </Compile>
     <Compile Include="Varia\Using EventsModules\UseDelegateM.vb" />
     <Compile Include="CustomTaskPanes\MyYearMonthPicker\MyYearMonthPicker.xaml.vb">
@@ -306,10 +306,10 @@
     <EmbeddedResource Include="Forms\MonthlyStats\MonthlyStats.resx">
       <DependentUpon>MonthlyStats.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\GetNonDispos\Form1.resx">
-      <DependentUpon>Form1.vb</DependentUpon>
+    <EmbeddedResource Include="Forms\GetNonDispos\GetNonDispos.resx">
+      <DependentUpon>GetNonDispos.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="CustomTaskPanes\MonthlyDocStatsTPF.resx">
+    <EmbeddedResource Include="CustomTaskPanes\MonthlyDocStats\MonthlyDocStatsTPF.resx">
       <DependentUpon>MonthlyDocStatsTPF.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Varia\Ribbon1.resx">
@@ -427,11 +427,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Forms\MonthlyStats\MonhtlyStatsC.xaml">
+    <Page Include="Forms\MonthlyStats\MonthlyStatsC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CustomTaskPanes\MonthlyDocStatsTP.xaml">
+    <Page Include="CustomTaskPanes\MonthlyDocStats\MonthlyDocStatsTP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

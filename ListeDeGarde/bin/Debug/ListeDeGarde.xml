@@ -6,7 +6,15 @@ ListeDeGarde
 </name>
 </assembly>
 <members>
-<member name="M:ListeDeGarde.ShiftInterfaceC.InitializeComponent">
+<member name="M:ListeDeGarde.MonhtlyStatsC.InitializeComponent">
+	<summary>
+InitializeComponent
+</summary>
+</member><member name="T:ListeDeGarde.MonhtlyStatsC">
+	<summary>
+MonhtlyStatsC
+</summary>
+</member><member name="M:ListeDeGarde.ShiftInterfaceC.InitializeComponent">
 	<summary>
 InitializeComponent
 </summary>
@@ -29,14 +37,6 @@ InitializeComponent
 </member><member name="T:ListeDeGarde.GetNonDispoC">
 	<summary>
 GetNonDispoC
-</summary>
-</member><member name="M:ListeDeGarde.MonhtlyStatsC.InitializeComponent">
-	<summary>
-InitializeComponent
-</summary>
-</member><member name="T:ListeDeGarde.MonhtlyStatsC">
-	<summary>
-MonhtlyStatsC
 </summary>
 </member><member name="M:ListeDeGarde.DocExpectations.InitializeComponent">
 	<summary>

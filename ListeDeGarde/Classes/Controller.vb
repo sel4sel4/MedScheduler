@@ -465,6 +465,9 @@
                 For Each aSNonDispo In aCollection
                     Dim stopDay As Integer
                     Dim startday As Integer
+                    nonDispoStart = aSNonDispo.DateStart.Ticks + CLng(aSNonDispo.TimeStart) * 600000000
+                    nonDispoStop = aSNonDispo.DateStop.Ticks + CLng(aSNonDispo.TimeStop) * 600000000
+
                     Select Case aSNonDispo.DateStart.Month
                         Case controlledMonth.Month
                             startday = aSNonDispo.DateStart.Day
@@ -477,19 +480,21 @@
                         Case Is > controlledMonth.Month
                             stopDay = System.DateTime.DaysInMonth(controlledMonth.Year, controlledMonth.Month)
                     End Select
-
+                    If (controlledMonth.Month = 1 And aSNonDispo.DateStart.Day = 15 And aSDoc.Initials = "DG" And controlledMonth.Year = 2014) Then
+                        Dim test As Integer = 1
+                    End If
                     For y As Integer = startday - 1 To stopDay
                         If controlledMonth.Days.Contains(CStr(y)) Then
                             aDay = CType(controlledMonth.Days.Item(y), SDay)
                             For Each ashift In aDay.Shifts
-                                nonDispoStart = aSNonDispo.DateStart.Ticks + CLng(aSNonDispo.TimeStart) * 600000000
-                                nonDispoStop = aSNonDispo.DateStop.Ticks + CLng(aSNonDispo.TimeStop) * 600000000
+
                                 shftStop = ashift.aDate.Ticks + CLng(ashift.ShiftStop) * 600000000
                                 shftStart = ashift.aDate.Ticks + CLng(ashift.ShiftStart) * 600000000
 
-                                If (shftStart > nonDispoStart And shftStart < nonDispoStop) Or _
-                                    (shftStop > nonDispoStart And shftStop < nonDispoStop) Or _
-                                    (shftStart > nonDispoStart And shftStop < nonDispoStop) Then
+                                If ((nonDispoStart > shftStart And nonDispoStart < shftStop) Or _
+                                    (nonDispoStop > shftStart And nonDispoStop < shftStop) Or _
+                                    (nonDispoStart < shftStart And nonDispoStop > shftStop)) Then
+
 
                                     Dim thedocAvail As SDocAvailable
                                     thedocAvail = CType(ashift.DocAvailabilities.Item(aSDoc.Initials), SDocAvailable)
@@ -510,7 +515,7 @@
         monthloaded = False 'set boolean toggle to false to stop event triggers
         controlledExcelSheet.Unprotect()
         Dim amonthstring As String = monthstrings(aControlledMonth.Month - 1)
-        ' Globals.ThisAddIn.Application.ScreenUpdating = False
+        Globals.ThisAddIn.Application.ScreenUpdating = False
         controlledExcelSheet.Cells.Clear() 'clear the worksheet
         Dim theDay As SDay
         Dim row As Integer
@@ -563,7 +568,7 @@
         Next
         SetupAssignedDocs()
         SetUpPermNonDispos()
-        'Globals.ThisAddIn.Application.ScreenUpdating = True
+        Globals.ThisAddIn.Application.ScreenUpdating = True
 
         monthloaded = True
         controlledExcelSheet.Protect(DrawingObjects:=True, Contents:=True, Scenarios:= _

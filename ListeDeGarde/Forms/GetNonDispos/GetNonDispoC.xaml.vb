@@ -133,10 +133,10 @@ Public Class GetNonDispoC
             theNonDispo.Delete()
             updateListview()
         End If
-        If Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then
-            Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
-            aController.resetSheetExt()
-        End If
+        'If Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then
+        '    Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
+        '    aController.resetSheetExt()
+        'End If
     End Sub
 
     Private Sub aMonth_Loaded(sender As Object, e As Windows.RoutedEventArgs)

@@ -151,11 +151,11 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="ListeDeGarde.Form1" Collapsed="true">
+  <Class Name="ListeDeGarde.GetNonDispos" Collapsed="true">
     <Position X="18.25" Y="23" Width="1.5" />
     <TypeIdentifier>
       <HashCode>ACAAAAAAACAAAAAAAACAAEACAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Forms\GetNonDispos\Form1.vb</FileName>
+      <FileName>Forms\GetNonDispos\GetNonDispos.vb</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ListeDeGarde.GetNonDispoC" BaseTypeListCollapsed="true">

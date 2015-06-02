@@ -1,7 +1,7 @@
 ﻿Imports Microsoft.Office.Tools.Ribbon
 
 Public Class Ribbon1
-    Private WithEvents aform1 As Form1
+    Private WithEvents aform1 As GetNonDispos
     Private Sub Ribbon1_Load(ByVal sender As System.Object, ByVal e As RibbonUIEventArgs) Handles MyBase.Load
 
     End Sub
@@ -13,7 +13,7 @@ Public Class Ribbon1
 
     Private Sub Button2_Click(sender As Object, e As RibbonControlEventArgs) Handles Button2.Click
         'UseDelegate()
-        aform1 = New Form1
+        aform1 = New GetNonDispos
         aform1.ShowDialog()
     End Sub
 
