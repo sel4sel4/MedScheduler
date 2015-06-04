@@ -4,7 +4,7 @@ Imports System.Configuration
 
 Public Class SYear
     Private pYear As Integer
-    Private pMonths As Collection
+    Private pMonths As List(Of SMonth)
 
     ReadOnly Property Year() As Integer
         Get
@@ -12,7 +12,7 @@ Public Class SYear
         End Get
     End Property
 
-    ReadOnly Property Months() As Collection
+    ReadOnly Property Months() As List(Of SMonth)
         Get
             Return pMonths
         End Get
@@ -20,11 +20,11 @@ Public Class SYear
 
     Public Sub New(aYear As Integer)
         pYear = aYear
-        pMonths = New Collection
+        pMonths = New List(Of SMonth)
         For x = 1 To 12
             Dim theMonth As SMonth
             theMonth = New SMonth(x, aYear)
-            pMonths.Add(theMonth, x.ToString())
+            pMonths.Add(theMonth)
         Next
     End Sub
 
@@ -33,9 +33,9 @@ End Class
 Public Class SMonth
     Private pYear As Integer
     Private pMonth As Integer
-    Private pDays As Collection
-    Private pShiftypes As Collection
-    Private pDocList As Collection
+    Private pDays As List(Of SDay)
+    Private pShiftypes As List(Of SShiftType)
+    Private pDocList As List(Of SDoc)
 
     ReadOnly Property Year() As Integer
         Get
@@ -47,17 +47,17 @@ Public Class SMonth
             Return pMonth
         End Get
     End Property
-    ReadOnly Property Days() As Collection
+    ReadOnly Property Days() As List(Of SDay)
         Get
             Return pDays
         End Get
     End Property
-    ReadOnly Property ShiftTypes() As Collection
+    ReadOnly Property ShiftTypes() As List(Of SShiftType)
         Get
             Return pShiftypes
         End Get
     End Property
-    ReadOnly Property DocList() As Collection
+    ReadOnly Property DocList() As List(Of SDoc)
         Get
             Return pDocList
         End Get
@@ -68,11 +68,11 @@ Public Class SMonth
         Dim theDaysInMonth As Integer = DateTime.DaysInMonth(aYear, aMonth)
         pYear = aYear
         pMonth = aMonth
-        pDays = New Collection
+        pDays = New List(Of SDay)
         For x = 1 To theDaysInMonth
             Dim theDay As SDay
             theDay = New SDay(x, aMonth, aYear, Me)
-            pDays.Add(theDay, x.ToString())
+            pDays.Add(theDay)
         Next
     End Sub
 
@@ -430,13 +430,13 @@ Public Class SShiftType
         pCompilation.theSQLName = SQLCompilation
         pOrder.theSQLName = SQLOrder
     End Sub
-    Public Shared Function loadShiftTypesFromDBPerMonth(aMonth As Integer, aYear As Integer) As Collection
+    Public Shared Function loadShiftTypesFromDBPerMonth(aMonth As Integer, aYear As Integer) As List(Of SShiftType)
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
         Dim theDBAC As New DBAC
         Dim aShifttype As SShiftType
-        Dim theShiftTypeCollection As Collection
-        theShiftTypeCollection = New Collection
+        Dim theShiftTypeCollection As List(Of SShiftType)
+        theShiftTypeCollection = New List(Of SShiftType)
         Dim theVersion As Integer : theVersion = ((aYear - 2000) * 100) + aMonth
 
         'check if a version exists for the month
@@ -545,13 +545,13 @@ Public Class SShiftType
         End If
         Return theShiftTypeCollection
     End Function
-    Public Shared Function loadTemplateShiftTypesFromDB() As Collection
+    Public Shared Function loadTemplateShiftTypesFromDB() As List(Of SShiftType)
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
         Dim theDBAC As New DBAC
         Dim aShifttype As SShiftType
-        Dim theShiftTypeCollection As Collection
-        theShiftTypeCollection = New Collection
+        Dim theShiftTypeCollection As List(Of SShiftType)
+        theShiftTypeCollection = New List(Of SShiftType)
         With theBuiltSql
             .SQL_Select("*")
             .SQL_From(TABLE_shiftType)
@@ -1078,13 +1078,13 @@ Public Class SDoc
                 Debug.WriteLine("there is more than one copy of this entry ... this is bad")
         End Select
     End Sub
-    Public Shared Function LoadAllDocsPerMonth(aYear As Integer, aMonth As Integer) As Collection
+    Public Shared Function LoadAllDocsPerMonth(aYear As Integer, aMonth As Integer) As List(Of SDoc)
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
         Dim theDBAC As New DBAC
         Dim theCurrentMonthDate As Date = DateSerial(aYear, aMonth, 1)
-        Dim aCollection As Collection
-        aCollection = New Collection
+        Dim aCollection As List(Of SDoc)
+        aCollection = New List(Of SDoc)
         Dim theVersion As Integer : theVersion = ((aYear - 2000) * 100) + aMonth
 
         'check if a version exists for the month
@@ -1130,7 +1130,7 @@ Public Class SDoc
                 If Not IsDBNull(theRS.Fields(SQLNuitsTog).Value) Then _
                     aSDoc.NuitsTog = CBool(theRS.Fields(SQLNuitsTog).Value)
 
-                aCollection.Add(aSDoc, aSDoc.Initials)
+                aCollection.Add(aSDoc)
                 theRS.MoveNext()
             Next
         Else 'if no version exists, load the template version (0)
@@ -1175,7 +1175,7 @@ Public Class SDoc
                     If Not IsDBNull(theRS.Fields(SQLNuitsTog).Value) Then _
                         aSDoc.NuitsTog = CBool(theRS.Fields(SQLNuitsTog).Value)
                     aSDoc.save()
-                    aCollection.Add(aSDoc, aSDoc.Initials)
+                    aCollection.Add(aSDoc)
                     theRS.MoveNext()
                 Next
             End If
@@ -1183,12 +1183,12 @@ Public Class SDoc
 
         Return aCollection
     End Function
-    Public Shared Function LoadTempateDocsFromDB() As Collection
+    Public Shared Function LoadTempateDocsFromDB() As List(Of SDoc)
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
         Dim theDBAC As New DBAC
-        Dim aCollection As Collection
-        aCollection = New Collection
+        Dim aCollection As List(Of SDoc)
+        aCollection = New List(Of SDoc)
 
         'check if a version exists for the month
         With theBuiltSql
@@ -1232,7 +1232,7 @@ Public Class SDoc
                 If Not IsDBNull(theRS.Fields(SQLNuitsTog).Value) Then _
                     aSDoc.NuitsTog = CBool(theRS.Fields(SQLNuitsTog).Value)
 
-                aCollection.Add(aSDoc, aSDoc.Initials)
+                aCollection.Add(aSDoc)
                 theRS.MoveNext()
             Next
         End If

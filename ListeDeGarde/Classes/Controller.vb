@@ -2,8 +2,8 @@
     Private WithEvents controlledExcelSheet As Excel.Worksheet
     Private controlledMonth As SMonth
     Private monthloaded As Boolean = False
-    Private monthlystats As MonhtlyStatsC
-    Private WithEvents theMonthlyStatsForm As MontlyStats
+    'Private monthlystats As MonthlyStatsC
+    'Private WithEvents theMonthlyStatsForm As MonthlyStats
     Private SDocStatsCollection As Collection
     Private Const theRestTime As Long = 432000000000
     Private theHighlightedDoc As String
@@ -222,9 +222,9 @@
         Globals.ThisAddIn.theControllerCollection.Remove(controlledExcelSheet.Name)
 
     End Sub
-    Private Sub theMonthlyStatsForm_close() Handles theMonthlyStatsForm.FormClosing
-        SDocStatsCollection = Nothing
-    End Sub
+    'Private Sub theMonthlyStatsForm_close() Handles theMonthlyStatsForm.FormClosing
+    '   SDocStatsCollection = Nothing
+    'End Sub
 
     Private Sub fixAvailability(aDoc As String, aMonth As SMonth, ashift As SShift, Optional firstDoc As String = "")
         Dim theDate As Date = ashift.aDate
@@ -243,8 +243,10 @@
         Dim RecheckShift As SShift
 
         For x As Integer = ashift.aDate.Day - 1 To ashift.aDate.Day + 1
-            If aMonth.Days.Contains(x.ToString()) Then
-                aDay = CType(aMonth.Days.Item(x.ToString()), SDay)
+            Dim yx As Integer = x
+            If aMonth.Days.Exists(Function(theDay) theDay.theDate.Day = yx) Then
+                'If aMonth.Days.Contains(x.ToString()) Then
+                aDay = CType(aMonth.Days.Find(Function(theDay) theDay.theDate.Day = yx), SDay)
                 For Each myShift In aDay.Shifts
 
                     nonDispoStart = ashift.aDate.Ticks + CLng(ashift.ShiftStart) * 600000000 - theRestTime

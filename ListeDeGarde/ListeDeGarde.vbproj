@@ -32,10 +32,10 @@
     </StartupObject>
     <IsWebBootstrapper>False</IsWebBootstrapper>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <PublishUrl>C:\Users\Martin\Documents\Scheduling Mira\Published Tool\</PublishUrl>
+    <PublishUrl>C:\Users\sel4_000\Documents\Scheduling Mira\Published Tool\</PublishUrl>
     <InstallUrl />
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>1.0.0.8</ApplicationVersion>
+    <ApplicationVersion>1.0.0.10</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>7</UpdateInterval>
@@ -231,12 +231,6 @@
     <Compile Include="Forms\DrInterface\DrInterfaceForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MonthlyStats\MonthlyStats.Designer.vb">
-      <DependentUpon>MonthlyStats.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\MonthlyStats\MonthlyStats.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Forms\GetNonDispos\GetNonDispos.Designer.vb">
       <DependentUpon>GetNonDispos.vb</DependentUpon>
     </Compile>
@@ -281,9 +275,6 @@
     <Compile Include="Forms\ShiftInterface\ShiftInterface.xaml.vb">
       <DependentUpon>ShiftInterface.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MonthlyStats\MonthlyStatsC.xaml.vb">
-      <DependentUpon>MonthlyStatsC.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Varia\Using EventsModules\UseDelegateM.vb" />
     <Compile Include="CustomTaskPanes\MyYearMonthPicker\MyYearMonthPicker.xaml.vb">
       <DependentUpon>MyYearMonthPicker.xaml</DependentUpon>
@@ -303,9 +294,6 @@
     <EmbeddedResource Include="Forms\DrInterface\DrInterfaceForm.resx">
       <DependentUpon>DrInterfaceForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MonthlyStats\MonthlyStats.resx">
-      <DependentUpon>MonthlyStats.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\GetNonDispos\GetNonDispos.resx">
       <DependentUpon>GetNonDispos.vb</DependentUpon>
     </EmbeddedResource>
@@ -323,7 +311,9 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
-    <None Include="ListeDeGarde_TemporaryKey.pfx" />
+    <None Include="..\..\..\..\Scheduling Mira\Published Tool\ListeDeGarde_TemporaryKey.pfx">
+      <Link>ListeDeGarde_TemporaryKey.pfx</Link>
+    </None>
     <None Include="Varia\app.config" />
     <None Include="Varia\ListeDeGarde_TemporaryKey.pfx" />
     <None Include="My Project\DataSources\SDoc.datasource" />
@@ -427,10 +417,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Forms\MonthlyStats\MonthlyStatsC.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="CustomTaskPanes\MonthlyDocStats\MonthlyDocStatsTP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -466,7 +452,8 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>ListeDeGarde_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <MyType>Windows</MyType>

@@ -14,16 +14,19 @@ Public Class DocExpectations
 
 
     End Sub
+
     Private Sub DrawGrid()
 
         Dim aHorizStackPanel As StackPanel
         Dim aLabel As Label
         Dim aTextBox As TextBox
         Dim aShift As SShiftType
-        ' Add any initialization after the InitializeComponent() call.
+        Dim aSDoc As SDoc
+
+        'If controller exists, get it
         If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
         Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
-        Dim aSDoc As SDoc
+
 
         MyPanel.Children.Clear()
 
@@ -159,7 +162,6 @@ Public Class DocExpectations
 
     End Sub
 
-
     Private Sub TextHasChanged(ByVal sender As Object, ByVal e As Windows.RoutedEventArgs)
         Dim myTextBox As TextBox
         myTextBox = CType(sender, TextBox)
@@ -170,30 +172,7 @@ Public Class DocExpectations
         End If
 
         CalculateTotals()
-        'Dim mySplit As String() = myTextBox.Name.Split(New Char() {"_"c})
-        'Dim x As Integer
-        'Dim aObject As Object
-        'Dim aTextBox As TextBox
-        'Dim aTotal As Integer = 0
-        'For x = 1 To 5
-        '    aObject = MyPanel.FindName(mySplit(0) + "_" + x.ToString())
-        '    aTextBox = CType(aObject, TextBox)
-        '    aTotal = aTotal + CInt(aTextBox.Text)
-        'Next
-        'aObject = MyPanel.FindName("Total_" + mySplit(0))
-        'aTextBox = CType(aObject, TextBox)
-        'aTextBox.Text = CStr(aTotal)
 
-        'Dim aSDoc As SDoc
-        'aTotal = 0
-        'For Each aSDoc In theDocCollection
-        '    aObject = MyPanel.FindName(aSDoc.Initials + "_" + mySplit(1))
-        '    aTextBox = CType(aObject, TextBox)
-        '    aTotal = aTotal + CInt(aTextBox.Text)
-        'Next
-        'aObject = MyPanel.FindName("Total_" + mySplit(1))
-        'aTextBox = CType(aObject, TextBox)
-        'aTextBox.Text = CStr(aTotal)
     End Sub
 
     Private Sub Edit_Template_Checked(sender As Object, e As Windows.RoutedEventArgs) Handles Edit_Template.Checked

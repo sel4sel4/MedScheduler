@@ -112,9 +112,6 @@ C:\Users\sel4_000\Documents\Visual Studio 2013\Projects\ListeDeGarde\ListeDeGard
 C:\Users\sel4_000\Documents\Visual Studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\CustomTaskPanes\MyYearMonthPicker\MyYearMonthPicker.g.vb
 C:\Users\sel4_000\Documents\Visual Studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\Forms\GetNonDispos\GetNonDispoC.baml
 C:\Users\sel4_000\Documents\Visual Studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\Forms\GetNonDispos\GetNonDispoC.g.vb
-C:\Users\sel4_000\Documents\Visual Studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde.MontlyStats.resources
 C:\Users\sel4_000\Documents\Visual Studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\ListeDeGarde.GetNonDispos.resources
-C:\Users\sel4_000\Documents\Visual Studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\Forms\MonthlyStats\MonthlyStatsC.baml
-C:\Users\sel4_000\Documents\Visual Studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\Forms\MonthlyStats\MonthlyStatsC.g.vb
 C:\Users\sel4_000\Documents\Visual Studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\CustomTaskPanes\MonthlyDocStats\MonthlyDocStatsTP.baml
 C:\Users\sel4_000\Documents\Visual Studio 2013\Projects\ListeDeGarde\ListeDeGarde\obj\Debug\CustomTaskPanes\MonthlyDocStats\MonthlyDocStatsTP.g.vb
