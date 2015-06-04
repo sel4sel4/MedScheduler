@@ -4,7 +4,7 @@
     Private monthloaded As Boolean = False
     'Private monthlystats As MonthlyStatsC
     'Private WithEvents theMonthlyStatsForm As MonthlyStats
-    Private SDocStatsCollection As Collection
+    Private SDocStatsCollection As List(Of SDocStats)
     Private Const theRestTime As Long = 432000000000
     Private theHighlightedDoc As String
     Private theCustomTaskPane As Microsoft.Office.Tools.CustomTaskPane
@@ -12,6 +12,12 @@
     Public ReadOnly Property aControlledMonth() As SMonth
         Get
             Return controlledMonth
+        End Get
+    End Property
+
+    Public ReadOnly Property aControlledExcelSheet() As Excel.Worksheet
+        Get
+            Return controlledExcelSheet
         End Get
     End Property
     Public ReadOnly Property pHighlightedDoc() As String
@@ -179,8 +185,9 @@
                 If aShift.aRange.Address = Target.Address Then
                     'make current Doc dispo again
                     If Not IsNothing(aShift.Doc) Then
-                        If aShift.DocAvailabilities.Contains(aShift.Doc) Then
-                            adocAvail = CType(aShift.DocAvailabilities.Item(aShift.Doc), SDocAvailable)
+                        If aShift.DocAvailabilities.Exists(Function(xy) xy.DocInitial = aShift.Doc) Then
+                            'adocAvail = CType(aShift.DocAvailabilities.Find(Function(xy) xy.DocInitial = aShift.Doc), SDocAvailable)
+                            adocAvail = aShift.DocAvailabilities.Find(Function(xy) xy.DocInitial = aShift.Doc)
                             adocAvail.Availability = PublicEnums.Availability.Dispo
                             firstDoc = aShift.Doc
                             anExitNotice = True
@@ -194,8 +201,8 @@
                         fixAvailability(firstDoc, controlledMonth, aShift, firstDoc)
                         aShift.Doc = ""
                     Else
-                        If aShift.DocAvailabilities.Contains(CStr(Target.Value)) Then
-                            adocAvail = CType(aShift.DocAvailabilities.Item(Target.Value), SDocAvailable)
+                        If aShift.DocAvailabilities.Exists(Function(xy) xy.DocInitial = CStr(Target.Value)) Then
+                            adocAvail = CType(aShift.DocAvailabilities.Find(Function(xy) xy.DocInitial = CStr(Target.Value)), SDocAvailable)
                             adocAvail.Availability = PublicEnums.Availability.Assigne
                             fixAvailability(CStr(Target.Value), controlledMonth, aShift, firstDoc)
                             aShift.Doc = CStr(Target.Value)
@@ -219,7 +226,9 @@
     End Sub
     Private Sub controlledExcelSheet_BeforeDelete() Handles controlledExcelSheet.BeforeDelete
 
-        Globals.ThisAddIn.theControllerCollection.Remove(controlledExcelSheet.Name)
+        'Globals.ThisAddIn.theControllerCollection.Remove(controlledExcelSheet.Name)
+        Globals.ThisAddIn.theControllerCollection.RemoveAll(Function(xy) xy.aControlledMonth.Month = Me.aControlledMonth.Month And _
+                                                                        xy.aControlledMonth.Year = Me.aControlledMonth.Year)
 
     End Sub
     'Private Sub theMonthlyStatsForm_close() Handles theMonthlyStatsForm.FormClosing
@@ -234,12 +243,12 @@
         Dim theStartDay As Integer = theDate.Day - 1
         Dim theStopDay As Integer = theDate.Day + 1
         Dim myShift As SShift
-        Dim aDay As SDay = CType(aMonth.Days(ashift.aDate.Day), SDay)
+        Dim aDay As SDay = CType(aMonth.Days.Find(Function(xY) ashift.aDate.Day = xY.theDate.Day), SDay)
         Dim nonDispoStart As Long
         Dim nonDispoStop As Long
         Dim shftStop As Long
         Dim shftStart As Long
-        Dim RecheckCollection As New Collection
+        Dim RecheckCollection As New List(Of SShift)
         Dim RecheckShift As SShift
 
         For x As Integer = ashift.aDate.Day - 1 To ashift.aDate.Day + 1
@@ -258,8 +267,8 @@
                     If firstDoc <> "" Then 'do opposite of the top one
                         'then check if this doc is assigned in prevous or next day
                         'if yes redo fixavailability on either or both of those if not leave as is
-                        If myShift.DocAvailabilities.Contains(firstDoc) Then
-                            thedocAvail = CType(myShift.DocAvailabilities.Item(firstDoc), SDocAvailable)
+                        If myShift.DocAvailabilities.Exists(Function(xy) xy.DocInitial = firstDoc) Then
+                            thedocAvail = CType(myShift.DocAvailabilities.Find(Function(xy) xy.DocInitial = firstDoc), SDocAvailable)
                             If thedocAvail.Availability = PublicEnums.Availability.Assigne Then
                                 RecheckCollection.Add(myShift)
                             End If
@@ -270,7 +279,7 @@
                                        (shftStop > nonDispoStart And shftStop < nonDispoStop) Or _
                                        (shftStart > nonDispoStart And shftStop < nonDispoStop) Then
 
-                        thedocAvail = CType(myShift.DocAvailabilities.Item(aDoc), SDocAvailable)
+                        thedocAvail = CType(myShift.DocAvailabilities.Find(Function(xy) xy.DocInitial = aDoc), SDocAvailable)
                         If thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
                                 thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
                             thedocAvail.Availability = PublicEnums.Availability.NonDispoTemporaire
@@ -280,8 +289,8 @@
                         If firstDoc <> "" Then 'do opposite of the top one
                             'then check if this doc is assigned in prevous or next day
                             'if yes redo fixavailability on either or both of those if not leave as is
-                            If myShift.DocAvailabilities.Contains(firstDoc) Then
-                                thedocAvail = CType(myShift.DocAvailabilities.Item(firstDoc), SDocAvailable)
+                            If myShift.DocAvailabilities.Exists(Function(xy) xy.DocInitial = firstDoc) Then
+                                thedocAvail = CType(myShift.DocAvailabilities.Find(Function(xy) xy.DocInitial = firstDoc), SDocAvailable)
                                 If thedocAvail.Availability <> PublicEnums.Availability.NonDispoPermanente And _
                                 thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
                                     thedocAvail.Availability = PublicEnums.Availability.Dispo
@@ -338,14 +347,14 @@
         If Not theCustomTaskPane Is Nothing Then
             If theCustomTaskPane.Visible = True Then
 
-                Dim theDocCollection As Collection = SDoc.LoadAllDocsPerMonth(controlledMonth.Year, controlledMonth.Month)
+                Dim theDocCollection As List(Of SDoc) = SDoc.LoadAllDocsPerMonth(controlledMonth.Year, controlledMonth.Month)
                 Dim aSDoc As SDoc
                 Dim ashift As SShift
                 Dim aDay As SDay
                 Dim aDOcAvail As SDocAvailable
                 Dim theSDocStats As SDocStats
                 If SDocStatsCollection Is Nothing Then
-                    SDocStatsCollection = New Collection
+                    SDocStatsCollection = New List(Of SDocStats)
                     For Each aSDoc In theDocCollection
                         theSDocStats = New SDocStats(aSDoc.Initials, _
                                                                    aSDoc.Shift1, _
@@ -353,7 +362,7 @@
                                                                   aSDoc.Shift3, _
                                                                   aSDoc.Shift4, _
                                                                   aSDoc.Shift5)
-                        SDocStatsCollection.Add(theSDocStats, aSDoc.Initials)
+                        SDocStatsCollection.Add(theSDocStats)
 
                     Next
                 Else
@@ -374,7 +383,7 @@
                         shiftCount = 0
                         For Each ashift In aDay.Shifts
                             If ashift.ShiftType > 5 Then Exit For
-                            aDOcAvail = CType(ashift.DocAvailabilities(theSDocStats.Initials), SDocAvailable)
+                            aDOcAvail = CType(ashift.DocAvailabilities.Find(Function(xy) xy.DocInitial = theSDocStats.Initials), SDocAvailable)
                             If aDOcAvail.Availability = PublicEnums.Availability.Assigne Then
                                 Select Case ashift.ShiftType
                                     Case 1
@@ -421,7 +430,7 @@
 
                         For Each ashift In aDay.Shifts
                             If ashift.ShiftType > 5 Then Exit For
-                            aDOcAvail = CType(ashift.DocAvailabilities(theHighlightedDoc), SDocAvailable)
+                            aDOcAvail = CType(ashift.DocAvailabilities.Find(Function(xy) xy.DocInitial = theHighlightedDoc), SDocAvailable)
                             If aDOcAvail.Availability = PublicEnums.Availability.Assigne Then
                                 'populate simple array of week counts
                                 theArray(weekCount) = theArray(weekCount) + 1
@@ -446,11 +455,11 @@
     Private Sub SetUpPermNonDispos()
         Dim theSNonDispo As New SNonDispo
         Dim aSNonDispo As SNonDispo
-        Dim aCollection As Collection
+        Dim aCollection As List(Of SNonDispo)
         Dim aDay As SDay
         Dim ashift As SShift
         Dim theSDoc As New SDoc(controlledMonth.Year, controlledMonth.Month)
-        Dim docCollection As Collection = controlledMonth.DocList
+        Dim docCollection As List(Of SDoc) = controlledMonth.DocList
         Dim aSDoc As SDoc
         Dim nonDispoStart As Long
         Dim nonDispoStop As Long
@@ -485,9 +494,12 @@
                     If (controlledMonth.Month = 1 And aSNonDispo.DateStart.Day = 15 And aSDoc.Initials = "DG" And controlledMonth.Year = 2014) Then
                         Dim test As Integer = 1
                     End If
+
+
                     For y As Integer = startday - 1 To stopDay
-                        If controlledMonth.Days.Contains(CStr(y)) Then
-                            aDay = CType(controlledMonth.Days.Item(y), SDay)
+                        Dim yx As Integer = y
+                        If controlledMonth.Days.Exists(Function(theDay) theDay.theDate.Day = yx) Then
+                            aDay = CType(controlledMonth.Days.Find(Function(theDay) theDay.theDate.Day = yx), SDay)
                             For Each ashift In aDay.Shifts
 
                                 shftStop = ashift.aDate.Ticks + CLng(ashift.ShiftStop) * 600000000
@@ -499,7 +511,7 @@
 
 
                                     Dim thedocAvail As SDocAvailable
-                                    thedocAvail = CType(ashift.DocAvailabilities.Item(aSDoc.Initials), SDocAvailable)
+                                    thedocAvail = CType(ashift.DocAvailabilities.Find(Function(xy) xy.DocInitial = aSDoc.Initials), SDocAvailable)
                                     'check if doc is assigned and ask to clear (provide some info.. make surutlisé
                                     If thedocAvail.Availability <> PublicEnums.Availability.Assigne Then
                                         thedocAvail.Availability = PublicEnums.Availability.NonDispoPermanente
@@ -584,7 +596,7 @@
     End Sub
     Private Sub SetupAssignedDocs()
         Dim aTest As New SDocAvailable(DateSerial(aControlledMonth.Year, aControlledMonth.Month, 1))
-        Dim aCollection As Collection
+        Dim aCollection As List(Of SDocAvailable)
         Dim theDay2 As SDay
         Dim theShift2 As SShift
         Dim theDocAvailble As SDocAvailable
@@ -592,12 +604,12 @@
         If Not IsNothing(aCollection) Then
             Dim theAssignedDocs As SDocAvailable
             For Each theAssignedDocs In aCollection
-                theDay2 = CType(controlledMonth.Days.Item(theAssignedDocs.Date_.Day), SDay)
-                If theDay2.Shifts.Contains(theAssignedDocs.ShiftType.ToString()) Then
-                    theShift2 = CType(theDay2.Shifts.Item(theAssignedDocs.ShiftType.ToString()), SShift)
+                theDay2 = CType(controlledMonth.Days.Find(Function(xy) theAssignedDocs.Date_.Day = xy.theDate.Day), SDay)
+                If theDay2.Shifts.Exists(Function(xy) xy.ShiftType = theAssignedDocs.ShiftType) Then
+                    theShift2 = CType(theDay2.Shifts.Find((Function(xy) xy.ShiftType = theAssignedDocs.ShiftType)), SShift)
                     theShift2.Doc = theAssignedDocs.DocInitial
-                    If theShift2.DocAvailabilities.Contains(theAssignedDocs.DocInitial) Then
-                        theDocAvailble = CType(theShift2.DocAvailabilities(theAssignedDocs.DocInitial), SDocAvailable)
+                    If theShift2.DocAvailabilities.Exists(Function(xy) xy.DocInitial = theAssignedDocs.DocInitial) Then
+                        theDocAvailble = CType(theShift2.DocAvailabilities.Find(Function(xy) xy.DocInitial = theAssignedDocs.DocInitial), SDocAvailable)
                         theDocAvailble.SetAvailabilityfromDB = PublicEnums.Availability.Assigne
                         theShift2.aRange.Value = theAssignedDocs.DocInitial
                         fixAvailability(theShift2.Doc, controlledMonth, theShift2)

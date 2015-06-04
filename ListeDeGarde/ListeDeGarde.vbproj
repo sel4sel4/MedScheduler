@@ -215,7 +215,6 @@
     <AppDesigner Include="My Project\" />
     <Compile Include="Classes\Controller.vb" />
     <Compile Include="Classes\Classes.vb" />
-    <Compile Include="Classes\RemotingServer.vb" />
     <Compile Include="Forms\DocExpectations\DocExpectations.xaml.vb">
       <DependentUpon>DocExpectations.xaml</DependentUpon>
     </Compile>

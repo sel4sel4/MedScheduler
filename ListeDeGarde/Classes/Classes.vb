@@ -80,10 +80,10 @@ End Class
 
 Public Class SDay
     Private pDate As DateTime 'uniqueID
-    Private pShifts As Collection
+    Private pShifts As List(Of SShift)
     Private pMonth As SMonth
 
-    ReadOnly Property Shifts() As Collection
+    ReadOnly Property Shifts() As List(Of SShift)
         Get
             Return pShifts
         End Get
@@ -102,7 +102,7 @@ Public Class SDay
     Public Sub New(aDay As Integer, aMonth As Integer, aYear As Integer, ByRef CMonth As SMonth)
         pDate = New DateTime(aYear, aMonth, aDay)
         pMonth = CMonth
-        pShifts = New Collection
+        pShifts = New List(Of SShift)
         Dim addShift As Boolean = False
         'populate the shift collection by cycling through 
         'the active SShiftTypes collection
@@ -134,7 +134,7 @@ Public Class SDay
                                                       aShiftType.Description, _
                                                       Me)
 
-                    pShifts.Add(theShift, aShiftType.ShiftType.ToString())
+                    pShifts.Add(theShift)
                 End If
             End If
         Next
@@ -149,7 +149,7 @@ Public Class SShift
     Private pShiftType As Integer
     Private pDescription As String
     Private pDoc As String
-    Private pDocAvailabilities As Collection
+    Private pDocAvailabilities As List(Of SDocAvailable)
     Private pDate As DateTime
     Private pStatus As Integer
     Private pRange As Excel.Range
@@ -204,11 +204,11 @@ Public Class SShift
             Return pShiftStop
         End Get
     End Property
-    Public Property DocAvailabilities() As Collection
+    Public Property DocAvailabilities() As List(Of SDocAvailable)
         Get
             Return pDocAvailabilities
         End Get
-        Set(ByVal value As Collection)
+        Set(ByVal value As List(Of SDocAvailable))
             pDocAvailabilities = value
         End Set
     End Property
@@ -227,7 +227,7 @@ Public Class SShift
         pDescription = aDescription
         pDay = aDay
 
-        pDocAvailabilities = New Collection
+        pDocAvailabilities = New List(Of SDocAvailable)
         Dim theSDocAvailable As SDocAvailable
         Dim aSDoc As SDoc
         Dim theDispo As PublicEnums.Availability
@@ -254,7 +254,7 @@ Public Class SShift
                                                                theDispo, _
                                                                pDate, _
                                                                pShiftType)
-            pDocAvailabilities.Add(theSDocAvailable, aSDoc.Initials)
+            pDocAvailabilities.Add(theSDocAvailable)
         Next
 
     End Sub
@@ -1498,7 +1498,7 @@ Public Class SDocAvailable
             theDBAC.CExecuteDB(.SQLStringDelete, numaffected)
         End With
     End Sub
-    Public Function doesDataExistForThisMonth() As Collection
+    Public Function doesDataExistForThisMonth() As List(Of SDocAvailable)
 
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
@@ -1515,7 +1515,7 @@ Public Class SDocAvailable
 
         If theRS.RecordCount > 0 Then
             Dim aSDocAvailable As SDocAvailable
-            Dim aCollection As New Collection
+            Dim aCollection As New List(Of SDocAvailable)
             theRS.MoveFirst()
             For x As Integer = 1 To theRS.RecordCount
                 aSDocAvailable = New SDocAvailable
@@ -1669,7 +1669,7 @@ Public Class SNonDispo
         End With
         If theRS.RecordCount > 0 Then Return False Else Return True
     End Function
-    Public Function GetNonDispoListForDoc(aDocInitials As String, aYear As Integer, aMonth As Integer) As Collection
+    Public Function GetNonDispoListForDoc(aDocInitials As String, aYear As Integer, aMonth As Integer) As List(Of SNonDispo)
         Dim theBuiltSql As New SQLStrBuilder
         Dim theRS As New ADODB.Recordset
         Dim theDBAC As New DBAC
@@ -1688,7 +1688,7 @@ Public Class SNonDispo
         Dim aSNonDispo As SNonDispo
         Dim theCount As Integer = theRS.RecordCount
         If theCount > 0 Then
-            Dim aCollection As New Collection
+            Dim aCollection As New List(Of SNonDispo)
             theRS.MoveFirst()
             For x As Integer = 1 To theCount
                 aSNonDispo = New SNonDispo
@@ -1697,7 +1697,7 @@ Public Class SNonDispo
                 If Not IsDBNull(theRS.Fields(pTimeStart.theSQLName).Value) Then aSNonDispo.TimeStart = CInt(theRS.Fields(pTimeStart.theSQLName).Value)
                 If Not IsDBNull(theRS.Fields(pDateStop.theSQLName).Value) Then aSNonDispo.DateStop = CDate(theRS.Fields(pDateStop.theSQLName).Value)
                 If Not IsDBNull(theRS.Fields(pTimeStop.theSQLName).Value) Then aSNonDispo.TimeStop = CInt(theRS.Fields(pTimeStop.theSQLName).Value)
-                aCollection.Add(aSNonDispo, x.ToString())
+                aCollection.Add(aSNonDispo)
                 theRS.MoveNext()
             Next
             Return aCollection

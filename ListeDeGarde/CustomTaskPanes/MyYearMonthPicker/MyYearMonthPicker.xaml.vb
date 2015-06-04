@@ -16,7 +16,7 @@ Public Class YearMonthPickerC
         End If
 
         'if sheet already exists exit
-        If Globals.ThisAddIn.theControllerCollection.Contains(Me.combo2.Text + "-" + Me.combo1.Text) Then Exit Sub
+        If Globals.ThisAddIn.theControllerCollection.Exists(Function(xy) xy.aControlledMonth.Month = Me.combo2.SelectedIndex + 1 And CInt(Me.combo1.Text) = xy.aControlledMonth.Year) Then Exit Sub
 
         'create a new sheet
         Globals.ThisAddIn.xlSheet1 = _
@@ -35,7 +35,7 @@ Public Class YearMonthPickerC
         'For Each aSDoc In theSDoc.DocList
         '    Me.addDocButton(aSDoc.FirstName + " " + aSDoc.LastName, aSDoc.Initials)
         'Next
-        Dim theDocCollection As Collection = SDoc.LoadAllDocsPerMonth(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
+        Dim theDocCollection As List(Of SDoc) = SDoc.LoadAllDocsPerMonth(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
         RemoveDocButtons()
         Dim aSDoc As SDoc
         For Each aSDoc In theDocCollection
@@ -47,7 +47,7 @@ Public Class YearMonthPickerC
         'create a controller instance and add it to the global collection
         theController = New Controller(Globals.ThisAddIn.xlSheet1, CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1, Me.combo2.Text)
 
-        Globals.ThisAddIn.theControllerCollection.Add(theController, Globals.ThisAddIn.xlSheet1.Name)
+        Globals.ThisAddIn.theControllerCollection.Add(theController)
         Initialles_Load()
 
     End Sub
@@ -77,11 +77,10 @@ Public Class YearMonthPickerC
         Next
     End Sub
 
-    Private Sub onBtnClick(ByVal sender As Object, ByVal e As Windows.RoutedEventArgs)
+    Private Sub onBtnClick(ByVal sender As Object, ByVal e As Windows.RoutedEventArgs) 'highlight button
         Dim aButton As Button = CType(sender, Button)
-        'Debug.WriteLine(aButton.Content)
-        If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
-        Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
+        If Not Globals.ThisAddIn.theControllerCollection.Exists(Function(xy) Globals.ThisAddIn.Application.ActiveSheet.name = xy.aControlledExcelSheet.Name) Then Exit Sub
+        Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Find(Function(xy) Globals.ThisAddIn.Application.ActiveSheet.name = xy.aControlledExcelSheet.Name)
         aController.HighLightDocAvailablilities(aButton.Name)
 
     End Sub
@@ -101,12 +100,12 @@ Public Class YearMonthPickerC
         '    Me.addDocButton(aSDoc.FirstName + " " + aSDoc.LastName, aSDoc.Initials)
         'Next
         If Globals.ThisAddIn.theControllerCollection.Count < 1 Then Exit Sub
-        If Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then
-            theController = Globals.ThisAddIn.theControllerCollection(Globals.ThisAddIn.Application.ActiveSheet.name)
+        If Globals.ThisAddIn.theControllerCollection.Exists(Function(xy) Globals.ThisAddIn.Application.ActiveSheet.name = xy.aControlledExcelSheet.Name) Then
+            theController = Globals.ThisAddIn.theControllerCollection.Find(Function(xy) Globals.ThisAddIn.Application.ActiveSheet.name = xy.aControlledExcelSheet.Name)
 
             If Not IsNothing(theController) Then
                 Me.MoisAnnee.Content = theController.aControlledMonth.Year.ToString + "-" + monthstrings(theController.aControlledMonth.Month - 1)
-                Dim theDocCollection As Collection = SDoc.LoadAllDocsPerMonth(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
+                Dim theDocCollection As List(Of SDoc) = SDoc.LoadAllDocsPerMonth(CInt(Me.combo1.Text), Me.combo2.SelectedIndex + 1)
                 RemoveDocButtons()
                 Dim aSDoc As SDoc
                 For Each aSDoc In theDocCollection
@@ -131,8 +130,8 @@ Public Class YearMonthPickerC
 
     Private Sub StatsBtn_Click(sender As Object, e As Windows.RoutedEventArgs) Handles StatsBtn.Click
         'lauch action in controller
-        If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
-        theController = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
+        If Not Globals.ThisAddIn.theControllerCollection.Exists(Function(xy) Globals.ThisAddIn.Application.ActiveSheet.name = xy.aControlledExcelSheet.Name) Then Exit Sub
+        theController = Globals.ThisAddIn.theControllerCollection.Find(Function(xy) Globals.ThisAddIn.Application.ActiveSheet.name = xy.aControlledExcelSheet.Name)
         theController.statsMensuelles()
 
 
@@ -140,8 +139,8 @@ Public Class YearMonthPickerC
     End Sub
 
     Private Sub Button_Click_1(sender As Object, e As Windows.RoutedEventArgs)
-        If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
-        theController = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
+        If Not Globals.ThisAddIn.theControllerCollection.Exists(Function(xy) Globals.ThisAddIn.Application.ActiveSheet.name = xy.aControlledExcelSheet.Name) Then Exit Sub
+        theController = Globals.ThisAddIn.theControllerCollection.Find(Function(xy) Globals.ThisAddIn.Application.ActiveSheet.name = xy.aControlledExcelSheet.Name)
         Dim myRange As Excel.Range = CType(Globals.ThisAddIn.Application.Selection, Global.Microsoft.Office.Interop.Excel.Range)
         Dim aDAy As SDay
         Dim aShift As SShift
@@ -150,7 +149,7 @@ Public Class YearMonthPickerC
             For Each aDAy In theController.aControlledMonth.Days
                 For Each aShift In aDAy.Shifts
                     If myRange.Address = aShift.aRange.Address Then
-                        aDocAvail = CType(aShift.DocAvailabilities.Item(Me.Initialles.SelectedValue), SDocAvailable)
+                        aDocAvail = CType(aShift.DocAvailabilities.Find(Function(xy) xy.DocInitial = Me.Initialles.SelectedValue), SDocAvailable)
                         aDocAvail.Availability = Availability.Assigne
                         theController.fixlist(aShift)
                         myRange.Value = Me.Initialles.SelectedValue
@@ -161,7 +160,7 @@ Public Class YearMonthPickerC
     End Sub
 
     Private Sub Initialles_Load()
-        Dim aCollection As Collection = SDoc.LoadAllDocsPerMonth(theController.aControlledMonth.Year, theController.aControlledMonth.Month)
+        Dim aCollection As List(Of SDoc) = SDoc.LoadAllDocsPerMonth(theController.aControlledMonth.Year, theController.aControlledMonth.Month)
         Me.Initialles.ItemsSource = aCollection
         Me.Initialles.DisplayMemberPath = "Initials"
         Me.Initialles.SelectedValuePath = "Initials"

@@ -3,7 +3,7 @@ Public Class ShiftInterfaceC
     Private aYearP As Integer
     Private aMonthP As Integer
     Private changesOngoing As Boolean = False
-    Private myShiftTypeCollection As Collection
+    Private myShiftTypeCollection As List(Of SShiftType)
     Private aSShiftType As SShiftType
     Private aNewSShiftType As SShiftType
 
@@ -29,8 +29,8 @@ Public Class ShiftInterfaceC
         aSShift = CType(ShiftListView.Items(ShiftListView.SelectedIndex), SShiftType)
     End Sub
     Private Sub GetYearMonth()
-        If Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then
-            Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
+        If Globals.ThisAddIn.theControllerCollection.Exists(Function(xy) xy.aControlledExcelSheet.Name = Globals.ThisAddIn.Application.ActiveSheet.name) Then
+            Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Find(Function(xy) xy.aControlledExcelSheet.Name = Globals.ThisAddIn.Application.ActiveSheet.name)
             aYearP = aController.aControlledMonth.Year
             aMonthP = aController.aControlledMonth.Month
         Else

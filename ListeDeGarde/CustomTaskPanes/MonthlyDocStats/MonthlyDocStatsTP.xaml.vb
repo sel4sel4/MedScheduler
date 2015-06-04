@@ -3,10 +3,10 @@ Imports System.Windows.Data
 Imports System.Windows.Media
 
 Public Class MonthlyDocStatsTP
-    Private aCollection As Collection
+    Private aCollection As List(Of SDocStats)
     Private aArray As Integer()
 
-    Public Sub loadarray(theCollection As Collection, theArray As Integer())
+    Public Sub loadarray(theCollection As List(Of SDocStats), theArray As Integer())
         aCollection = theCollection
         aArray = theArray
         DrawGrid()
@@ -21,8 +21,10 @@ Public Class MonthlyDocStatsTP
     Private Sub DrawGrid()
 
         If Globals.ThisAddIn.theControllerCollection.Count < 1 Then Exit Sub
-        If Not Globals.ThisAddIn.theControllerCollection.Contains(CStr(Globals.ThisAddIn.Application.ActiveSheet.name)) Then Exit Sub
-        Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
+        'If Not Globals.ThisAddIn.theControllerCollection.Contains(CStr(Globals.ThisAddIn.Application.ActiveSheet.name)) Then Exit Sub
+        If Not Globals.ThisAddIn.theControllerCollection.Exists(Function(xy) Globals.ThisAddIn.Application.ActiveSheet.name = xy.aControlledExcelSheet.Name) Then Exit Sub
+
+        Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Find(Function(xy) Globals.ThisAddIn.Application.ActiveSheet.name = xy.aControlledExcelSheet.Name)
 
         'clear everything
         MyPanel.Children.Clear()

@@ -4,7 +4,7 @@ Imports System.Windows.Media
 
 Public Class DocExpectations
 
-    Private theDocCollection As Collection
+    Private theDocCollection As List(Of SDoc)
     Public Sub New()
 
         ' This call is required by the designer.
@@ -24,8 +24,8 @@ Public Class DocExpectations
         Dim aSDoc As SDoc
 
         'If controller exists, get it
-        If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
-        Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
+        If Not Globals.ThisAddIn.theControllerCollection.Exists(Function(xy) xy.aControlledExcelSheet.Name = Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
+        Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Find(Function(xy) xy.aControlledExcelSheet.Name = Globals.ThisAddIn.Application.ActiveSheet.name)
 
 
         MyPanel.Children.Clear()

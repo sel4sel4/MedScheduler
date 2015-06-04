@@ -32,8 +32,8 @@ Public Class Ribbon1
     End Sub
 
     Private Sub aForm1_close() Handles aform1.FormClosing
-        If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
-        Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
+        If Not Globals.ThisAddIn.theControllerCollection.Exists(Function(xy) xy.aControlledExcelSheet.Name = Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
+        Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Find(Function(xy) xy.aControlledExcelSheet.Name = Globals.ThisAddIn.Application.ActiveSheet.name)
         aController.resetSheetExt()
     End Sub
 
@@ -41,8 +41,8 @@ Public Class Ribbon1
     Private Sub ExpectDoc_Click(sender As Object, e As RibbonControlEventArgs) Handles ExpectDoc.Click
         Dim theController As Controller
         If Globals.ThisAddIn.theControllerCollection.Count < 1 Then Exit Sub
-        If Not Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
-        theController = Globals.ThisAddIn.theControllerCollection(Globals.ThisAddIn.Application.ActiveSheet.name)
+        If Not Globals.ThisAddIn.theControllerCollection.Exists(Function(xy) xy.aControlledExcelSheet.Name = Globals.ThisAddIn.Application.ActiveSheet.name) Then Exit Sub
+        theController = Globals.ThisAddIn.theControllerCollection.Find(Function(xy) xy.aControlledExcelSheet.Name = Globals.ThisAddIn.Application.ActiveSheet.name)
 
         Dim aDocExpecationF As DocExpectationsF
         aDocExpecationF = New DocExpectationsF

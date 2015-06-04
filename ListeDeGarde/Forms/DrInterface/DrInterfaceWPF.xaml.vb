@@ -1,7 +1,7 @@
 ﻿Imports System.Windows.Controls
 Public Class DrInterface
     Private waitingForNewSave As SDoc
-    Private myDocCollection As Collection
+    Private myDocCollection As List(Of SDoc)
     Private changesongoing As Boolean = False
     Private aYearP As Integer
     Private aMonthP As Integer
@@ -21,8 +21,8 @@ Public Class DrInterface
         Lock(True)
     End Sub
     Private Sub GetYearMonth()
-        If Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then
-            Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
+        If Globals.ThisAddIn.theControllerCollection.Exists(Function(xy) xy.aControlledExcelSheet.Name = Globals.ThisAddIn.Application.ActiveSheet.name) Then
+            Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Find(Function(xy) xy.aControlledExcelSheet.Name = Globals.ThisAddIn.Application.ActiveSheet.name)
             aYearP = aController.aControlledMonth.Year
             aMonthP = aController.aControlledMonth.Month
         Else

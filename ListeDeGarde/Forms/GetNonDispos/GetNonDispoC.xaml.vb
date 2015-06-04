@@ -16,7 +16,7 @@ Public Class GetNonDispoC
     Private aMonthP As Integer = 0
     Private aYearP As Integer = 0
     Private changesOngoing As Boolean = False
-    Private theNonDispoCollection As Collection
+    Private theNonDispoCollection As List(Of SNonDispo)
 
     Private Sub AddNonDispo_Click(sender As Object, e As Windows.RoutedEventArgs) Handles AddNonDispo.Click
 
@@ -62,8 +62,8 @@ Public Class GetNonDispoC
         Else : CONSTFILEADDRESS = MySettingsGlobal.DataBaseLocation
         End If
 
-        If Globals.ThisAddIn.theControllerCollection.Contains(Globals.ThisAddIn.Application.ActiveSheet.name) Then
-            Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Item(Globals.ThisAddIn.Application.ActiveSheet.name)
+        If Globals.ThisAddIn.theControllerCollection.Exists(Function(xy) xy.aControlledExcelSheet.Name = Globals.ThisAddIn.Application.ActiveSheet.name) Then
+            Dim aController As Controller = Globals.ThisAddIn.theControllerCollection.Find(Function(xy) xy.aControlledExcelSheet.Name = Globals.ThisAddIn.Application.ActiveSheet.name)
             aYearP = aController.aControlledMonth.Year
             aMonthP = aController.aControlledMonth.Month
         Else
@@ -156,7 +156,7 @@ Public Class GetNonDispoC
     End Sub
 
     Private Sub LoadDocList()
-        Dim theSDocCollection As New Collection
+        Dim theSDocCollection As New List(Of SDoc)
         theSDocCollection = SDoc.LoadAllDocsPerMonth(aYearP, aMonthP)
         changesOngoing = True
         If theSDocCollection.Count > 0 Then
