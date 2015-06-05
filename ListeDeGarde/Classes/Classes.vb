@@ -93,7 +93,8 @@ Public Class SMonth
                                  xy.Jeudi = True Or _
                                  xy.Vendredi = True Or _
                                  xy.Samedi = True Or _
-                                 xy.Dimanche = True) Then
+                                 xy.Dimanche = True Or _
+                                 xy.Ferie = True) Then
             Return True
         Else
             Return False
@@ -595,12 +596,12 @@ Public Class SShiftType
             End If
         End If
         theShiftTypeCollection.Sort(AddressOf CompareOrder)
-        Dim aShift As SShiftType
-        Dim counter As Integer = 1
-        For Each aShift In theShiftTypeCollection
-            aShift.AdjustedOrder = counter
-            counter = counter + 1
-        Next
+        'Dim aShift As SShiftType
+        'Dim counter As Integer = 1
+        'For Each aShift In theShiftTypeCollection
+        '    aShift.AdjustedOrder = counter
+        '    counter = counter + 1
+        'Next
         Return theShiftTypeCollection
     End Function
     Public Shared Function loadTemplateShiftTypesFromDB() As List(Of SShiftType)
@@ -679,6 +680,7 @@ Public Class SShiftType
             .SQL_Where(SQLJeudi, "=", True, "or", EnumWhereSubClause.EW_None, 1, False)
             .SQL_Where(SQLVendredi, "=", True, "or", EnumWhereSubClause.EW_None, 1, False)
             .SQL_Where(SQLSamedi, "=", True, "or", EnumWhereSubClause.EW_None, 1, False)
+            .SQL_Where(SQLFerie, "=", True, "or", EnumWhereSubClause.EW_None, 1, False)
             .SQL_Where(SQLDimanche, "=", True, "or", EnumWhereSubClause.EW_end, 1, False)
 
             theDBAC.COpenDB(.SQLStringSelect, theRS)
@@ -1430,6 +1432,8 @@ Public Class SDocStats
         shift5E = aShift5
 
     End Sub
+
+
 
 End Class
 

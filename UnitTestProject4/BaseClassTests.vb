@@ -75,6 +75,10 @@ End Class
         Assert.IsTrue(theInt = 5)
     End Sub
 
+    <TestMethod()> Public Sub stats_calcs_from_DB()
 
+        Dim theInt As Integer = SShiftType.ActiveShiftTypesCountPerMonth(12, 2015)
+        Assert.IsTrue(theInt = 5)
+    End Sub
 End Class
 

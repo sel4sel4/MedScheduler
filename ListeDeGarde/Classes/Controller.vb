@@ -341,9 +341,20 @@
         End With
 
     End Sub
-    Private Sub statsMensuellesUpdate()
-        'pour chaque medecin compter chaque type de shift
 
+    Private Shared Function FindCompiledShifts(xy As SShiftType) As Boolean
+
+        Return xy.Compilation
+
+    End Function
+
+    Private Sub statsMensuellesUpdate()
+        'GetMonthlyCountsFromDB()
+        GetMonthlyCountsFromInstances()
+
+        Dim thetime3 As DateTime
+        Dim thetime4 As DateTime
+        thetime3 = DateTime.Now
         If Not theCustomTaskPane Is Nothing Then
             If theCustomTaskPane.Visible = True Then
 
@@ -357,11 +368,11 @@
                     SDocStatsCollection = New List(Of SDocStats)
                     For Each aSDoc In theDocCollection
                         theSDocStats = New SDocStats(aSDoc.Initials, _
-                                                                   aSDoc.Shift1, _
-                                                                  aSDoc.Shift2, _
-                                                                  aSDoc.Shift3, _
-                                                                  aSDoc.Shift4, _
-                                                                  aSDoc.Shift5)
+                                                                    aSDoc.Shift1, _
+                                                                    aSDoc.Shift2, _
+                                                                    aSDoc.Shift3, _
+                                                                    aSDoc.Shift4, _
+                                                                    aSDoc.Shift5)
                         SDocStatsCollection.Add(theSDocStats)
 
                     Next
@@ -403,6 +414,11 @@
                     Next
                     docCount = docCount + 1
                 Next
+
+                thetime4 = DateTime.Now
+                Dim theticks As Long = thetime4.Ticks - thetime3.Ticks
+                Dim span As TimeSpan = TimeSpan.FromTicks(theticks)
+                System.Diagnostics.Debug.WriteLine(span)
 
                 'Dim bCollection As System.Windows.Forms.Control.ControlCollection = theMonthlyStatsForm.Controls
                 'Dim aElementHost As System.Windows.Forms.Integration.ElementHost = bCollection(0)
@@ -638,5 +654,114 @@
                 fixlist(ashift)
             Next
         Next
+    End Sub
+
+    Private Sub GetMonthlyCountsFromDB()
+        'pour chaque medecin compter chaque type de shift
+        Dim theTime As DateTime
+        Dim theTime2 As DateTime
+        theTime = DateTime.Now
+        Dim aShiftType As SShiftType
+        Dim theBuiltSql As New SQLStrBuilder
+        Dim theRS As New ADODB.Recordset
+        Dim theDBAC As New DBAC
+        Dim theList As New List(Of String)
+        Dim theCompiledShifts As List(Of SShiftType)
+        Dim theDateB = DateSerial(Globals.ThisAddIn.theCurrentController.aControlledMonth.Year, Globals.ThisAddIn.theCurrentController.aControlledMonth.Month, 1)
+        Dim theDateE = DateSerial(Globals.ThisAddIn.theCurrentController.aControlledMonth.Year, Globals.ThisAddIn.theCurrentController.aControlledMonth.Month + 1, 1)
+
+        theCompiledShifts = Globals.ThisAddIn.theCurrentController.aControlledMonth.ShiftTypes.FindAll(AddressOf FindCompiledShifts)
+
+        For Each aShiftType In theCompiledShifts
+
+            With theBuiltSql
+                .SQLClear()
+                .SQL_Select("count(ID)")
+                .SQL_From(TABLE_ScheduleData + " sd2")
+                .SQL_Where("sd2." + SQLInitials, "=", "sd." + SQLInitials, "AND", EnumWhereSubClause.EW_None, 1, True)
+                .SQL_Where("sd2." + SQLDate, ">=", theDateB)
+                .SQL_Where("sd2." + SQLDate, "<", theDateE)
+                .SQL_Where("sd2." + SQLShiftType, "=", aShiftType.ShiftType, "AND")
+
+                theList.Add(.SQLStringSelect)
+            End With
+
+        Next
+
+        With theBuiltSql
+            .SQLClear()
+            .SQL_Select("distinct " + SQLInitials)
+            For Each astring As String In theList
+                .SQL_Select("(" + astring + ")")
+            Next
+
+            .SQL_From(TABLE_ScheduleData + " sd")
+            .SQL_Order_By(SQLInitials)
+
+            theDBAC.COpenDB(.SQLStringSelect, theRS)
+        End With
+        theRS.MoveFirst()
+        Dim theDocInitials(theRS.RecordCount - 1) As String
+        Dim theCounts(theRS.RecordCount - 1, theRS.Fields.Count - 2) As Integer
+        Dim theShiftDescs(theRS.Fields.Count - 1) As String
+
+        For y As Integer = 0 To theRS.RecordCount - 1
+            theDocInitials(y) = theRS.Fields(0).Value
+            For x As Integer = 1 To theRS.Fields.Count - 1
+                If y = 0 Then
+                    theShiftDescs(x) = theCompiledShifts.Item(x - 1).Description
+                End If
+                theCounts(y, x - 1) = theRS.Fields(x).Value
+            Next
+            theRS.MoveNext()
+        Next
+        theTime2 = DateTime.Now
+        Dim theticks As Long = theTime2.Ticks - theTime.Ticks
+        Dim span As TimeSpan = TimeSpan.FromTicks(theticks)
+        System.Diagnostics.Debug.WriteLine(span)
+    End Sub
+
+    Private Sub GetMonthlyCountsFromInstances()
+        'pour chaque medecin compter chaque type de shift
+        Dim theTime5 As DateTime
+        Dim theTime6 As DateTime
+        theTime5 = DateTime.Now
+
+        Dim theDateB = DateSerial(Globals.ThisAddIn.theCurrentController.aControlledMonth.Year, Globals.ThisAddIn.theCurrentController.aControlledMonth.Month, 1)
+        Dim theDateE = DateSerial(Globals.ThisAddIn.theCurrentController.aControlledMonth.Year, Globals.ThisAddIn.theCurrentController.aControlledMonth.Month + 1, 1)
+
+        Dim theDocList As List(Of SDoc) = Globals.ThisAddIn.theCurrentController.aControlledMonth.DocList
+        Dim theCompiledShifts As List(Of SShiftType) = Globals.ThisAddIn.theCurrentController.aControlledMonth.ShiftTypes.FindAll(AddressOf FindCompiledShifts)
+
+        Dim theDocInitials(theDocList.Count - 1) As String
+        Dim theCounts(theDocList.Count - 1, theCompiledShifts.Count - 1) As Integer
+        Dim theShiftDescs(theCompiledShifts.Count - 1) As String
+
+        Dim x As Integer = 0
+
+        For Each aDoc As SDoc In theDocList
+            theDocInitials(x) = aDoc.Initials
+            Dim y As Integer = 0
+            For Each aShiftType As SShiftType In theCompiledShifts
+                If x = 0 Then
+                    theShiftDescs(y) = aShiftType.Description
+                End If
+                For Each aDay As SDay In Globals.ThisAddIn.theCurrentController.aControlledMonth.Days
+                    If aDay.Shifts.Exists(Function(xy) xy.ShiftType = aShiftType.ShiftType) Then
+                        Dim aShift As SShift = aDay.Shifts.Find(Function(xy) xy.ShiftType = aShiftType.ShiftType)
+                        If aShift.Doc = aDoc.Initials Then
+                            theCounts(x, y) = theCounts(x, y) + 1
+                        End If
+                    End If
+
+                Next
+                y = y + 1
+            Next
+            x = x + 1
+        Next
+        theTime6 = DateTime.Now
+        Dim theticks As Long = theTime6.Ticks - theTime5.Ticks
+        Dim span As TimeSpan = TimeSpan.FromTicks(theticks)
+        System.Diagnostics.Debug.WriteLine(span)
     End Sub
 End Class
