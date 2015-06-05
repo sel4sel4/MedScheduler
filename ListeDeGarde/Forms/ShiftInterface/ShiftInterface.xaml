@@ -18,7 +18,7 @@
 		<ComboBox x:Name="StartHour" HorizontalAlignment="Left" Margin="119.64,100,0,0" VerticalAlignment="Top" Width="46" Loaded="Hours_Loaded"/>
 		<ComboBox x:Name="StartMin" HorizontalAlignment="Left" Margin="183.64,100,0,0" VerticalAlignment="Top" Width="46" Loaded="Mins_Loaded"/>
 		<Label Content=":" HorizontalAlignment="Left" Margin="165.64,100,0,0" VerticalAlignment="Top" Width="18" Height="21.96" FontSize="13.333" FontFamily="Arial Black"/>
-		<Button x:Name="MoveUpBtn" Content="Déplacer vers le haut" HorizontalAlignment="Left" Margin="188,381.08,0,0" VerticalAlignment="Top" Width="126" IsEnabled="False"/>
+		<Button x:Name="MoveUpBtn" Content="Déplacer vers le haut" HorizontalAlignment="Left" Margin="188,381.08,0,0" VerticalAlignment="Top" Width="126"/>
 		<ListView x:Name="ShiftListView" HorizontalAlignment="Left" Height="189.04" Margin="16,338.96,0,0" VerticalAlignment="Top" Width="167">
 			<ListView.View>
 				<GridView>
@@ -32,7 +32,7 @@
 				</GridView>
 			</ListView.View>
 		</ListView>
-		<Button x:Name="MoveDownBtn" Content="Déplacer vers le bas" HorizontalAlignment="Left" Margin="188,408.04,0,0" VerticalAlignment="Top" Width="126" IsEnabled="False"/>
+		<Button x:Name="MoveDownBtn" Content="Déplacer vers le bas" HorizontalAlignment="Left" Margin="188,408.04,0,0" VerticalAlignment="Top" Width="126"/>
 		<Button x:Name="SaveBtn" Content="Save" HorizontalAlignment="Left" Margin="240.64,542.04,0,0" VerticalAlignment="Top" Width="75"/>
 		<Button x:Name="ExitBtn" Content="Cancel" HorizontalAlignment="Left" Margin="160.64,542.04,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.635,4.506"/>
 		<Button x:Name="EditBtn" Content="Edit" HorizontalAlignment="Left" Margin="11,542.04,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="-0.635,4.506"/>

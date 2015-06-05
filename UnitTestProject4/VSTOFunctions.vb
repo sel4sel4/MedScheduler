@@ -15,7 +15,7 @@ Imports Microsoft.Office.Interop
 
     <TestInitialize()> _
     Public Sub init()
-        System.Diagnostics.Debug.WriteLine("initfired")
+        'System.Diagnostics.Debug.WriteLine("initfired")
         Dim workbookToTest As String = "C:\ExcelWorkbook1\ExcelWorkbook1\bin\Debug\ExcelWorkbook1.xls"
         xlsApp = New Excel.Application
         xlsApp.Visible = True
@@ -28,14 +28,13 @@ Imports Microsoft.Office.Interop
     <TestMethod()> _
     Public Sub VSTOFunctions_UseTaskPane()
 
-        Dim astring As String = theCOMConnection.getaddin()
         theCOMConnection.testclick()
-        System.Diagnostics.Debug.WriteLine("runtest")
+        'System.Diagnostics.Debug.WriteLine("runtest")
         Assert.IsTrue(True)
     End Sub
     <TestCleanup()> _
     Public Sub clean()
-        System.Diagnostics.Debug.WriteLine("quit")
+        'System.Diagnostics.Debug.WriteLine("quit")
         xlsApp.Quit()
     End Sub
 

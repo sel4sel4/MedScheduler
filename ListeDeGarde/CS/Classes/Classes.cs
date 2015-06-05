@@ -20,7 +20,7 @@ namespace ListeDeGarde
 	public class SYear
 	{
 		private int pYear;
-		private Collection pMonths;
+		private List<SMonth> pMonths;
 		
 		public int Year
 		{
@@ -30,7 +30,7 @@ namespace ListeDeGarde
 			}
 		}
 		
-		public Collection Months
+		public List<SMonth> Months
 		{
 			get
 			{
@@ -41,12 +41,12 @@ namespace ListeDeGarde
 		public SYear(int aYear)
 		{
 			pYear = aYear;
-			pMonths = new Collection();
+			pMonths = new List<SMonth>();
 			for (var x = 1; x <= 12; x++)
 			{
 				SMonth theMonth = default(SMonth);
 				theMonth = new SMonth(System.Convert.ToInt32(x), aYear);
-				pMonths.Add(theMonth, x.ToString(), null, null);
+				pMonths.Add(theMonth);
 			}
 		}
 		
@@ -56,9 +56,9 @@ namespace ListeDeGarde
 	{
 		private int pYear;
 		private int pMonth;
-		private Collection pDays;
-		private Collection pShiftypes;
-		private Collection pDocList;
+		private List<SDay> pDays;
+		private List<SShiftType> pShiftypes;
+		private List<SDoc> pDocList;
 		
 		public int Year
 		{
@@ -74,21 +74,21 @@ namespace ListeDeGarde
 				return pMonth;
 			}
 		}
-		public Collection Days
+		public List<SDay> Days
 		{
 			get
 			{
 				return pDays;
 			}
 		}
-		public Collection ShiftTypes
+		public List<SShiftType> ShiftTypes
 		{
 			get
 			{
 				return pShiftypes;
 			}
 		}
-		public Collection DocList
+		public List<SDoc> DocList
 		{
 			get
 			{
@@ -102,12 +102,12 @@ namespace ListeDeGarde
 			int theDaysInMonth = DateTime.DaysInMonth(aYear, aMonth);
 			pYear = aYear;
 			pMonth = aMonth;
-			pDays = new Collection();
+			pDays = new List<SDay>();
 			for (var x = 1; x <= theDaysInMonth; x++)
 			{
 				SDay theDay = default(SDay);
-				theDay = new SDay(System.Convert.ToInt32(x), aMonth, aYear, this);
-				pDays.Add(theDay, x.ToString(), null, null);
+				theDay = new SDay(x, aMonth, aYear, this);
+				pDays.Add(theDay);
 			}
 		}
 		
@@ -116,10 +116,10 @@ namespace ListeDeGarde
 	public class SDay
 	{
 		private DateTime pDate; //uniqueID
-		private Collection pShifts;
+		private List<SShift> pShifts;
 		private SMonth pMonth;
 		
-		public Collection Shifts
+		public List<SShift> Shifts
 		{
 			get
 			{
@@ -145,7 +145,7 @@ namespace ListeDeGarde
 		{
 			pDate = new DateTime(aYear, aMonth, aDay);
 			pMonth = CMonth;
-			pShifts = new Collection();
+			pShifts = new List<SShift>();
 			bool addShift = false;
 			//populate the shift collection by cycling through
 			//the active SShiftTypes collection
@@ -233,7 +233,7 @@ namespace ListeDeGarde
 					{
 						SShift theShift = new SShift(aShiftType.ShiftType, pDate, aShiftType.ShiftStart, aShiftType.ShiftStop, aShiftType.Description, this);
 						
-						pShifts.Add(theShift, aShiftType.ShiftType.ToString(), null, null);
+						pShifts.Add(theShift);
 					}
 				}
 			}
@@ -249,7 +249,7 @@ namespace ListeDeGarde
 		private int pShiftType;
 		private string pDescription;
 		private string pDoc;
-		private Collection pDocAvailabilities;
+		private List<SDocAvailable> pDocAvailabilities;
 		private DateTime pDate;
 		private int pStatus;
 		private Excel.Range pRange;
@@ -323,7 +323,7 @@ namespace ListeDeGarde
 				return pShiftStop;
 			}
 		}
-		public Collection DocAvailabilities
+		public List<SDocAvailable> DocAvailabilities
 		{
 			get
 			{
@@ -345,7 +345,7 @@ namespace ListeDeGarde
 			pDescription = aDescription;
 			pDay = aDay;
 			
-			pDocAvailabilities = new Collection();
+			pDocAvailabilities = new List<SDocAvailable>();
 			SDocAvailable theSDocAvailable = default(SDocAvailable);
 			SDoc aSDoc = default(SDoc);
 			PublicEnums.Availability theDispo = default(PublicEnums.Availability);
@@ -404,7 +404,7 @@ namespace ListeDeGarde
 						break;
 				}
 				theSDocAvailable = new SDocAvailable(aSDoc.Initials, theDispo, pDate, pShiftType);
-				pDocAvailabilities.Add(theSDocAvailable, aSDoc.Initials, null, null);
+				pDocAvailabilities.Add(theSDocAvailable);
 			}
 			
 		}
@@ -630,14 +630,14 @@ namespace ListeDeGarde
 			pCompilation.theSQLName = PublicConstants.SQLCompilation;
 			pOrder.theSQLName = PublicConstants.SQLOrder;
 		}
-		public static Collection loadShiftTypesFromDBPerMonth(int aMonth, int aYear)
+		public static List<SShiftType> loadShiftTypesFromDBPerMonth(int aMonth, int aYear)
 		{
 			SQLStrBuilder theBuiltSql = new SQLStrBuilder();
 			ADODB.Recordset theRS = new ADODB.Recordset();
 			DBAC theDBAC = new DBAC();
 			SShiftType aShifttype = default(SShiftType);
-			Collection theShiftTypeCollection = default(Collection);
-			theShiftTypeCollection = new Collection();
+			List<SShiftType> theShiftTypeCollection = default(List<SShiftType>);
+			theShiftTypeCollection = new List<SShiftType>();
 			int theVersion = default(int);
 			theVersion = ((aYear - 2000) * 100) + aMonth;
 			
@@ -721,7 +721,7 @@ namespace ListeDeGarde
 					}
 					
 					
-					theShiftTypeCollection.Add(aShifttype, null, null, null);
+					theShiftTypeCollection.Add(aShifttype);
 					theRS.MoveNext();
 				}
 			}
@@ -803,7 +803,7 @@ namespace ListeDeGarde
 							aShifttype.Order = System.Convert.ToInt32(theRS.Fields[PublicConstants.SQLOrder].Value);
 						}
 						aShifttype.Save(); //save the shifttype version to DB
-						theShiftTypeCollection.Add(aShifttype, null, null, null);
+						theShiftTypeCollection.Add(aShifttype);
 						theRS.MoveNext();
 					}
 					
@@ -811,14 +811,14 @@ namespace ListeDeGarde
 			}
 			return theShiftTypeCollection;
 		}
-		public static Collection loadTemplateShiftTypesFromDB()
+		public static List<SShiftType> loadTemplateShiftTypesFromDB()
 		{
 			SQLStrBuilder theBuiltSql = new SQLStrBuilder();
 			ADODB.Recordset theRS = new ADODB.Recordset();
 			DBAC theDBAC = new DBAC();
 			SShiftType aShifttype = default(SShiftType);
-			Collection theShiftTypeCollection = default(Collection);
-			theShiftTypeCollection = new Collection();
+			List<SShiftType> theShiftTypeCollection = default(List<SShiftType>);
+			theShiftTypeCollection = new List<SShiftType>();
 			theBuiltSql.SQL_Select("*");
 			theBuiltSql.SQL_From(PublicConstants.TABLE_shiftType);
 			theBuiltSql.SQL_Where(PublicConstants.SQLVersion, "=", 0);
@@ -893,7 +893,7 @@ namespace ListeDeGarde
 						aShifttype.Order = System.Convert.ToInt32(theRS.Fields[PublicConstants.SQLOrder].Value);
 					}
 					
-					theShiftTypeCollection.Add(aShifttype, null, null, null);
+					theShiftTypeCollection.Add(aShifttype);
 					theRS.MoveNext();
 				}
 			}
@@ -1414,14 +1414,14 @@ namespace ListeDeGarde
 					break;
 			}
 		}
-		public static Collection LoadAllDocsPerMonth(int aYear, int aMonth)
+		public static List<SDoc> LoadAllDocsPerMonth(int aYear, int aMonth)
 		{
 			SQLStrBuilder theBuiltSql = new SQLStrBuilder();
 			ADODB.Recordset theRS = new ADODB.Recordset();
 			DBAC theDBAC = new DBAC();
 			DateTime theCurrentMonthDate = DateAndTime.DateSerial(aYear, aMonth, 1);
-			Collection aCollection = default(Collection);
-			aCollection = new Collection();
+			List<SDoc> aCollection = default(List<SDoc>);
+			aCollection = new List<SDoc>();
 			int theVersion = default(int);
 			theVersion = ((aYear - 2000) * 100) + aMonth;
 			
@@ -1496,7 +1496,7 @@ namespace ListeDeGarde
 						aSDoc.NuitsTog = System.Convert.ToBoolean(theRS.Fields[PublicConstants.SQLNuitsTog].Value);
 					}
 					
-					aCollection.Add(aSDoc, aSDoc.Initials, null, null);
+					aCollection.Add(aSDoc);
 					theRS.MoveNext();
 				}
 			}
@@ -1569,7 +1569,7 @@ namespace ListeDeGarde
 							aSDoc.NuitsTog = System.Convert.ToBoolean(theRS.Fields[PublicConstants.SQLNuitsTog].Value);
 						}
 						aSDoc.save();
-						aCollection.Add(aSDoc, aSDoc.Initials, null, null);
+						aCollection.Add(aSDoc);
 						theRS.MoveNext();
 					}
 				}
@@ -1577,13 +1577,13 @@ namespace ListeDeGarde
 			
 			return aCollection;
 		}
-		public static Collection LoadTempateDocsFromDB()
+		public static List<SDoc> LoadTempateDocsFromDB()
 		{
 			SQLStrBuilder theBuiltSql = new SQLStrBuilder();
 			ADODB.Recordset theRS = new ADODB.Recordset();
 			DBAC theDBAC = new DBAC();
-			Collection aCollection = default(Collection);
-			aCollection = new Collection();
+			List<SDoc> aCollection = default(List<SDoc>);
+			aCollection = new List<SDoc>();
 			
 			//check if a version exists for the month
 			theBuiltSql.SQL_Select("*");
@@ -1655,7 +1655,7 @@ namespace ListeDeGarde
 						aSDoc.NuitsTog = System.Convert.ToBoolean(theRS.Fields[PublicConstants.SQLNuitsTog].Value);
 					}
 					
-					aCollection.Add(aSDoc, aSDoc.Initials, null, null);
+					aCollection.Add(aSDoc);
 					theRS.MoveNext();
 				}
 			}
@@ -1968,7 +1968,7 @@ namespace ListeDeGarde
 			int numaffected = default(int);
 			theDBAC.CExecuteDB(theBuiltSql.SQLStringDelete, numaffected);
 		}
-		public Collection doesDataExistForThisMonth()
+		public List<SDocAvailable> doesDataExistForThisMonth()
 		{
 			
 			SQLStrBuilder theBuiltSql = new SQLStrBuilder();
@@ -1985,7 +1985,7 @@ namespace ListeDeGarde
 			if (theRS.RecordCount > 0)
 			{
 				SDocAvailable aSDocAvailable = default(SDocAvailable);
-				Collection aCollection = new Collection();
+				List<SDocAvailable> aCollection = new List<SDocAvailable>();
 				theRS.MoveFirst();
 				for (int x = 1; x <= theRS.RecordCount; x++)
 				{
@@ -1993,12 +1993,12 @@ namespace ListeDeGarde
 					aSDocAvailable.DocInitial = (theRS.Fields[this.pDocInitial.theSQLName].Value).ToString();
 					aSDocAvailable.Date_ = System.Convert.ToDateTime(theRS.Fields[this.pDate.theSQLName].Value);
 					aSDocAvailable.ShiftType = System.Convert.ToInt32(theRS.Fields[this.pShiftType.theSQLName].Value);
-					aCollection.Add(aSDocAvailable, null, null, null);
+					aCollection.Add(aSDocAvailable);
 					theRS.MoveNext();
 				}
 				return aCollection;
 			}
-			return null;
+			return default(List<SDocAvailable>);
 		}
 		
 	}
@@ -2155,7 +2155,7 @@ namespace ListeDeGarde
 				return true;
 			}
 		}
-		public Collection GetNonDispoListForDoc(string aDocInitials, int aYear, int aMonth)
+		public List<SNonDispo> GetNonDispoListForDoc(string aDocInitials, int aYear, int aMonth)
 		{
 			SQLStrBuilder theBuiltSql = new SQLStrBuilder();
 			ADODB.Recordset theRS = new ADODB.Recordset();
@@ -2174,7 +2174,7 @@ namespace ListeDeGarde
 			int theCount = theRS.RecordCount;
 			if (theCount > 0)
 			{
-				Collection aCollection = new Collection();
+				List<SNonDispo> aCollection = new List<SNonDispo>();
 				theRS.MoveFirst();
 				for (int x = 1; x <= theCount; x++)
 				{
@@ -2199,14 +2199,14 @@ namespace ListeDeGarde
 					{
 						aSNonDispo.TimeStop = System.Convert.ToInt32(theRS.Fields[pTimeStop.theSQLName].Value);
 					}
-					aCollection.Add(aSNonDispo, x.ToString(), null, null);
+					aCollection.Add(aSNonDispo);
 					theRS.MoveNext();
 				}
 				return aCollection;
 			}
 			else
 			{
-				return null;
+				return default(List<SNonDispo>);
 			}
 		}
 		public void Delete()
@@ -2247,35 +2247,57 @@ namespace ListeDeGarde
 		
 		public DBAC()
 		{
-			//On Error GoTo errhandler
-			if (MyGlobals.cnn.State == (int) ADODB.ObjectStateEnum.adStateClosed)
+			try
 			{
-				
-				
-				if (PublicConstants.CONSTFILEADDRESS == "")
+				if (MyGlobals.cnn.State == (int) ADODB.ObjectStateEnum.adStateClosed)
 				{
-					if (MyGlobals.MySettingsGlobal.DataBaseLocation == "")
+					
+					
+					if (PublicConstants.CONSTFILEADDRESS == "")
 					{
-						GlobalFunctions.LoadDatabaseFileLocation();
+						if (MyGlobals.MySettingsGlobal.DataBaseLocation == "")
+						{
+							GlobalFunctions.LoadDatabaseFileLocation();
+						}
+						PublicConstants.CONSTFILEADDRESS = MyGlobals.MySettingsGlobal.DataBaseLocation;
 					}
-					PublicConstants.CONSTFILEADDRESS = MyGlobals.MySettingsGlobal.DataBaseLocation;
+					mConnectionString = Provider + "Data Source=" + PublicConstants.CONSTFILEADDRESS; //_
+					//+ ";" & DBpassword
+					MyGlobals.cnn.ConnectionString = mConnectionString;
+					MyGlobals.cnn.Open("", "", "", -1);
 				}
-				mConnectionString = Provider + "Data Source=" + PublicConstants.CONSTFILEADDRESS; //_
-				//+ ";" & DBpassword
-				MyGlobals.cnn.ConnectionString = mConnectionString;
-				MyGlobals.cnn.Open("", "", "", -1);
+				
+				mConnection = MyGlobals.cnn;
 			}
-			
-			mConnection = MyGlobals.cnn;
-			//        On Error GoTo 0
-			//        Exit Sub
-			//errhandler:
-			//        MsgBox("An error occurred during initial connection to DB: " + _
-			//               CStr(Err.Number) + "  :  " + _
-			//               CStr(Err.Description))
-			
-			//        'add code to select current location for the database !!FEATURE!!
-			
+			catch
+			{
+				MessageBox.Show((string) ("An error occurred during initial connection to DB: " + (Information.Err().Number).ToString() + "  :  " + Information.Err().Description));
+				
+				//        'add code to select current location for the database !!FEATURE!!
+				
+			}
+		}
+		public DBAC(string fileAddress)
+		{
+			try
+			{
+				if (MyGlobals.cnn.State == (int) ADODB.ObjectStateEnum.adStateClosed)
+				{
+					
+					mConnectionString = Provider + "Data Source=" + fileAddress;
+					MyGlobals.cnn.ConnectionString = mConnectionString;
+					MyGlobals.cnn.Open("", "", "", -1);
+				}
+				
+				mConnection = MyGlobals.cnn;
+			}
+			catch
+			{
+				MessageBox.Show((string) ("An error occurred during initial connection to DB: " + (Information.Err().Number).ToString() + "  :  " + Information.Err().Description));
+				
+				//        'add code to select current location for the database !!FEATURE!!
+				
+			}
 		}
 		public void COpenDB(string theSQLstr, ADODB.Recordset theRS)
 		{
@@ -2292,42 +2314,38 @@ namespace ListeDeGarde
 			}
 			theRS.CursorLocation = ADODB.CursorLocationEnum.adUseClient;
 			
-			//On Error GoTo errhandler
-			//Debug.Print(theSQLstr)
-			theRS.Open(theSQLstr, mConnection, ADODB.CursorTypeEnum.adOpenKeyset, ADODB.LockTypeEnum.adLockOptimistic, -1);
-			theRS.ActiveConnection = null;
-			
-			// On Error GoTo 0
-			//Exit Sub 'to not run errhandler for nothing
-			//errhandler:
-			
-			//        MsgBox("An error occurred during SELECT query execution: " + _
-			//               CStr(Err.Number) & "  :  " + _
-			//               CStr(Err.Description) + _
-			//               "   SQL TEXT:   " + _
-			//               theSQLstr)
-			
+			try
+			{
+				//Debug.Print(theSQLstr)
+				theRS.Open(theSQLstr, mConnection, ADODB.CursorTypeEnum.adOpenKeyset, ADODB.LockTypeEnum.adLockOptimistic, -1);
+				theRS.ActiveConnection = null;
+			}
+			catch
+			{
+				
+				MessageBox.Show((string) ("An error occurred during SELECT query execution: " + (Information.Err().Number).ToString() + ("  :  " + Information.Err().Description + "   SQL TEXT:   " + theSQLstr)));
+				
+			}
 		}
 		public void CExecuteDB(string theSQLstr, long numAffected)
 		{
 			
-			//On Error GoTo errhandler
+			//On Error Goto errhandler VBConversions Warning: could not be converted to try/catch - logic too complex
 			object theNumAffectedObj = default(object);
 			mConnection.Execute(theSQLstr, out theNumAffectedObj, -1);
 			//StoreToAuditFile theSQLstr
-			//On Error GoTo 0
 			numAffected = System.Convert.ToInt32(theNumAffectedObj);
-			//        Exit Sub 'to not run errhandler for nothing
+			return; //to not run errhandler for nothing
 			
 			
-			//errhandler:
+errhandler:
 			
-			//        Dim theError As String
-			//        theError = CStr(Err.Number) & "  :  " & CStr(Err.Description) & "   SQL TEXT:   " & theSQLstr
-			//        theError = Replace(theError, "'", "''")
-			//        MsgBox("An error occurred during execution of an INSERT or UPDATE query: " & theError)
+			string theError = default(string);
+			theError = (string) ((Information.Err().Number).ToString() + "  :  " + Information.Err().Description + "   SQL TEXT:   " + theSQLstr);
+			theError = theError.Replace("\'", "\'\'");
+			MessageBox.Show("An error occurred during execution of an INSERT or UPDATE query: " + theError);
 			
-			//        ''LogError theError
+			//'LogError theError
 			
 		}
 		

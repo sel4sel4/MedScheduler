@@ -19,9 +19,9 @@ namespace ListeDeGarde
 		private Excel.Worksheet controlledExcelSheet;
 		private SMonth controlledMonth;
 		private bool monthloaded = false;
-		private UserControl4 monthlystats;
-		private Form2 theMonthlyStatsForm;
-		private Collection SDocStatsCollection;
+		//Private monthlystats As MonthlyStatsC
+		//Private WithEvents theMonthlyStatsForm As MonthlyStats
+		private List<SDocStats> SDocStatsCollection;
 		private const long theRestTime = 432000000000;
 		private string theHighlightedDoc;
 		private Microsoft.Office.Tools.CustomTaskPane theCustomTaskPane;
@@ -31,6 +31,14 @@ namespace ListeDeGarde
 			get
 			{
 				return controlledMonth;
+			}
+		}
+		
+		public Excel.Worksheet aControlledExcelSheet
+		{
+			get
+			{
+				return controlledExcelSheet;
 			}
 		}
 		public string pHighlightedDoc
@@ -252,9 +260,10 @@ namespace ListeDeGarde
 						//make current Doc dispo again
 						if (aShift.Doc != null)
 						{
-							if (aShift.DocAvailabilities.Contains(aShift.Doc))
+							if (aShift.DocAvailabilities.Exists(xy => xy.DocInitial == aShift.Doc))
 							{
-								adocAvail = (SDocAvailable) (aShift.DocAvailabilities[aShift.Doc]);
+								//adocAvail = CType(aShift.DocAvailabilities.Find(Function(xy) xy.DocInitial = aShift.Doc), SDocAvailable)
+								adocAvail = aShift.DocAvailabilities.Find(xy => xy.DocInitial == aShift.Doc);
 								adocAvail.Availability = PublicEnums.Availability.Dispo;
 								firstDoc = aShift.Doc;
 								anExitNotice = true;
@@ -271,9 +280,9 @@ namespace ListeDeGarde
 						}
 						else
 						{
-							if (aShift.DocAvailabilities.Contains((Target.Value).ToString()))
+							if (aShift.DocAvailabilities.Exists(xy => xy.DocInitial == (Target.Value).ToString()))
 							{
-								adocAvail = (SDocAvailable) (aShift.DocAvailabilities[Target.Value]);
+								adocAvail = (SDocAvailable) (aShift.DocAvailabilities.Find(xy => xy.DocInitial == (Target.Value).ToString()));
 								adocAvail.Availability = PublicEnums.Availability.Assigne;
 								fixAvailability((Target.Value).ToString(), controlledMonth, aShift, firstDoc);
 								aShift.Doc = (Target.Value).ToString();
@@ -307,13 +316,13 @@ namespace ListeDeGarde
 		private void controlledExcelSheet_BeforeDelete()
 		{
 			
-			Globals.ThisAddIn.theControllerCollection.Remove((string) controlledExcelSheet.Name);
+			//Globals.ThisAddIn.theControllerCollection.Remove(controlledExcelSheet.Name)
+			Globals.ThisAddIn.theControllerCollection.RemoveAll(xy => xy.aControlledMonth.Month == this.aControlledMonth.Month && xy.aControlledMonth.Year == this.aControlledMonth.Year);
 			
 		}
-		private void theMonthlyStatsForm_close(System.Object sender, System.Windows.Forms.FormClosingEventArgs e)
-		{
-			SDocStatsCollection = null;
-		}
+		//Private Sub theMonthlyStatsForm_close() Handles theMonthlyStatsForm.FormClosing
+		//   SDocStatsCollection = Nothing
+		//End Sub
 		
 		private void fixAvailability(string aDoc, SMonth aMonth, SShift ashift, string firstDoc = "")
 		{
@@ -324,19 +333,21 @@ namespace ListeDeGarde
 			int theStartDay = theDate.Day - 1;
 			int theStopDay = theDate.Day + 1;
 			SShift myShift = default(SShift);
-			SDay aDay = (SDay) (aMonth.Days[ashift.aDate.Day]);
+			SDay aDay = (SDay) (aMonth.Days.Find(xY => ashift.aDate.Day == xy.theDate.Day));
 			long nonDispoStart = default(long);
 			long nonDispoStop = default(long);
 			long shftStop = default(long);
 			long shftStart = default(long);
-			Collection RecheckCollection = new Collection();
+			List<SShift> RecheckCollection = new List<SShift>();
 			SShift RecheckShift = default(SShift);
 			
 			for (int x = ashift.aDate.Day - 1; x <= ashift.aDate.Day + 1; x++)
 			{
-				if (aMonth.Days.Contains(x.ToString()))
+				int yx = x;
+				if (aMonth.Days.Exists(theDay => theDay.theDate.Day == yx))
 				{
-					aDay = (SDay) (aMonth.Days[x.ToString()]);
+					//If aMonth.Days.Contains(x.ToString()) Then
+					aDay = (SDay) (aMonth.Days.Find(theDay => theDay.theDate.Day == yx));
 					foreach (SShift tempLoopVar_myShift in aDay.Shifts)
 					{
 						myShift = tempLoopVar_myShift;
@@ -351,12 +362,12 @@ namespace ListeDeGarde
 						{
 							//then check if this doc is assigned in prevous or next day
 							//if yes redo fixavailability on either or both of those if not leave as is
-							if (myShift.DocAvailabilities.Contains(firstDoc))
+							if (myShift.DocAvailabilities.Exists(xy => xy.DocInitial == firstDoc))
 							{
-								thedocAvail = (SDocAvailable) (myShift.DocAvailabilities[firstDoc]);
+								thedocAvail = (SDocAvailable) (myShift.DocAvailabilities.Find(xy => xy.DocInitial == firstDoc));
 								if (thedocAvail.Availability == PublicEnums.Availability.Assigne)
 								{
-									RecheckCollection.Add(myShift, null, null, null);
+									RecheckCollection.Add(myShift);
 								}
 							}
 						}
@@ -364,7 +375,7 @@ namespace ListeDeGarde
 						if ((shftStart > nonDispoStart & shftStart < nonDispoStop) || (shftStop > nonDispoStart & shftStop < nonDispoStop) || (shftStart > nonDispoStart & shftStop < nonDispoStop))
 						{
 							
-							thedocAvail = (SDocAvailable) (myShift.DocAvailabilities[aDoc]);
+							thedocAvail = (SDocAvailable) (myShift.DocAvailabilities.Find(xy => xy.DocInitial == aDoc));
 							if (thedocAvail.Availability != PublicEnums.Availability.NonDispoPermanente & thedocAvail.Availability != PublicEnums.Availability.Assigne)
 							{
 								thedocAvail.Availability = PublicEnums.Availability.NonDispoTemporaire;
@@ -375,9 +386,9 @@ namespace ListeDeGarde
 							{
 								//then check if this doc is assigned in prevous or next day
 								//if yes redo fixavailability on either or both of those if not leave as is
-								if (myShift.DocAvailabilities.Contains(firstDoc))
+								if (myShift.DocAvailabilities.Exists(xy => xy.DocInitial == firstDoc))
 								{
-									thedocAvail = (SDocAvailable) (myShift.DocAvailabilities[firstDoc]);
+									thedocAvail = (SDocAvailable) (myShift.DocAvailabilities.Find(xy => xy.DocInitial == firstDoc));
 									if (thedocAvail.Availability != PublicEnums.Availability.NonDispoPermanente & thedocAvail.Availability != PublicEnums.Availability.Assigne)
 									{
 										thedocAvail.Availability = PublicEnums.Availability.Dispo;
@@ -438,7 +449,7 @@ namespace ListeDeGarde
 				if (theCustomTaskPane.Visible == true)
 				{
 					
-					Collection theDocCollection = SDoc.LoadAllDocsPerMonth(controlledMonth.Year, controlledMonth.Month);
+					List<SDoc> theDocCollection = SDoc.LoadAllDocsPerMonth(controlledMonth.Year, controlledMonth.Month);
 					SDoc aSDoc = default(SDoc);
 					SShift ashift = default(SShift);
 					SDay aDay = default(SDay);
@@ -446,12 +457,12 @@ namespace ListeDeGarde
 					SDocStats theSDocStats = default(SDocStats);
 					if (SDocStatsCollection == null)
 					{
-						SDocStatsCollection = new Collection();
+						SDocStatsCollection = new List<SDocStats>();
 						foreach (SDoc tempLoopVar_aSDoc in theDocCollection)
 						{
 							aSDoc = tempLoopVar_aSDoc;
 							theSDocStats = new SDocStats(aSDoc.Initials, aSDoc.Shift1, aSDoc.Shift2, aSDoc.Shift3, aSDoc.Shift4, aSDoc.Shift5);
-							SDocStatsCollection.Add(theSDocStats, aSDoc.Initials, null, null);
+							SDocStatsCollection.Add(theSDocStats);
 							
 						}
 					}
@@ -485,7 +496,7 @@ namespace ListeDeGarde
 								{
 									break;
 								}
-								aDOcAvail = (SDocAvailable) (ashift.DocAvailabilities[theSDocStats.Initials]);
+								aDOcAvail = (SDocAvailable) (ashift.DocAvailabilities.Find(xy => xy.DocInitial == theSDocStats.Initials));
 								if (aDOcAvail.Availability == PublicEnums.Availability.Assigne)
 								{
 									switch (ashift.ShiftType)
@@ -551,7 +562,7 @@ namespace ListeDeGarde
 								{
 									break;
 								}
-								aDOcAvail = (SDocAvailable) (ashift.DocAvailabilities[theHighlightedDoc]);
+								aDOcAvail = (SDocAvailable) (ashift.DocAvailabilities.Find(xy => xy.DocInitial == theHighlightedDoc));
 								if (aDOcAvail.Availability == PublicEnums.Availability.Assigne)
 								{
 									//populate simple array of week counts
@@ -581,11 +592,11 @@ namespace ListeDeGarde
 		{
 			SNonDispo theSNonDispo = new SNonDispo();
 			SNonDispo aSNonDispo = default(SNonDispo);
-			Collection aCollection = default(Collection);
+			List<SNonDispo> aCollection = default(List<SNonDispo>);
 			SDay aDay = default(SDay);
 			SShift ashift = default(SShift);
 			SDoc theSDoc = new SDoc(controlledMonth.Year, controlledMonth.Month);
-			Collection docCollection = controlledMonth.DocList;
+			List<SDoc> docCollection = controlledMonth.DocList;
 			SDoc aSDoc = default(SDoc);
 			long nonDispoStart = default(long);
 			long nonDispoStop = default(long);
@@ -607,6 +618,9 @@ namespace ListeDeGarde
 						aSNonDispo = tempLoopVar_aSNonDispo;
 						int stopDay = default(int);
 						int startday = default(int);
+						nonDispoStart = aSNonDispo.DateStart.Ticks + (aSNonDispo.TimeStart) * 600000000;
+						nonDispoStop = aSNonDispo.DateStop.Ticks + (aSNonDispo.TimeStop) * 600000000;
+						
 						if (aSNonDispo.DateStart.Month == controlledMonth.Month)
 						{
 							startday = aSNonDispo.DateStart.Day;
@@ -623,25 +637,31 @@ namespace ListeDeGarde
 						{
 							stopDay = System.DateTime.DaysInMonth(controlledMonth.Year, controlledMonth.Month);
 						}
+						if (controlledMonth.Month == 1 & aSNonDispo.DateStart.Day == 15 && aSDoc.Initials == "DG" && controlledMonth.Year == 2014)
+						{
+							int test = 1;
+						}
+						
 						
 						for (int y = startday - 1; y <= stopDay; y++)
 						{
-							if (controlledMonth.Days.Contains((y).ToString()))
+							int yx = y;
+							if (controlledMonth.Days.Exists(theDay => theDay.theDate.Day == yx))
 							{
-								aDay = (SDay) (controlledMonth.Days[y]);
+								aDay = (SDay) (controlledMonth.Days.Find(theDay => theDay.theDate.Day == yx));
 								foreach (SShift tempLoopVar_ashift in aDay.Shifts)
 								{
 									ashift = tempLoopVar_ashift;
-									nonDispoStart = aSNonDispo.DateStart.Ticks + (aSNonDispo.TimeStart) * 600000000;
-									nonDispoStop = aSNonDispo.DateStop.Ticks + (aSNonDispo.TimeStop) * 600000000;
+									
 									shftStop = ashift.aDate.Ticks + (ashift.ShiftStop) * 600000000;
 									shftStart = ashift.aDate.Ticks + (ashift.ShiftStart) * 600000000;
 									
-									if ((shftStart > nonDispoStart & shftStart < nonDispoStop) || (shftStop > nonDispoStart & shftStop < nonDispoStop) || (shftStart > nonDispoStart & shftStop < nonDispoStop))
+									if ((nonDispoStart > shftStart & nonDispoStart < shftStop) || (nonDispoStop > shftStart & nonDispoStop < shftStop) || (nonDispoStart < shftStart & nonDispoStop > shftStop))
 									{
 										
+										
 										SDocAvailable thedocAvail = default(SDocAvailable);
-										thedocAvail = (SDocAvailable) (ashift.DocAvailabilities[aSDoc.Initials]);
+										thedocAvail = (SDocAvailable) (ashift.DocAvailabilities.Find(xy => xy.DocInitial == aSDoc.Initials));
 										//check if doc is assigned and ask to clear (provide some info.. make surutlisé
 										if (thedocAvail.Availability != PublicEnums.Availability.Assigne)
 										{
@@ -661,7 +681,7 @@ namespace ListeDeGarde
 			monthloaded = false; //set boolean toggle to false to stop event triggers
 			controlledExcelSheet.Unprotect();
 			string amonthstring = MyGlobals.monthstrings[aControlledMonth.Month - 1];
-			// Globals.ThisAddIn.Application.ScreenUpdating = False
+			Globals.ThisAddIn.Application.ScreenUpdating = false;
 			controlledExcelSheet.Cells.Clear(); //clear the worksheet
 			SDay theDay = default(SDay);
 			int row = default(int);
@@ -723,7 +743,7 @@ namespace ListeDeGarde
 			}
 			SetupAssignedDocs();
 			SetUpPermNonDispos();
-			//Globals.ThisAddIn.Application.ScreenUpdating = True
+			Globals.ThisAddIn.Application.ScreenUpdating = true;
 			
 			monthloaded = true;
 			controlledExcelSheet.Protect(true, true, true, false, false, false, false, AllowInsertingRows false, false, false, true, false, false, false);
@@ -733,7 +753,7 @@ namespace ListeDeGarde
 		private void SetupAssignedDocs()
 		{
 			SDocAvailable aTest = new SDocAvailable(DateAndTime.DateSerial(aControlledMonth.Year, aControlledMonth.Month, 1));
-			Collection aCollection = default(Collection);
+			List<SDocAvailable> aCollection = default(List<SDocAvailable>);
 			SDay theDay2 = default(SDay);
 			SShift theShift2 = default(SShift);
 			SDocAvailable theDocAvailble;
@@ -744,14 +764,14 @@ namespace ListeDeGarde
 				foreach (SDocAvailable tempLoopVar_theAssignedDocs in aCollection)
 				{
 					theAssignedDocs = tempLoopVar_theAssignedDocs;
-					theDay2 = (SDay) (controlledMonth.Days[theAssignedDocs.Date_.Day]);
-					if (theDay2.Shifts.Contains(theAssignedDocs.ShiftType.ToString()))
+					theDay2 = (SDay) (controlledMonth.Days.Find(xy => theAssignedDocs.Date_.Day == xy.theDate.Day));
+					if (theDay2.Shifts.Exists(xy => xy.ShiftType == theAssignedDocs.ShiftType))
 					{
-						theShift2 = (SShift) (theDay2.Shifts[theAssignedDocs.ShiftType.ToString()]);
+						theShift2 = (SShift) (theDay2.Shifts.Find(xy => xy.ShiftType == theAssignedDocs.ShiftType));
 						theShift2.Doc = theAssignedDocs.DocInitial;
-						if (theShift2.DocAvailabilities.Contains(theAssignedDocs.DocInitial))
+						if (theShift2.DocAvailabilities.Exists(xy => xy.DocInitial == theAssignedDocs.DocInitial))
 						{
-							theDocAvailble = (SDocAvailable) (theShift2.DocAvailabilities[theAssignedDocs.DocInitial]);
+							theDocAvailble = (SDocAvailable) (theShift2.DocAvailabilities.Find(xy => xy.DocInitial == theAssignedDocs.DocInitial));
 							theDocAvailble.SetAvailabilityfromDB = PublicEnums.Availability.Assigne;
 							theShift2.aRange.Value = theAssignedDocs.DocInitial;
 							fixAvailability(theShift2.Doc, controlledMonth, theShift2);

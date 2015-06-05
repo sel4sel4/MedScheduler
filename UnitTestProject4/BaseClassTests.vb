@@ -68,5 +68,13 @@ End Class
         Dim adbac As New DBAC()
         Assert.IsTrue(Not adbac.aConnection Is Nothing)
     End Sub
+
+    <TestMethod()> Public Sub Count_Active_Shifts()
+
+        Dim theInt As Integer = SShiftType.ActiveShiftTypesCountPerMonth(12, 2015)
+        Assert.IsTrue(theInt = 5)
+    End Sub
+
+
 End Class
 

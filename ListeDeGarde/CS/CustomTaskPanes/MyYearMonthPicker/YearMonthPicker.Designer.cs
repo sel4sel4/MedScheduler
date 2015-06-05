@@ -41,7 +41,7 @@ namespace ListeDeGarde
 		[System.Diagnostics.DebuggerStepThrough()]private void InitializeComponent()
 		{
 			this.ElementHost1 = new System.Windows.Forms.Integration.ElementHost();
-			this.UserControl21 = new ListeDeGarde.UserControl2();
+			this.UserControl21 = new ListeDeGarde.YearMonthPickerC();
 			this.SuspendLayout();
 			//
 			//ElementHost1
@@ -64,7 +64,7 @@ namespace ListeDeGarde
 			
 		}
 		internal System.Windows.Forms.Integration.ElementHost ElementHost1;
-		internal ListeDeGarde.UserControl2 UserControl21;
+		internal ListeDeGarde.YearMonthPickerC UserControl21;
 		
 	}
 	

@@ -14,16 +14,16 @@ using System.Windows.Controls;
 
 namespace ListeDeGarde
 {
-	public partial class UserControl3
+	public partial class ShiftInterfaceC
 	{
 		private int aYearP;
 		private int aMonthP;
 		private bool changesOngoing = false;
-		private Collection myShiftTypeCollection;
+		private List<SShiftType> myShiftTypeCollection;
 		private SShiftType aSShiftType;
 		private SShiftType aNewSShiftType;
 		
-		public UserControl3()
+		public ShiftInterfaceC()
 		{
 			
 			// This call is required by the designer.
@@ -48,9 +48,9 @@ namespace ListeDeGarde
 		}
 		private void GetYearMonth()
 		{
-			if (Globals.ThisAddIn.theControllerCollection.Contains((string) Globals.ThisAddIn.Application.ActiveSheet.name))
+			if (Globals.ThisAddIn.theControllerCollection.Exists(xy => xy.aControlledExcelSheet.Name == Globals.ThisAddIn.Application.ActiveSheet.name))
 			{
-				Controller aController = Globals.ThisAddIn.theControllerCollection[Globals.ThisAddIn.Application.ActiveSheet.name];
+				Controller aController = Globals.ThisAddIn.theControllerCollection.Find(xy => xy.aControlledExcelSheet.Name == Globals.ThisAddIn.Application.ActiveSheet.name);
 				aYearP = aController.aControlledMonth.Year;
 				aMonthP = aController.aControlledMonth.Month;
 			}
@@ -105,7 +105,7 @@ namespace ListeDeGarde
 		{
 			UpdateListValues();
 		}
-		private void Hours_Loaded(object sender, Windows.RoutedEventArgs e)
+        private void Hours_Loaded(object sender, System.Windows.RoutedEventArgs e)
 		{
 			ComboBox theComboBox;
 			theComboBox = (ComboBox) sender;
@@ -113,7 +113,7 @@ namespace ListeDeGarde
 			theComboBox.SelectedIndex = 0;
 			UpdateListValues();
 		}
-		private void Mins_Loaded(object sender, Windows.RoutedEventArgs e)
+        private void Mins_Loaded(object sender, System.Windows.RoutedEventArgs e)
 		{
 			ComboBox theComboBox;
 			theComboBox = (ComboBox) sender;
@@ -121,7 +121,7 @@ namespace ListeDeGarde
 			theComboBox.SelectedIndex = 0;
 			UpdateListValues();
 		}
-		public void EditBtn_Click(object sender, Windows.RoutedEventArgs e)
+        public void EditBtn_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
 			Lock(false);
 		}
@@ -164,7 +164,7 @@ namespace ListeDeGarde
 			
 			Lock(true);
 		}
-		private void aMonth_Loaded(object sender, Windows.RoutedEventArgs e)
+        private void aMonth_Loaded(object sender, System.Windows.RoutedEventArgs e)
 		{
 			changesOngoing = true;
 			ComboBox theComboBox;
@@ -172,7 +172,7 @@ namespace ListeDeGarde
 			theComboBox.ItemsSource = MyGlobals.monthstrings;
 			changesOngoing = false;
 		}
-		private void aYear_Loaded(object sender, Windows.RoutedEventArgs e)
+        private void aYear_Loaded(object sender, System.Windows.RoutedEventArgs e)
 		{
 			changesOngoing = true;
 			ComboBox theComboBox;
@@ -200,19 +200,19 @@ namespace ListeDeGarde
 			initializeShiftList();
 			
 		}
-		public void Edit_Template_Checked(object sender, Windows.RoutedEventArgs e)
+        public void Edit_Template_Checked(object sender, System.Windows.RoutedEventArgs e)
 		{
 			Month.IsEnabled = false;
 			Year.IsEnabled = false;
 			initializeShiftList(true);
 		}
-		public void Edit_Template_Unchecked(object sender, Windows.RoutedEventArgs e)
+        public void Edit_Template_Unchecked(object sender, System.Windows.RoutedEventArgs e)
 		{
 			Month.IsEnabled = true;
 			Year.IsEnabled = true;
 			initializeShiftList();
 		}
-		public void SaveBtn_Click(object sender, Windows.RoutedEventArgs e)
+        public void SaveBtn_Click(object sender, System.Windows.RoutedEventArgs e)
 		{
 			aSShiftType.Description = (string) this.Description.Text;
 			aSShiftType.ShiftStart = System.Convert.ToInt32(this.StartHour.SelectedIndex * 60 + this.StartMin.SelectedIndex * 5);

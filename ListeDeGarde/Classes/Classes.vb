@@ -64,6 +64,16 @@ Public Class SMonth
     End Property
     Public Sub New(aMonth As Integer, aYear As Integer)
         pShiftypes = SShiftType.loadShiftTypesFromDBPerMonth(aMonth, aYear)
+        pShiftypes = pShiftypes.FindAll(AddressOf FindActiveShiftTypes)
+
+        pShiftypes.Sort(AddressOf CompareOrder)
+        Dim aShift As SShiftType
+        Dim counter As Integer = 1
+        For Each aShift In pShiftypes
+            aShift.AdjustedOrder = counter
+            counter = counter + 1
+        Next
+
         pDocList = SDoc.LoadAllDocsPerMonth(aYear, aMonth)
         Dim theDaysInMonth As Integer = DateTime.DaysInMonth(aYear, aMonth)
         pYear = aYear
@@ -76,6 +86,23 @@ Public Class SMonth
         Next
     End Sub
 
+    Private Shared Function FindActiveShiftTypes(xy As SShiftType) As Boolean
+        If xy.Active = True And (xy.Lundi = True Or _
+                                 xy.Mardi = True Or _
+                                 xy.Mercredi = True Or _
+                                 xy.Jeudi = True Or _
+                                 xy.Vendredi = True Or _
+                                 xy.Samedi = True Or _
+                                 xy.Dimanche = True) Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Private Shared Function CompareOrder(order1 As SShiftType, order2 As SShiftType)
+        Return order1.Order.CompareTo(order2.Order)
+    End Function
 End Class
 
 Public Class SDay
@@ -132,7 +159,8 @@ Public Class SDay
                                                       aShiftType.ShiftStart, _
                                                       aShiftType.ShiftStop, _
                                                       aShiftType.Description, _
-                                                      Me)
+                                                      Me, _
+                                                      aShiftType.AdjustedOrder)
 
                     pShifts.Add(theShift)
                 End If
@@ -140,6 +168,8 @@ Public Class SDay
         Next
 
     End Sub
+
+
 
 End Class
 
@@ -154,6 +184,7 @@ Public Class SShift
     Private pStatus As Integer
     Private pRange As Excel.Range
     Private pDay As SDay
+    Private pAdjustedOrder As Integer
 
     Public Property Doc() As String
         Get
@@ -212,19 +243,29 @@ Public Class SShift
             pDocAvailabilities = value
         End Set
     End Property
+    Public Property AdjustedOrder() As Integer
+        Get
+            Return pAdjustedOrder
+        End Get
+        Set(ByVal value As Integer)
+            pAdjustedOrder = value
+        End Set
+    End Property
 
     Public Sub New(aShiftType As Integer, _
                    aDate As DateTime, _
                    aShiftStart As Integer, _
                    aShiftStop As Integer, _
                    aDescription As String, _
-                   ByRef aDay As SDay)
+                   ByRef aDay As SDay, _
+                  aAdjustedOrder As Integer)
         pDate = aDate
         pShiftType = aShiftType
         pShiftStart = aShiftStart
         pShiftStop = aShiftStop
         pStatus = 0 ' for empty
         pDescription = aDescription
+        pAdjustedOrder = aAdjustedOrder
         pDay = aDay
 
         pDocAvailabilities = New List(Of SDocAvailable)
@@ -278,6 +319,7 @@ Public Class SShiftType
     Private pDimanche As T_DBRefTypeB
     Private pFerie As T_DBRefTypeB
     Private pOrder As T_DBRefTypeI
+    Private pAdjustedOrder As Integer
 
 
 
@@ -410,6 +452,15 @@ Public Class SShiftType
             pOrder.theValue = value
         End Set
     End Property
+    Public Property AdjustedOrder() As Integer
+        Get
+            Return pAdjustedOrder
+        End Get
+        Set(ByVal value As Integer)
+            pAdjustedOrder = value
+        End Set
+    End Property
+
 
 
     Public Sub New()
@@ -543,6 +594,13 @@ Public Class SShiftType
 
             End If
         End If
+        theShiftTypeCollection.Sort(AddressOf CompareOrder)
+        Dim aShift As SShiftType
+        Dim counter As Integer = 1
+        For Each aShift In theShiftTypeCollection
+            aShift.AdjustedOrder = counter
+            counter = counter + 1
+        Next
         Return theShiftTypeCollection
     End Function
     Public Shared Function loadTemplateShiftTypesFromDB() As List(Of SShiftType)
@@ -611,10 +669,18 @@ Public Class SShiftType
         'check if a version exists for the month
 
         With theBuiltSql
-            .SQL_Select("*")
+            .SQL_Select("ID")
             .SQL_From(TABLE_shiftType)
             .SQL_Where(SQLVersion, "=", theVersion)
             .SQL_Where(SQLActive, "=", True)
+            .SQL_Where(SQLLundi, "=", True, "and", EnumWhereSubClause.EW_begin, 1, False)
+            .SQL_Where(SQLMardi, "=", True, "or", EnumWhereSubClause.EW_None, 1, False)
+            .SQL_Where(SQLMercredi, "=", True, "or", EnumWhereSubClause.EW_None, 1, False)
+            .SQL_Where(SQLJeudi, "=", True, "or", EnumWhereSubClause.EW_None, 1, False)
+            .SQL_Where(SQLVendredi, "=", True, "or", EnumWhereSubClause.EW_None, 1, False)
+            .SQL_Where(SQLSamedi, "=", True, "or", EnumWhereSubClause.EW_None, 1, False)
+            .SQL_Where(SQLDimanche, "=", True, "or", EnumWhereSubClause.EW_end, 1, False)
+
             theDBAC.COpenDB(.SQLStringSelect, theRS)
         End With
 
@@ -731,7 +797,9 @@ Public Class SShiftType
                 Debug.WriteLine("there is more than one copy of this entry ... this is bad")
         End Select
     End Sub
-
+    Private Shared Function CompareOrder(order1 As SShiftType, order2 As SShiftType)
+        Return order1.Order.CompareTo(order2.Order)
+    End Function
 End Class
 
 Public Class SDoc

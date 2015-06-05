@@ -20,7 +20,7 @@ namespace ListeDeGarde
 	public partial class DocExpectations
 	{
 		
-		private Collection theDocCollection;
+		private List<SDoc> theDocCollection;
 		public DocExpectations()
 		{
 			
@@ -31,6 +31,7 @@ namespace ListeDeGarde
 			
 			
 		}
+		
 		private void DrawGrid()
 		{
 			
@@ -38,13 +39,15 @@ namespace ListeDeGarde
 			Label aLabel = default(Label);
 			TextBox aTextBox = default(TextBox);
 			SShiftType aShift = default(SShiftType);
-			// Add any initialization after the InitializeComponent() call.
-			if (!Globals.ThisAddIn.theControllerCollection.Contains((string) Globals.ThisAddIn.Application.ActiveSheet.name))
+			SDoc aSDoc = default(SDoc);
+			
+			//If controller exists, get it
+			if (!Globals.ThisAddIn.theControllerCollection.Exists(xy => xy.aControlledExcelSheet.Name == Globals.ThisAddIn.Application.ActiveSheet.name))
 			{
 				return;
 			}
-			Controller aController = Globals.ThisAddIn.theControllerCollection[Globals.ThisAddIn.Application.ActiveSheet.name];
-			SDoc aSDoc = default(SDoc);
+			Controller aController = Globals.ThisAddIn.theControllerCollection.Find(xy => xy.aControlledExcelSheet.Name == Globals.ThisAddIn.Application.ActiveSheet.name);
+			
 			
 			MyPanel.Children.Clear();
 			
@@ -221,8 +224,7 @@ namespace ListeDeGarde
 			
 		}
 		
-		
-		private void TextHasChanged(object sender, Windows.RoutedEventArgs e)
+		private void TextHasChanged(object sender, System.Windows.RoutedEventArgs e)
 		{
 			TextBox myTextBox = default(TextBox);
 			myTextBox = (TextBox) sender;
@@ -237,30 +239,7 @@ namespace ListeDeGarde
 			}
 			
 			CalculateTotals();
-			//Dim mySplit As String() = myTextBox.Name.Split(New Char() {"_"c})
-			//Dim x As Integer
-			//Dim aObject As Object
-			//Dim aTextBox As TextBox
-			//Dim aTotal As Integer = 0
-			//For x = 1 To 5
-			//    aObject = MyPanel.FindName(mySplit(0) + "_" + x.ToString())
-			//    aTextBox = CType(aObject, TextBox)
-			//    aTotal = aTotal + CInt(aTextBox.Text)
-			//Next
-			//aObject = MyPanel.FindName("Total_" + mySplit(0))
-			//aTextBox = CType(aObject, TextBox)
-			//aTextBox.Text = CStr(aTotal)
 			
-			//Dim aSDoc As SDoc
-			//aTotal = 0
-			//For Each aSDoc In theDocCollection
-			//    aObject = MyPanel.FindName(aSDoc.Initials + "_" + mySplit(1))
-			//    aTextBox = CType(aObject, TextBox)
-			//    aTotal = aTotal + CInt(aTextBox.Text)
-			//Next
-			//aObject = MyPanel.FindName("Total_" + mySplit(1))
-			//aTextBox = CType(aObject, TextBox)
-			//aTextBox.Text = CStr(aTotal)
 		}
 		
 		public void Edit_Template_Checked(object sender, Windows.RoutedEventArgs e)

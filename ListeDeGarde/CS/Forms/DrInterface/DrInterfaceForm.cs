@@ -17,9 +17,12 @@ namespace ListeDeGarde
 	{
 		public DrInterfaceForm()
 		{
+			
+			// This call is required by the designer.
 			InitializeComponent();
+			
+			// Add any initialization after the InitializeComponent() call.
+			this.StartPosition = Windows.Forms.FormStartPosition.CenterParent;
 		}
-		
-		
 	}
 }

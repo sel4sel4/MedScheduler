@@ -23,7 +23,8 @@ namespace ListeDeGarde
 			InitializeComponent();
 			
 			// Add any initialization after the InitializeComponent() call.
-			
+			//Me.StartPosition = Windows.Forms.FormStartPosition.Manual
+			this.StartPosition = Windows.Forms.FormStartPosition.CenterParent;
 		}
 	}
 }

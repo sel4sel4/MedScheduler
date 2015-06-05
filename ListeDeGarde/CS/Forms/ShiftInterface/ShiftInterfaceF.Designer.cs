@@ -41,7 +41,7 @@ namespace ListeDeGarde
 		[System.Diagnostics.DebuggerStepThrough()]private void InitializeComponent()
 		{
 			this.ElementHost1 = new System.Windows.Forms.Integration.ElementHost();
-			this.UserControl31 = new ListeDeGarde.UserControl3();
+			this.UserControl31 = new ListeDeGarde.ShiftInterfaceC();
 			this.SuspendLayout();
 			//
 			//ElementHost1
@@ -66,7 +66,7 @@ namespace ListeDeGarde
 			
 		}
 		internal System.Windows.Forms.Integration.ElementHost ElementHost1;
-		internal ListeDeGarde.UserControl3 UserControl31;
+		internal ListeDeGarde.ShiftInterfaceC UserControl31;
 	}
 	
 }

@@ -24,6 +24,8 @@ Public Class ShiftInterfaceC
         initializeShiftList()
         Lock(True)
     End Sub
+
+
     Private Sub MenuItem1Clicked(sender As Object, e As System.Windows.RoutedEventArgs)
         Dim aSShift As SShiftType
         aSShift = CType(ShiftListView.Items(ShiftListView.SelectedIndex), SShiftType)
@@ -51,11 +53,14 @@ Public Class ShiftInterfaceC
             myShiftTypeCollection = SShiftType.loadShiftTypesFromDBPerMonth(aMonthP, aYearP)
         End If
         changesOngoing = True
+        myShiftTypeCollection.Sort(AddressOf SortShiftsByOrder)
         Me.ShiftListView.ItemsSource = myShiftTypeCollection
         changesOngoing = False
         Me.ShiftListView.SelectedIndex = 0
-
     End Sub
+    Private Shared Function SortShiftsByOrder(order1 As SShiftType, order2 As SShiftType) As Integer
+        Return order1.Order.CompareTo(order2.Order)
+    End Function
     Private Sub Lock(locked As Boolean)
         Me.Description.IsReadOnly = locked
         Me.VersionNo.IsReadOnly = True
@@ -185,5 +190,51 @@ Public Class ShiftInterfaceC
         Globals.ThisAddIn.theCurrentController.resetSheetExt()
 
 
+    End Sub
+
+    Private Sub MoveUpBtn_Click(sender As Object, e As Windows.RoutedEventArgs) Handles MoveUpBtn.Click
+        If Me.ShiftListView.SelectedIndex < 1 Then Exit Sub
+        Dim theCurrentIndex As Integer = Me.ShiftListView.SelectedIndex
+        Dim theSelectedItem As SShiftType = myShiftTypeCollection.Item(theCurrentIndex)
+        Dim theItemOnTopOfSelectedItem As SShiftType = myShiftTypeCollection.Item(theCurrentIndex - 1)
+
+        theSelectedItem.Order = theSelectedItem.Order - 1
+        theItemOnTopOfSelectedItem.Order = theItemOnTopOfSelectedItem.Order + 1
+        theSelectedItem.Update()
+        theItemOnTopOfSelectedItem.Update()
+        changesOngoing = True
+        myShiftTypeCollection.Sort(AddressOf SortShiftsByOrder)
+        Me.ShiftListView.ItemsSource = Nothing
+        Me.ShiftListView.ItemsSource = myShiftTypeCollection
+        Me.ShiftListView.SelectedIndex = theCurrentIndex - 1
+        Me.ShiftListView.UpdateLayout()
+        changesOngoing = False
+
+    End Sub
+
+    Private Sub MoveDownBtn_Click(sender As Object, e As Windows.RoutedEventArgs) Handles MoveDownBtn.Click
+        If Me.ShiftListView.SelectedIndex > myShiftTypeCollection.Count - 1 Then Exit Sub
+        Dim theCurrentIndex As Integer = Me.ShiftListView.SelectedIndex
+        Dim theSelectedItem As SShiftType = myShiftTypeCollection.Item(theCurrentIndex)
+        Dim theItemBelowSelectedItem As SShiftType = myShiftTypeCollection.Item(theCurrentIndex + 1)
+
+        theSelectedItem.Order = theSelectedItem.Order + 1
+        theItemBelowSelectedItem.Order = theItemBelowSelectedItem.Order - 1
+        theSelectedItem.Update()
+        theItemBelowSelectedItem.Update()
+        changesOngoing = True
+        myShiftTypeCollection.Sort(AddressOf SortShiftsByOrder)
+        Me.ShiftListView.ItemsSource = Nothing
+        Me.ShiftListView.ItemsSource = myShiftTypeCollection
+        Me.ShiftListView.SelectedIndex = theCurrentIndex + 1
+        Me.ShiftListView.UpdateLayout()
+        changesOngoing = False
+    End Sub
+
+
+    Private Sub ShiftInterfaceC_Unloaded(sender As Object, e As Windows.RoutedEventArgs) Handles Me.Unloaded
+        If Not Globals.ThisAddIn.theCurrentController Is Nothing Then
+            Globals.ThisAddIn.theCurrentController.resetSheetExt()
+        End If
     End Sub
 End Class

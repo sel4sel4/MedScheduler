@@ -17,7 +17,7 @@ namespace ListeDeGarde
 {
 	public partial class Ribbon1
 	{
-		private Form1 aform1;
+		private GetNonDispos aform1;
 		public void Ribbon1_Load(System.Object sender, RibbonUIEventArgs e)
 		{
 			
@@ -32,7 +32,7 @@ namespace ListeDeGarde
 		public void Button2_Click(object sender, RibbonControlEventArgs e)
 		{
 			//UseDelegate()
-			aform1 = new Form1();
+			aform1 = new GetNonDispos();
 			aform1.FormClosing += new System.Windows.Forms.FormClosingEventHandler(aForm1_close);
 			aform1.ShowDialog();
 		}
@@ -56,11 +56,11 @@ namespace ListeDeGarde
 		
 		private void aForm1_close(System.Object sender, System.Windows.Forms.FormClosingEventArgs e)
 		{
-			if (!Globals.ThisAddIn.theControllerCollection.Contains((string) Globals.ThisAddIn.Application.ActiveSheet.name))
+			if (!Globals.ThisAddIn.theControllerCollection.Exists(xy => xy.aControlledExcelSheet.Name == Globals.ThisAddIn.Application.ActiveSheet.name))
 			{
 				return;
 			}
-			Controller aController = Globals.ThisAddIn.theControllerCollection[Globals.ThisAddIn.Application.ActiveSheet.name];
+			Controller aController = Globals.ThisAddIn.theControllerCollection.Find(xy => xy.aControlledExcelSheet.Name == Globals.ThisAddIn.Application.ActiveSheet.name);
 			aController.resetSheetExt();
 		}
 		
@@ -72,11 +72,11 @@ namespace ListeDeGarde
 			{
 				return;
 			}
-			if (!Globals.ThisAddIn.theControllerCollection.Contains((string) Globals.ThisAddIn.Application.ActiveSheet.name))
+			if (!Globals.ThisAddIn.theControllerCollection.Exists(xy => xy.aControlledExcelSheet.Name == Globals.ThisAddIn.Application.ActiveSheet.name))
 			{
 				return;
 			}
-			theController = Globals.ThisAddIn.theControllerCollection[Globals.ThisAddIn.Application.ActiveSheet.name];
+			theController = Globals.ThisAddIn.theControllerCollection.Find(xy => xy.aControlledExcelSheet.Name == Globals.ThisAddIn.Application.ActiveSheet.name);
 			
 			DocExpectationsF aDocExpecationF = default(DocExpectationsF);
 			aDocExpecationF = new DocExpectationsF();

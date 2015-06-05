@@ -31,10 +31,10 @@
     </StartupObject>
     <IsWebBootstrapper>False</IsWebBootstrapper>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <PublishUrl>C:\Users\Martin\Documents\Scheduling Mira\Published Tool\</PublishUrl>
+    <PublishUrl>C:\Users\sel4_000\Documents\Scheduling Mira\Published Tool\</PublishUrl>
     <InstallUrl />
     <TargetCulture>en</TargetCulture>
-    <ApplicationVersion>1.0.0.8</ApplicationVersion>
+    <ApplicationVersion>1.0.0.10</ApplicationVersion>
     <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateInterval>7</UpdateInterval>
@@ -114,6 +114,7 @@
     <RegisterForComInterop>false</RegisterForComInterop>
     <RemoveIntegerChecks>false</RemoveIntegerChecks>
     <NOWARN>1591,660,661</NOWARN>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <!--
     This section defines properties that are set when the "Release" configuration is selected.
@@ -151,18 +152,21 @@
     This section specifies references for the project.
   -->
   <ItemGroup>
-    <Reference Include="Microsoft.Office.Tools, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="mscorlib" />
     <Reference Include="Accessibility" />
+    <Reference Include="Microsoft.Office.Tools.Common.v4.0.Utilities, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Vbe.Interop.Forms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
@@ -177,11 +181,9 @@
     <Reference Include="mscorlib" />
     <Reference Include="Microsoft.Office.Tools.v4.0.Framework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Tools.Applications.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Office.Tools, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Office.Tools.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Office.Tools.Excel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
@@ -222,25 +224,19 @@
     <Compile Include="Forms\DrInterface\DrInterfaceForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\MonthlyStats\Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <Compile Include="Forms\GetNonDispos\GetNonDispos.Designer.cs">
+      <DependentUpon>GetNonDispos.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MonthlyStats\Form2.cs">
+    <Compile Include="Forms\GetNonDispos\GetNonDispos.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\GetNonDispos\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\GetNonDispos\Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CustomTaskPanes\MonthlyDocStatsTP.xaml.cs">
+    <Compile Include="CustomTaskPanes\MonthlyDocStats\MonthlyDocStatsTP.xaml.cs">
       <DependentUpon>MonthlyDocStatsTP.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CustomTaskPanes\MonthlyDocStatsTPF.Designer.cs">
+    <Compile Include="CustomTaskPanes\MonthlyDocStats\MonthlyDocStatsTPF.Designer.cs">
       <DependentUpon>MonthlyDocStatsTPF.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomTaskPanes\MonthlyDocStatsTPF.cs">
+    <Compile Include="CustomTaskPanes\MonthlyDocStats\MonthlyDocStatsTPF.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Varia\GlobalSuppressions.cs" />
@@ -251,8 +247,8 @@
     <Compile Include="CustomTaskPanes\MyYearMonthPicker\YearMonthPicker.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\GetNonDispos\UserControl1.xaml.cs">
-      <DependentUpon>UserControl1.xaml</DependentUpon>
+    <Compile Include="Forms\GetNonDispos\GetNonDispoC.xaml.cs">
+      <DependentUpon>GetNonDispoC.xaml</DependentUpon>
     </Compile>
     <Compile Include="Varia\Settings1.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -272,17 +268,16 @@
     <Compile Include="Forms\ShiftInterface\ShiftInterface.xaml.cs">
       <DependentUpon>ShiftInterface.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MonthlyStats\UserControl4.xaml.cs">
-      <DependentUpon>UserControl4.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Varia\Using EventsModules\UseDelegateM.cs" />
-    <Compile Include="CustomTaskPanes\MyYearMonthPicker\UserControl2.xaml.cs">
-      <DependentUpon>UserControl2.xaml</DependentUpon>
+    <Compile Include="CustomTaskPanes\MyYearMonthPicker\MyYearMonthPicker.xaml.cs">
+      <DependentUpon>MyYearMonthPicker.xaml</DependentUpon>
     </Compile>
     <Compile Include="Varia\Ribbon1.Designer.cs">
       <DependentUpon>Ribbon1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Varia\Ribbon1.cs" />
+    <Compile Include="Varia\Ribbon1.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ThisAddIn.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -292,13 +287,10 @@
     <EmbeddedResource Include="Forms\DrInterface\DrInterfaceForm.resx">
       <DependentUpon>DrInterfaceForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MonthlyStats\Form2.resx">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\GetNonDispos\GetNonDispos.resx">
+      <DependentUpon>GetNonDispos.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\GetNonDispos\Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomTaskPanes\MonthlyDocStatsTPF.resx">
+    <EmbeddedResource Include="CustomTaskPanes\MonthlyDocStats\MonthlyDocStatsTPF.resx">
       <DependentUpon>MonthlyDocStatsTPF.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Varia\Ribbon1.resx">
@@ -311,7 +303,10 @@
       <DependentUpon>ShiftInterfaceF.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="ListeDeGarde_TemporaryKey.pfx" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="..\..\..\..\Scheduling Mira\Published Tool\ListeDeGarde_TemporaryKey.pfx">
+      <Link>ListeDeGarde_TemporaryKey.pfx</Link>
+    </None>
     <None Include="Varia\app.config" />
     <None Include="Varia\ListeDeGarde_TemporaryKey.pfx" />
     <None Include="Properties\DataSources\SDoc.datasource" />
@@ -401,11 +396,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CustomTaskPanes\MyYearMonthPicker\UserControl2.xaml">
+    <Page Include="CustomTaskPanes\MyYearMonthPicker\MyYearMonthPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Forms\GetNonDispos\UserControl1.xaml">
+    <Page Include="Forms\GetNonDispos\GetNonDispoC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -417,11 +412,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Forms\MonthlyStats\UserControl4.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="CustomTaskPanes\MonthlyDocStatsTP.xaml">
+    <Page Include="CustomTaskPanes\MonthlyDocStats\MonthlyDocStatsTP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -456,7 +447,8 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>ListeDeGarde_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <MyType>Windows</MyType>

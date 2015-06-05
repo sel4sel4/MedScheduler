@@ -8,6 +8,8 @@ using Microsoft.Office.Tools.Excel;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Text;
 using System.Linq;
+using System.Windows.Forms.Integration;
+
 // End of VB project level imports
 
 
@@ -19,8 +21,8 @@ namespace ListeDeGarde
 		{
 			InitializeComponent();
 		}
-		
-		private void ElementHost1_ChildChanged(object sender, Windows.ChildChangedEventArgs e)
+
+        private void ElementHost1_ChildChanged(object sender, ChildChangedEventArgs e)
 		{
 			
 		}

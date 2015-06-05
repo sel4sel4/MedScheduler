@@ -167,6 +167,7 @@ namespace ListeDeGarde
 		//Public theNonDispoList As Collection
 		public static string theList;
 		public static Collection theRangeCollection;
+		public static ThisAddIn MyAddin;
 		
 		// Conenction Global variables
 		public static ADODB.Connection cnn = new ADODB.Connection(); //Connection object definition

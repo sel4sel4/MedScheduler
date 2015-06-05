@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ListeDeGarde", "ListeDeGarde\ListeDeGarde.vbproj", "{45FBB8AF-63C4-4CC8-A7D1-44838CA2058E}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "UnitTestProject4", "UnitTestProject4\UnitTestProject4.vbproj", "{0872AEB0-1DF3-4633-B4AA-108379CBA76E}"
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "UnitTests", "UnitTestProject4\UnitTests.vbproj", "{0872AEB0-1DF3-4633-B4AA-108379CBA76E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

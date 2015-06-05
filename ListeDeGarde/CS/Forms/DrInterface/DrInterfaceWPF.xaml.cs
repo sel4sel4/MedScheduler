@@ -17,7 +17,7 @@ namespace ListeDeGarde
 	public partial class DrInterface
 	{
 		private SDoc waitingForNewSave;
-		private Collection myDocCollection;
+		private List<SDoc> myDocCollection;
 		private bool changesongoing = false;
 		private int aYearP;
 		private int aMonthP;
@@ -39,9 +39,9 @@ namespace ListeDeGarde
 		}
 		private void GetYearMonth()
 		{
-			if (Globals.ThisAddIn.theControllerCollection.Contains((string) Globals.ThisAddIn.Application.ActiveSheet.name))
+			if (Globals.ThisAddIn.theControllerCollection.Exists(xy => xy.aControlledExcelSheet.Name == Globals.ThisAddIn.Application.ActiveSheet.name))
 			{
-				Controller aController = Globals.ThisAddIn.theControllerCollection[Globals.ThisAddIn.Application.ActiveSheet.name];
+				Controller aController = Globals.ThisAddIn.theControllerCollection.Find(xy => xy.aControlledExcelSheet.Name == Globals.ThisAddIn.Application.ActiveSheet.name);
 				aYearP = aController.aControlledMonth.Year;
 				aMonthP = aController.aControlledMonth.Month;
 			}
@@ -87,7 +87,7 @@ namespace ListeDeGarde
 			initializeDocList(System.Convert.ToBoolean(Edit_Template.IsChecked));
 			changesongoing = false;
 		}
-		private void EraseBtn_Click(object sender, Windows.RoutedEventArgs e) //erase doc button
+		private void EraseBtn_Click(object sender, system.Windows.RoutedEventArgs e) //erase doc button
 		{
 			SDoc aSDoc = default(SDoc);
 			aSDoc = (SDoc) DocListView.SelectedItem;
@@ -120,11 +120,11 @@ namespace ListeDeGarde
 			this.Nuits.IsChecked = waitingForNewSave.NuitsTog;
 			this.Urgence.IsChecked = waitingForNewSave.UrgenceTog;
 		}
-		private void ModifyBtn_Click(object sender, Windows.RoutedEventArgs e) //modify doc button
+		private void ModifyBtn_Click(object sender, System.Windows.RoutedEventArgs e) //modify doc button
 		{
 			Lock(!this.firstName1.IsReadOnly);
 		}
-		private void SaveBtn_Click(object sender, Windows.RoutedEventArgs e) //save doc button
+        private void SaveBtn_Click(object sender, System.Windows.RoutedEventArgs e) //save doc button
 		{
 			SDoc aSDoc = default(SDoc);
 			if (waitingForNewSave != null)

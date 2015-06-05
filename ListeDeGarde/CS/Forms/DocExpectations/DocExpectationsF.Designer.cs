@@ -49,7 +49,7 @@ namespace ListeDeGarde
 			this.ElementHost1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.ElementHost1.Location = new System.Drawing.Point(0, 0);
 			this.ElementHost1.Name = "ElementHost1";
-			this.ElementHost1.Size = new System.Drawing.Size(500, 500);
+			this.ElementHost1.Size = new System.Drawing.Size(357, 451);
 			this.ElementHost1.TabIndex = 0;
 			this.ElementHost1.Text = "ElementHost1";
 			this.ElementHost1.Child = this.DocExpectations1;
@@ -58,7 +58,7 @@ namespace ListeDeGarde
 			//
 			this.AutoScaleDimensions = new System.Drawing.SizeF((float) (6.0F), (float) (13.0F));
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(500, 500);
+			this.ClientSize = new System.Drawing.Size(357, 451);
 			this.Controls.Add(this.ElementHost1);
 			this.Name = "DocExpectationsF";
 			this.Text = "DocExpectationsF";

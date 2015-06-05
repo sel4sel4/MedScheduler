@@ -564,9 +564,9 @@
             Dim theShift As SShift
 
             For Each theShift In theDay.Shifts
-                theRangeForShiftType = theRange.Offset(theShift.ShiftType, 0)
+                theRangeForShiftType = theRange.Offset(theShift.AdjustedOrder, 0)
                 theRangeForShiftType.Value2 = "'" + theShift.Description
-                TheRAngeForDocLists = theRange.Offset(theShift.ShiftType, 1)
+                TheRAngeForDocLists = theRange.Offset(theShift.AdjustedOrder, 1)
                 theShift.aRange = TheRAngeForDocLists
 
                 fixlist(theShift)
