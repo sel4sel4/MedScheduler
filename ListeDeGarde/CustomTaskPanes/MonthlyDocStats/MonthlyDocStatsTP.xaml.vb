@@ -35,7 +35,7 @@ Public Class MonthlyDocStatsTP
         'create empty placeholder top left
         aLabel = New Label
         aLabel.Content = ""
-        aLabel.Width = 50
+        aLabel.Width = 30
         aLabel.Height = 70
         aHorizStackPanel = New StackPanel
         aHorizStackPanel.Orientation = Orientation.Horizontal
@@ -63,7 +63,7 @@ Public Class MonthlyDocStatsTP
             aHorizStackPanel = New StackPanel
             aLabel = New Label
             aLabel.Content = theStats.Initials
-            aLabel.Width = 50
+            aLabel.Width = 30
             aLabel.Height = 18.5
             aLabel.Padding = New Windows.Thickness(4)
 
@@ -127,6 +127,80 @@ Public Class MonthlyDocStatsTP
 
             Next
         End If
+
+        mypanel3.Children.Clear()
+        'create empty placeholder top left
+        aLabel = New Label
+        aLabel.Content = ""
+        aLabel.Width = 30
+        aLabel.Height = 70
+        aHorizStackPanel = New StackPanel
+        aHorizStackPanel.Orientation = Orientation.Horizontal
+        aHorizStackPanel.Height = 96
+        aHorizStackPanel.Children.Add(aLabel)
+        Dim adoclist As List(Of SDoc)
+        Dim alistofshifts As List(Of SShiftType)
+        Dim theCounts As Integer(,)
+        theCounts = Globals.ThisAddIn.theCurrentController.GetMonthlyCountsFromInstances(theDocList:=adoclist, thecompiledshifts:=alistofshifts)
+
+        'create shift headers
+
+        For Each aShift In alistofshifts
+            aLabel = New Label
+            aLabel.Content = aShift.Description
+            aLabel.Width = 70
+            aLabel.Height = 25
+            aLabel.VerticalContentAlignment = Windows.VerticalAlignment.Center
+            Dim aRotateTransform As New RotateTransform()
+            aRotateTransform.Angle = 270
+            aLabel.LayoutTransform = aRotateTransform
+            aHorizStackPanel.Children.Add(aLabel)
+        Next
+        Me.MyPanel.Children.Add(aHorizStackPanel)
+        aHorizStackPanel.Name = "Header"
+        'create doc list with shifts counts
+        Dim z As Integer = 0
+        For Each aDoc As SDoc In adoclist
+            aHorizStackPanel = New StackPanel
+            aLabel = New Label
+            aLabel.Content = aDoc.Initials
+            aLabel.Width = 30
+            aLabel.Height = 18.5
+            aLabel.Padding = New Windows.Thickness(4)
+
+            aHorizStackPanel.Height = 18.5
+            aHorizStackPanel.Orientation = Orientation.Horizontal
+            Me.MyPanel.Children.Add(aHorizStackPanel)
+            aHorizStackPanel.Children.Add(aLabel)
+            Dim counting1 As Integer = theCounts.GetUpperBound(0)
+            Dim counting2 As Integer = theCounts.GetUpperBound(1)
+            For x As Integer = 0 To counting2
+
+                aLabel = New Label
+                aLabel.Content = theCounts(z, x)
+                If aDoc.Initials = Globals.ThisAddIn.theCurrentController.pHighlightedDoc Then
+                    aLabel.Background = New SolidColorBrush(Color.FromRgb(150, 100, 150))
+                End If
+                aLabel.Padding = New Windows.Thickness(3)
+                aLabel.HorizontalContentAlignment = Windows.HorizontalAlignment.Center
+                aLabel.BorderBrush = System.Windows.Media.Brushes.Black
+                If z = adoclist.Count - 1 Then
+                    aLabel.BorderThickness = New Windows.Thickness(1, 1, 0, 1)
+                Else
+                    aLabel.BorderThickness = New Windows.Thickness(1, 1, 0, 0)
+                End If
+
+                aLabel.Width = 25
+                aLabel.Height = 18.5
+                aHorizStackPanel.Children.Add(aLabel)
+            Next
+            If z = adoclist.Count - 1 Then
+                aLabel.BorderThickness = New Windows.Thickness(1, 1, 1, 1)
+            Else
+                aLabel.BorderThickness = New Windows.Thickness(1, 1, 1, 0)
+            End If
+            z = z + 1
+        Next
 
     End Sub
 End Class

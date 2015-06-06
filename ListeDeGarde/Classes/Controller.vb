@@ -350,7 +350,7 @@
 
     Private Sub statsMensuellesUpdate()
         'GetMonthlyCountsFromDB()
-        GetMonthlyCountsFromInstances()
+        'GetMonthlyCountsFromInstances()
 
         Dim thetime3 As DateTime
         Dim thetime4 As DateTime
@@ -721,17 +721,17 @@
         System.Diagnostics.Debug.WriteLine(span)
     End Sub
 
-    Private Sub GetMonthlyCountsFromInstances()
+    Public Function GetMonthlyCountsFromInstances(ByRef theDocList As List(Of SDoc), ByRef thecompiledshifts As List(Of SShiftType)) As Integer(,)
         'pour chaque medecin compter chaque type de shift
-        Dim theTime5 As DateTime
-        Dim theTime6 As DateTime
-        theTime5 = DateTime.Now
+        'Dim theTime5 As DateTime
+        'Dim theTime6 As DateTime
+        'theTime5 = DateTime.Now
 
         Dim theDateB = DateSerial(Globals.ThisAddIn.theCurrentController.aControlledMonth.Year, Globals.ThisAddIn.theCurrentController.aControlledMonth.Month, 1)
         Dim theDateE = DateSerial(Globals.ThisAddIn.theCurrentController.aControlledMonth.Year, Globals.ThisAddIn.theCurrentController.aControlledMonth.Month + 1, 1)
 
-        Dim theDocList As List(Of SDoc) = Globals.ThisAddIn.theCurrentController.aControlledMonth.DocList
-        Dim theCompiledShifts As List(Of SShiftType) = Globals.ThisAddIn.theCurrentController.aControlledMonth.ShiftTypes.FindAll(AddressOf FindCompiledShifts)
+        theDocList = Globals.ThisAddIn.theCurrentController.aControlledMonth.DocList
+        thecompiledshifts = Globals.ThisAddIn.theCurrentController.aControlledMonth.ShiftTypes.FindAll(AddressOf FindCompiledShifts)
 
         Dim theDocInitials(theDocList.Count - 1) As String
         Dim theCounts(theDocList.Count - 1, theCompiledShifts.Count - 1) As Integer
@@ -759,9 +759,10 @@
             Next
             x = x + 1
         Next
-        theTime6 = DateTime.Now
-        Dim theticks As Long = theTime6.Ticks - theTime5.Ticks
-        Dim span As TimeSpan = TimeSpan.FromTicks(theticks)
-        System.Diagnostics.Debug.WriteLine(span)
-    End Sub
+        Return theCounts
+        'theTime6 = DateTime.Now
+        'Dim theticks As Long = theTime6.Ticks - theTime5.Ticks
+        'Dim span As TimeSpan = TimeSpan.FromTicks(theticks)
+        'System.Diagnostics.Debug.WriteLine(span)
+    End Function
 End Class
